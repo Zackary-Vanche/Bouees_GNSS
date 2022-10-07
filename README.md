@@ -4,3 +4,4 @@ Test 2 Baptiste
 Test Pull Baptiste 
 Test Pull Alice
 Test conflit Zack
+Test conflit Baptiste 
