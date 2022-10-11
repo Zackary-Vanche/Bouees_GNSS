@@ -1,0 +1,9 @@
+Angle de coupure : 0 degrés
+baud rate : 10s (0.1 Hz)
+GNSS : L1 et L2 GPS GLONASS GALILEO BEIDOU 
+Configuration avec carte std:
+	NMEA GxGGA jusqu'à NMEA GxVTG envoyés en USB (pour les tests)
+	02-15 RXM-RAWX en UART1
+Configuration raspberry pi:
+	02-15 RXM-RAWX en USB
+	F0-00 NMEA GxGGA en USB
