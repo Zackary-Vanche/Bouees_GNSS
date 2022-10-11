@@ -40,13 +40,18 @@ while True:
     # outputFilePath_RAW = f'{pathfolderHour}\{filename}_RAW.ubx' # Test sous windows 
     # outputFilePath_NMEA = f'{pathfolderHour}\{filename}_NMEA.txt' # Test sous windows 
 
-    cmdRAW =  f'gpspipe -o {outputFilePath_RAW} -R'
+    # cmdRAW =  f'gpspipe -o {outputFilePath_RAW} -R'
+    cmdRINEX =  f'gpsrinex -f {outputFilePath_RAW}'
+
     cmdNMEA =  f'gpspipe -o {outputFilePath_NMEA} -r'
 
-    # Save RAW
-    os.system(cmdRAW)
+    # # Save RAW
+    # os.system(cmdRAW)
     # os.system(f'echo.>{outputFilePath_RAW}')
     # print(cmdRAW)
+
+    # Save RINEX 
+    os.system(cmdRINEX)
 
     # Save NMEA 
     if (current_min%T_NMEA == 0) & (current_sec == 0):
