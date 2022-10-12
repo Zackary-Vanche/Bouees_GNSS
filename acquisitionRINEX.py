@@ -5,8 +5,6 @@ from datetime import datetime
 
 # time.sleep(120) # Wait for synchronisation 
 
-
-
 def main():
     # Path definition
     root = r'.'
@@ -16,32 +14,32 @@ def main():
     # Create new folder 'acquisition'
     os.system(f'mkdir {pathData}')
 
-    createFolderHour = True 
+    # createFolderHour = True 
     pathFolderHour = ''
-    
-    while True:
-        previousPathFolderHour = pathFolderHour
-        now = datetime.now()
 
-        pathfolderHour = f'{pathData}/{now.strftime("%d%m%Y_%H00")}'
-        if pathFolderHour != previousPathFolderHour:
-            createFolderHour = True
+    # while True:
+    # previousPathFolderHour = pathFolderHour
+    now = datetime.now()
 
-        if createFolderHour:
-            os.system(f'mkdir {pathFolderHour}')
-            createFolderHour = False
+    pathfolderHour = f'{pathData}/{now.strftime("%d%m%Y_%H00")}'
+    # if pathFolderHour != previousPathFolderHour:
+    #     createFolderHour = True
 
-        filename = now.strftime("%d%m%Y_%H00")
-        outputFilePath_RINEX = f'{pathfolderHour}/{filename}_RINEX.txt'
+    # if createFolderHour:
+    os.system(f'mkdir {pathFolderHour}')
+        # createFolderHour = False
 
-        cmdRINEX =  f'gpsrinex -f {outputFilePath_RINEX}'
+    filename = now.strftime("%d%m%Y_%H00")
+    outputFilePath_RINEX = f'{pathfolderHour}/{filename}_RINEX.txt'
 
-        # Save RINEX 
-        os.system(cmdRINEX)
+    cmdRINEX =  f'gpsrinex -f {outputFilePath_RINEX}'
+
+    # Save RINEX 
+    os.system(cmdRINEX)
 
     
 if __name__ == "__main__":
     main()
-
+    
 
  
