@@ -5,22 +5,23 @@ from datetime import datetime
 
 # time.sleep(120) # Wait for synchronisation 
 
-# Path definition
-root = r'.'
-pathData = f'{root}/data/NMEA'
 
-T_NMEA = 10 # Save NMEA every 10 min
-
-# Remove former folder 'acquisition'
-os.system(f'rm -r {pathData}')
-
-# Create new folder 'acquisition'
-os.system(f'mkdir {pathData}')
-
-createFolderHour = True 
-pathFolderHour = ''
 
 def main():
+    # Path definition
+    root = r'.'
+    pathData = f'{root}/data/NMEA'
+
+    t_NMEA = 10 # Save NMEA every 10 min
+
+    # Remove former folder 'acquisition'
+    os.system(f'rm -r {pathData}')
+
+    # Create new folder 'acquisition'
+    os.system(f'mkdir {pathData}')
+
+    createFolderHour = True 
+    pathFolderHour = ''
 
     while True:
         previousPathFolderHour = pathFolderHour
@@ -42,7 +43,7 @@ def main():
         cmdNMEA =  f'gpspipe -o {outputFilePath_NMEA} -r'
 
         # Save NMEA 
-        if (current_min%T_NMEA == 0) & (current_sec == 0):
+        if (current_min%t_NMEA == 0) & (current_sec == 0):
             os.system(cmdNMEA)
 
 
