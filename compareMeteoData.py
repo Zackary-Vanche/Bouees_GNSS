@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 colNames = ['Time','T', 'H', 'P']
 
 fileSeiche = r'C:\Users\33686\Desktop\ENSTAB\Cours\3A\Guerledan\data_2022_2023\StationMeteo\WEATHER_2022_10_13_soir.csv'
-dataSeiche = pd.read_csv(fileSeiche, header=9, usecols=[0, 1, 2, 6], names=colNames)
+dataSeiche = pd.read_csv(fileSeiche, header=9, usecols=[0, 1, 3, 6], names=colNames)
 
 colNames = ['Time','T', 'P', 'H']
 fileBouee = r'C:\Users\33686\Desktop\ENSTAB\Cours\3A\Guerledan\data_2022_2023\BoueeV2\13102022_14102022\METEO\logMETEO.txt-2022101317'

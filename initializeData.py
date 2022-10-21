@@ -1,6 +1,12 @@
+#@Baptiste Menetrier
+"""
+Initialize buffer files used to temporaly store data logged by the buyo and remove files from previous acquisition. 
+Warning: this function deletes all log files and should then used carefully. 
+"""
+
 import os
 
-root = '/home/pi/data'
+root = '/home/pi/BuyoData'
 listFolder = ['NMEA', 'UBX', 'METEO', 'RINEX']
 
 for folder in listFolder:
