@@ -12,8 +12,6 @@ def main():
     root = r'.'
     pathData = f'{root}/data/NMEA'
 
-    # t_NMEA = 10 # Save NMEA every 10 min
-
     # Remove former folder 'acquisition'
     os.system(f'rm -r {pathData}')
 

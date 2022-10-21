@@ -8,9 +8,11 @@ from datetime import datetime
 def main():
     # Path definition
     root = r'.'
-    pathData = f'{root}/data/RINEX'
+    pathData = f'{root}/data/NMEA'
+
     # Remove former folder 'acquisition'
     os.system(f'rm -r {pathData}')
+
     # Create new folder 'acquisition'
     os.system(f'mkdir {pathData}')
 
@@ -21,16 +23,11 @@ def main():
     # previousPathFolderHour = pathFolderHour
     now = datetime.now()
 
-    pathfolderHour = f'{pathData}/{now.strftime("%d%m%Y_%H00")}'
-    # if pathFolderHour != previousPathFolderHour:
-    #     createFolderHour = True
-
-    # if createFolderHour:
-    os.system(f'mkdir {pathFolderHour}')
+    pathFolderHour = f'{pathData}/{now.strftime("%d%m%Y_%H00")}'
         # createFolderHour = False
 
     filename = now.strftime("%d%m%Y_%H00")
-    outputFilePath_RINEX = f'{pathfolderHour}/{filename}_RINEX.txt'
+    outputFilePath_RINEX = f'{pathFolderHour}/{filename}_RINEX.txt'
 
     cmdRINEX =  f'gpsrinex -f {outputFilePath_RINEX}'
 
@@ -40,6 +37,6 @@ def main():
     
 if __name__ == "__main__":
     main()
-    
+
 
  
