@@ -11,7 +11,7 @@ bme280.load_calibration_params(bus, address)
 
 Ts = 10 # Sampling period (should be the same as RINEX one)
 
-file = './data/METEO/logMETEO.txt'
+file = './BuyoData/METEO/logMETEO.txt'
 # Write header 
 with open(file, 'w') as f:
     header = "date, temperature_C, pression_hPa, humidity_per\n"
