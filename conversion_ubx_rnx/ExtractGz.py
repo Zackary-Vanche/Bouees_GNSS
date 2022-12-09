@@ -16,9 +16,10 @@ def ExtractGz(directory, extract_dir, verbose = 0):
     list_gz = []
     for file in list_files:
         if file.split('.')[-1] == 'gz':
-            list_gz.append(directory + '/' + file)
+            list_gz.append(file)
     for file_in_name in list_gz:
-        file_out_name = file_in_name.replace('.gz', '')
+        file_out_name = extract_dir + '/' + file_in_name.replace('.gz', '')
+        file_in_name = directory + '/' + file
         f_in = gzip.open(file_in_name, 'r')
         f_out = open(file_out_name, 'w')
         file_content = f_in.read()
