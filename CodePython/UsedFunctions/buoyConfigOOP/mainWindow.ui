@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1187</width>
+    <height>320</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout_3">
+    <property name="horizontalSpacing">
+     <number>30</number>
+    </property>
+    <item row="4" column="6">
+     <widget class="QLineEdit" name="accessPoint_ConfirmPWD_lineEdit">
+      <property name="echoMode">
+       <enum>QLineEdit::Password</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="wifi_TITLE_label">
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Wifi settings</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="3" colspan="2">
+     <widget class="QLineEdit" name="wifi_PSK_lineEdit">
+      <property name="echoMode">
+       <enum>QLineEdit::Password</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="2" colspan="4">
+     <widget class="QPushButton" name="sendConfig_pushButton">
+      <property name="text">
+       <string>Send configuration</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="3" colspan="2">
+     <widget class="QLineEdit" name="accessPoint_PWD_lineEdit">
+      <property name="echoMode">
+       <enum>QLineEdit::Password</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="5">
+     <widget class="QLabel" name="accessPoint_ConfirmPWD_label">
+      <property name="text">
+       <string>Confirm Password:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0" colspan="2">
+     <widget class="QLabel" name="accessPoint_TITLE_label">
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Access point settings</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QLineEdit" name="accessPoint_SSID_lineEdit"/>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="accessPoint_SSID_label">
+      <property name="text">
+       <string>SSID:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="5">
+     <widget class="QLabel" name="wifi_ConfirmPSK_label">
+      <property name="text">
+       <string>Confirm Password:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="2">
+     <widget class="QLabel" name="accessPoint_PWD_label">
+      <property name="text">
+       <string>Password:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="wifi_SSID_label">
+      <property name="text">
+       <string>SSID:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QLineEdit" name="wifi_SSID_lineEdit"/>
+    </item>
+    <item row="2" column="2">
+     <widget class="QLabel" name="wifi_PSK_label">
+      <property name="text">
+       <string>Password:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="6">
+     <widget class="QLineEdit" name="wifi_ConfirmPSK_lineEdit">
+      <property name="text">
+       <string/>
+      </property>
+      <property name="echoMode">
+       <enum>QLineEdit::Password</enum>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1187</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuBuoy_configuration">
+    <property name="title">
+     <string>Buoy configuration</string>
+    </property>
+   </widget>
+   <addaction name="menuBuoy_configuration"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <tabstops>
+  <tabstop>wifi_SSID_lineEdit</tabstop>
+  <tabstop>wifi_PSK_lineEdit</tabstop>
+  <tabstop>wifi_ConfirmPSK_lineEdit</tabstop>
+  <tabstop>accessPoint_SSID_lineEdit</tabstop>
+  <tabstop>accessPoint_PWD_lineEdit</tabstop>
+  <tabstop>accessPoint_ConfirmPWD_lineEdit</tabstop>
+  <tabstop>sendConfig_pushButton</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>
