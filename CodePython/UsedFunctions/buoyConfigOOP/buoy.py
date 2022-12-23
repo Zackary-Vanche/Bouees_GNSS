@@ -39,6 +39,12 @@ class Buoy:
 
         # self.readConfig()
 
+    def copyMainConfigFileToSDCard(self, dest):
+        if not self.runningOSisLinnux:
+            dest = dest.replace('/', '\\')
+        cmd = f'copy {self.configMainFile_Path} {dest}'
+        os.system(cmd)
+
     def writeMainConfig(self):
         """
         Write main configuration file to be used by the raspberry pi when setting up. 

@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QMessageBox
+from PyQt5.QtWidgets import QApplication, QWidget, QMessageBox, QFileDialog
 from mainWindow import *
 from buoy import *
 
@@ -14,11 +14,16 @@ class BuoyUI(QWidget, Ui_MainWindow):
         self.infoMsgType = 'Information'
 
         self.buoy = Buoy()
-        self.sendConfig_pushButton.clicked.connect(self.sendConfig)
+        self.saveConfig_pushButton.clicked.connect(self.saveConfig)
+        # self.push
+        self.transferConfig_pushButton.clicked.connect(self.transferConfig)
+
         self.wifi_SSID_lineEdit.editingFinished.connect(self.checkWifi_SSID)
         self.wifi_PSK_lineEdit.editingFinished.connect(self.checkWifi_PSK)
-        # self.accessPoint_SSID_lineEdit.editingFinished.connect(self.checkAccessPoint_SSID)
-        # self.accessPoint_PWD_lineEdit.editingFinished.connect(self.checkAccessPoint_PWD)
+        self.accessPoint_SSID_lineEdit.editingFinished.connect(self.checkAccessPoint_SSID)
+        self.accessPoint_PWD_lineEdit.editingFinished.connect(self.checkAccessPoint_PWD)
+
+        self.configIsSaved = False
 
     def checkWifi_SSID(self):
         ssid = self.wifi_SSID_lineEdit.text()
@@ -111,12 +116,24 @@ class BuoyUI(QWidget, Ui_MainWindow):
         
         return isValid
 
-    def sendConfig(self):
+    def saveConfig(self):
         configIsValid = self.checkConfig()
         if configIsValid:
             self.getConfig()
             self.buoy.writeMainConfig()
-            print('Config sent')
+            self.configIsSaved = True
+            # print('Config sent')
+
+    def transferConfig(self):
+        if self.configIsSaved:
+            # dest , check = QFileDialog.getSaveFileName(None, "QFileDialog getSaveFileName() Demo",
+                                            #    "", "All Files (*);;Python Files (*.py);;Text Files (*.txt)")
+            dest = QtWidgets.QFileDialog.getExistingDirectory(self, 'Select Folder')
+            # dest = 
+            self.buoy.copyMainConfigFileToSDCard(dest)
+        else: 
+            self.saveConfig()
+    
 
     def checkConfig(self):
         wifiIsValid = self.checkWifi()

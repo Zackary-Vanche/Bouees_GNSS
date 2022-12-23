@@ -15,17 +15,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_3">
-    <property name="horizontalSpacing">
-     <number>30</number>
-    </property>
-    <item row="4" column="6">
-     <widget class="QLineEdit" name="accessPoint_ConfirmPWD_lineEdit">
-      <property name="echoMode">
-       <enum>QLineEdit::Password</enum>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0">
+    <item row="0" column="0">
      <widget class="QLabel" name="wifi_TITLE_label">
       <property name="font">
        <font>
@@ -37,35 +27,48 @@
       </property>
      </widget>
     </item>
-    <item row="2" column="3" colspan="2">
+    <item row="1" column="0">
+     <widget class="QLabel" name="wifi_SSID_label">
+      <property name="text">
+       <string>SSID:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLineEdit" name="wifi_SSID_lineEdit"/>
+    </item>
+    <item row="1" column="2">
+     <widget class="QLabel" name="wifi_PSK_label">
+      <property name="text">
+       <string>Password:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="3">
      <widget class="QLineEdit" name="wifi_PSK_lineEdit">
       <property name="echoMode">
        <enum>QLineEdit::Password</enum>
       </property>
      </widget>
     </item>
-    <item row="5" column="2" colspan="4">
-     <widget class="QPushButton" name="sendConfig_pushButton">
-      <property name="text">
-       <string>Send configuration</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="3" colspan="2">
-     <widget class="QLineEdit" name="accessPoint_PWD_lineEdit">
-      <property name="echoMode">
-       <enum>QLineEdit::Password</enum>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="5">
-     <widget class="QLabel" name="accessPoint_ConfirmPWD_label">
+    <item row="1" column="4">
+     <widget class="QLabel" name="wifi_ConfirmPSK_label">
       <property name="text">
        <string>Confirm Password:</string>
       </property>
      </widget>
     </item>
-    <item row="3" column="0" colspan="2">
+    <item row="1" column="5">
+     <widget class="QLineEdit" name="wifi_ConfirmPSK_lineEdit">
+      <property name="text">
+       <string/>
+      </property>
+      <property name="echoMode">
+       <enum>QLineEdit::Password</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0" colspan="2">
      <widget class="QLabel" name="accessPoint_TITLE_label">
       <property name="font">
        <font>
@@ -77,54 +80,55 @@
       </property>
      </widget>
     </item>
-    <item row="4" column="1">
-     <widget class="QLineEdit" name="accessPoint_SSID_lineEdit"/>
-    </item>
-    <item row="4" column="0">
+    <item row="3" column="0">
      <widget class="QLabel" name="accessPoint_SSID_label">
       <property name="text">
        <string>SSID:</string>
       </property>
      </widget>
     </item>
-    <item row="2" column="5">
-     <widget class="QLabel" name="wifi_ConfirmPSK_label">
-      <property name="text">
-       <string>Confirm Password:</string>
-      </property>
-     </widget>
+    <item row="3" column="1">
+     <widget class="QLineEdit" name="accessPoint_SSID_lineEdit"/>
     </item>
-    <item row="4" column="2">
+    <item row="3" column="2">
      <widget class="QLabel" name="accessPoint_PWD_label">
       <property name="text">
        <string>Password:</string>
       </property>
      </widget>
     </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="wifi_SSID_label">
-      <property name="text">
-       <string>SSID:</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="1">
-     <widget class="QLineEdit" name="wifi_SSID_lineEdit"/>
-    </item>
-    <item row="2" column="2">
-     <widget class="QLabel" name="wifi_PSK_label">
-      <property name="text">
-       <string>Password:</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="6">
-     <widget class="QLineEdit" name="wifi_ConfirmPSK_lineEdit">
-      <property name="text">
-       <string/>
-      </property>
+    <item row="3" column="3">
+     <widget class="QLineEdit" name="accessPoint_PWD_lineEdit">
       <property name="echoMode">
        <enum>QLineEdit::Password</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="4">
+     <widget class="QLabel" name="accessPoint_ConfirmPWD_label">
+      <property name="text">
+       <string>Confirm Password:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="5">
+     <widget class="QLineEdit" name="accessPoint_ConfirmPWD_lineEdit">
+      <property name="echoMode">
+       <enum>QLineEdit::Password</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="3">
+     <widget class="QPushButton" name="saveConfig_pushButton">
+      <property name="text">
+       <string>Save configuration</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="4" colspan="2">
+     <widget class="QPushButton" name="sendConfig_pushButton_2">
+      <property name="text">
+       <string>Transfer configuration to SD card</string>
       </property>
      </widget>
     </item>
@@ -155,7 +159,6 @@
   <tabstop>accessPoint_SSID_lineEdit</tabstop>
   <tabstop>accessPoint_PWD_lineEdit</tabstop>
   <tabstop>accessPoint_ConfirmPWD_lineEdit</tabstop>
-  <tabstop>sendConfig_pushButton</tabstop>
  </tabstops>
  <resources/>
  <connections/>
