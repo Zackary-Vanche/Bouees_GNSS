@@ -25,12 +25,17 @@ class Buoy:
         if self.runningOSisLinnux:
             self.configFiles_Path = '/home/pi/BuoyConfig/UserConfig'
         else:
-            self.configFiles_Path = r'C:\Users\33686\Desktop\ENSTAB\Cours\3A\Guerledan\Bouees_GNSS\CodePython\UsedFunctions\setBuoyConfig\UserConfig'
+            # self.configFiles_Path = r'C:\Users\33686\Desktop\ENSTAB\Cours\3A\Guerledan\Bouees_GNSS\CodePython\UsedFunctions\setBuoyConfig\UserConfig'
+            self.configFiles_Path = r'.\UserConfig'
+            if not os.path.isdir(r'.\UserConfig'):
+                os.mkdir(r'.\UserConfig')
+
 
         if self.runningOSisLinnux:
             self.configMainFile_Path = '/boot/BuoyConfig.txt'
         else:
-            self.configMainFile_Path = r'C:\Users\33686\Desktop\ENSTAB\Cours\3A\Guerledan\Bouees_GNSS\CodePython\UsedFunctions\setBuoyConfig\BuoyConfig.txt'
+            self.configMainFile_Path = r'.\UserConfig\BuoyConfig.txt'
+            # self.configMainFile_Path = r'C:\Users\33686\Desktop\ENSTAB\Cours\3A\Guerledan\Bouees_GNSS\CodePython\UsedFunctions\setBuoyConfig\BuoyConfig.txt'
 
         self.wifi = Wifi(self)
         self.accessPoint = AccessPoint(self)
@@ -40,15 +45,34 @@ class Buoy:
         # self.readConfig()
 
     def copyMainConfigFileToSDCard(self, dest):
+        """
+        Copy main configuration file to the SD card holding the RPi OS. Set deployment status to 0 to tell RPi config needs to be updated.
+        """
         if not self.runningOSisLinnux:
             dest = dest.replace('/', '\\')
         cmd = f'copy {self.configMainFile_Path} {dest}'
         os.system(cmd)
 
-    def writeMainConfig(self):
+        # Change status 
+        self.changeUserConfigDeployementStatus(dest)
+
+    def changeUserConfigDeployementStatus(self, dest):
         """
-        Write main configuration file to be used by the raspberry pi when setting up. 
+        Update deployment status. The deployement status is read by the function deployUserConfig.py to check if config needs to be updated. 
+            - status = 0: new config has been loaded and need to be used. 
+            - status = 1: current config is up to date. 
         """
+        if not self.runningOSisLinnux:
+            dest = dest.replace('/', '\\')
+            flagFile = f'{dest}\\userConfigIsDeployed.txt'
+        else:
+            flagFile = f'{dest}/userConfigIsDeployed.txt'
+        with open(flagFile, 'w') as f:
+            f.write('0')
+        
+
+    def writeMainConfig(self, path=None):
+        """Write main configuration file to be used by the raspberry pi when setting up."""
         lines = ['# Default Wifi Network to connect to when Wifi mode is activated', 
                 f'{self.wifi.ssid}', 
                 f'{self.wifi.psk}', 
@@ -58,14 +82,19 @@ class Buoy:
                 '# End of configuration']
         lines = [line + '\n' for line in lines]
 
-        with open(self.configMainFile_Path, 'w') as f:
+        if path == None:
+            path = self.configMainFile_Path
+            
+        with open(path, 'w') as f:
             f.writelines(lines)
         
-    def readConfig(self):
-        """
-        Reads configuration informations from configuration file and associates each element with its item's attribute. 
-        """
-        with open(self.configMainFile_Path, 'r') as f:
+    def readConfig(self, path=None):
+        """ Reads configuration informations from configuration file and associates each element with its item's attribute."""
+        
+        if path == None:
+            path = self.configMainFile_Path
+            
+        with open(path, 'r') as f:
             lines = self.getLines(f)
             baliseIdx = self.getBaliseIdx(lines)
         content = self.getContent(lines, baliseIdx)
@@ -74,24 +103,18 @@ class Buoy:
             self.items[it].content = content[it]
 
     def applyConfig(self):
-        """ 
-        Applies item-related configuration for each item (updates item-related configuration files).
-        """
+        """Applies item-related configuration for each item (updates item-related configuration files)."""
         for item in self.items:
             item.applyConfig()
 
     def updateConfig(self):
-        """
-        Reads and apply new configuration.
-        """
+        """Reads and apply new configuration."""
         self.readConfig()
         self.applyConfig()
 
     @staticmethod   
     def getContent(lines, baliseIdx):
-        """
-        Separates informations read from configuration file into item-related categories. 
-        """
+        """Separates information read from configuration file into item-related categories."""
         content = []
         for i in range(len(baliseIdx)-1):
             ib = baliseIdx[i]
@@ -102,9 +125,7 @@ class Buoy:
     
     @staticmethod
     def getLines(f):
-        """
-        Reads usefull information from configuration file.
-        """
+        """Reads usefull information from configuration file."""
         lines = np.array(f.readlines())
         nbLines = len(lines)
         blankLines = np.array([False] * nbLines)
@@ -119,9 +140,7 @@ class Buoy:
     
     @staticmethod
     def getBaliseIdx(lines):
-        """
-        Gets balise indexes.
-        """
+        """Gets balise indexes."""
         balise = '#'
         baliseIdx = []
         for il in range(len(lines)):
@@ -132,9 +151,7 @@ class Buoy:
 
     @staticmethod
     def getOS():
-        """
-        Differentiates between deployed and dev configuration.
-        """
+        """Differentiates between deployed and dev configuration."""
         if os.name == 'nt':
             return False
         else:
@@ -154,8 +171,12 @@ class Item:
         self.dest: path of the configuration file to modify
         self.src: path of the configuration file to use  
     """
-
     def __init__(self, buoy):
+        """Update the number of items handled by the Buoy object. 
+
+        Args:
+            buoy (Buoy): Buoy object handling the configuration. 
+        """
         self.buoy = buoy
         self.buoy.nbItems += 1
         self.name = '' 
@@ -163,34 +184,45 @@ class Item:
         self.configFilename = ''
 
     def setSrc(self):
+        """Path to configuration file."""
         if self.buoy.runningOSisLinnux:
             self.src = f'{self.buoy.configFiles_Path}/{self.configFilename}'
         else:
             self.src = f'{self.buoy.configFiles_Path}\{self.configFilename}'
 
-        if not os.path.exists(self.src):
-            self.createEmptyConfigFile()
+        # if not os.path.exists(self.src):
+        #     self.createEmptyConfigFile()
 
-    def createEmptyConfigFile(self):    
+    def createEmptyConfigFile(self):
+        """Create empty configuration file."""   
         cmd = f'touch {self.src}'                
         os.system(cmd)
 
     def writeUserItemFile(self):
+        """Write configuration file for current item."""
         lines = [line + '\n' for line in self.lines]
         with open(self.src, 'w') as f:
             f.writelines(lines)
 
     def copyConfig(self):
+        """Copy configuration to destination file to update item configuration."""
         cmd = f'sudo cp {self.src} {self.dest}'
         os.system(cmd)
 
     def applyConfig(self):
+        """Apply item configuration."""
         self.writeUserItemFile()
         self.copyConfig()
 
 
     
 class Wifi(Item):
+    """Class handling the wifi configuration. Wifi can be used either to provide connection 
+    to the Raspberrry Pi (for update purposes for instance) or as a ssh connection. 
+
+    Args:
+        Item (Item): Mother class. 
+    """
     def __init__(self, buoy):
         super().__init__(buoy)
         self.name = 'wifi'
@@ -249,7 +281,7 @@ class AccessPoint(Item):
     def __init__(self, buoy):
         super().__init__(buoy)
         self.name = 'wifi'
-        self.dest = '/etc/wpa_supplicant/wpa_supplicant.conf'
+        self.dest = '/etc/hostapd/hostapd.conf'
         self.configFilename = 'userAccessPointConfig.txt'
         self.setSrc()
 

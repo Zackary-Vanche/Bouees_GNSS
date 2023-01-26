@@ -1,0 +1,7 @@
+# Default Wifi Network to connect to when Wifi mode is activated
+ferfezgr!
+ferfezgr!
+# Access Point properties
+ferfezgr!
+ferfezgr!
+# End of configuration

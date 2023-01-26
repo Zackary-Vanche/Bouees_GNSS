@@ -1,0 +1,7 @@
+# Default Wifi Network to connect to when Wifi mode is activated
+vdfdbvfd!
+vdfdbvfd!
+# Access Point properties
+vdfdbvfd!
+vdfdbvfd!
+# End of configuration

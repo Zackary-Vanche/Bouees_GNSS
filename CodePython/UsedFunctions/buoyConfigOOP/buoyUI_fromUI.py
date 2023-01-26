@@ -1,30 +1,67 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QMessageBox, QFileDialog
-from mainWindow import *
+from PyQt5.QtWidgets import QApplication, QMessageBox, QFileDialog, QMainWindow, QPushButton, QLineEdit
+from PyQt5 import uic
+# from mainWindow import *
 from buoy import *
 
-class BuoyUI(QWidget, Ui_MainWindow):
-    def __init__(self, parent=None):
-        QWidget.__init__(self)
-        self.setupUi(parent)
+class BuoyUI(QMainWindow):
+    def __init__(self):
+        super(BuoyUI, self).__init__()
+        
+        # Load the ui file 
+        uic.loadUi(r"C:\Users\33686\Desktop\ENSTAB\Cours\3A\Guerledan\Bouees_GNSS\CodePython\UsedFunctions\buoyConfigOOP\mainWindow.ui", self)
+        # uic.loadUi("mainWindow.ui", self)
 
-        self.warningMsgType = 'Warning'
-        self.warningBoxTitle = 'Warning, invalid entry!'
+        # Define widgets    
+        # QPushButton
+        self.validateConfig_pushButton = self.findChild(QPushButton, "validateConfig_pushButton")
+        self.saveConfig_pushButton = self.findChild(QPushButton, "saveConfig_pushButton")
+        self.transferConfig_pushButton = self.findChild(QPushButton, "transferConfig_pushButton")
+        self.loadConfig_pushButton = self.findChild(QPushButton, "loadConfig_pushButton")
+        # QLineEdit 
+        self.wifi_SSID_lineEdit = self.findChild(QLineEdit, "wifi_SSID_lineEdit")
+        self.wifi_PSK_lineEdit = self.findChild(QLineEdit, "wifi_PSK_lineEdit")
+        self.wifi_ConfirmPSK_lineEdit = self.findChild(QLineEdit, "wifi_ConfirmPSK_lineEdit")
+        self.accessPoint_SSID_lineEdit = self.findChild(QLineEdit, "accessPoint_SSID_lineEdit")
+        self.accessPoint_PWD_lineEdit = self.findChild(QLineEdit, "accessPoint_PWD_lineEdit")
+        self.accessPoint_ConfirmPWD_lineEdit = self.findChild(QLineEdit, "accessPoint_ConfirmPWD_lineEdit")
 
-        self.infoMsgType = 'Information'
-
-        self.buoy = Buoy()
+        # Button control
+        self.validateConfig_pushButton.clicked.connect(self.validateConfig)
         self.saveConfig_pushButton.clicked.connect(self.saveConfig)
-        # self.push
         self.transferConfig_pushButton.clicked.connect(self.transferConfig)
-
+        self.loadConfig_pushButton.clicked.connect(self.loadConfig)
+        
+        # Text edited
+        self.wifi_PSK_lineEdit.textEdited.connect(self.resetWifi_PSKConfirm)
+        self.accessPoint_PWD_lineEdit.textEdited.connect(self.resetAccessPoint_PWDConfirm)
+        
+        # Text editing finished
         self.wifi_SSID_lineEdit.editingFinished.connect(self.checkWifi_SSID)
         self.wifi_PSK_lineEdit.editingFinished.connect(self.checkWifi_PSK)
         self.accessPoint_SSID_lineEdit.editingFinished.connect(self.checkAccessPoint_SSID)
         self.accessPoint_PWD_lineEdit.editingFinished.connect(self.checkAccessPoint_PWD)
 
-        self.configIsSaved = False
+        # Warning messages 
+        self.warningMsgType = 'Warning'
+        self.warningBoxTitle = 'Warning, invalid entry!'
+        self.infoMsgType = 'Information'
 
+        # Buoy object 
+        self.buoy = Buoy()
+        
+        # Boolean to track save status 
+        self.configIsSaved = False
+        
+        # Show app 
+        self.show()
+
+    def resetWifi_PSKConfirm(self):
+        self.wifi_ConfirmPSK_lineEdit.setText('')
+        
+    def resetAccessPoint_PWDConfirm(self):
+        self.accessPoint_ConfirmPWD_lineEdit.setText('')
+        
     def checkWifi_SSID(self):
         ssid = self.wifi_SSID_lineEdit.text()
         txt = ''
@@ -117,24 +154,50 @@ class BuoyUI(QWidget, Ui_MainWindow):
         return isValid
 
     def saveConfig(self):
+        # Save configuration file for later use  
+        configIsValid = self.checkConfig()
+        if configIsValid:
+            self.getConfig()
+            # dest = QtWidgets.QFileDialog.getExistingDirectory(self, 'Select Folder')
+            dest = self.saveFileDialog()
+            self.buoy.writeMainConfig(path=dest)
+            
+    def loadConfig(self):
+        src = self.openFileDialog() # Get filepath
+        self.buoy.readConfig(path=src) # Read config from src file 
+        self.updateContent()
+    
+    def updateContent(self):
+        # Fill UI with parameters loaded into buoy object
+        # WiFi 
+        self.wifi_SSID_lineEdit.setText(self.buoy.wifi.ssid)
+        self.wifi_PSK_lineEdit.setText(self.buoy.wifi.psk)
+        self.wifi_ConfirmPSK_lineEdit.setText(self.buoy.wifi.psk)
+
+        # AccessPoint 
+        self.accessPoint_SSID_lineEdit.setText(self.buoy.accessPoint.ssid)
+        self.accessPoint_PWD_lineEdit.setText(self.buoy.accessPoint.wpa_passphrase)
+        self.accessPoint_ConfirmPWD_lineEdit.setText(self.buoy.accessPoint.wpa_passphrase)
+
+        
+        
+    def validateConfig(self):
+        # Save configuration file 
         configIsValid = self.checkConfig()
         if configIsValid:
             self.getConfig()
             self.buoy.writeMainConfig()
             self.configIsSaved = True
-            # print('Config sent')
-
-    def transferConfig(self):
+            
+    def transferConfig(self):       
         if self.configIsSaved:
-            # dest , check = QFileDialog.getSaveFileName(None, "QFileDialog getSaveFileName() Demo",
-                                            #    "", "All Files (*);;Python Files (*.py);;Text Files (*.txt)")
-            dest = QtWidgets.QFileDialog.getExistingDirectory(self, 'Select Folder')
-            # dest = 
+            dest = QFileDialog.getExistingDirectory(self, 'Select Folder')
             self.buoy.copyMainConfigFileToSDCard(dest)
         else: 
             self.saveConfig()
+            dest = QFileDialog.getExistingDirectory(self, 'Select Folder')
+            self.buoy.copyMainConfigFileToSDCard(dest)
     
-
     def checkConfig(self):
         wifiIsValid = self.checkWifi()
         accessPointIsValid = self.checkAccessPoint()
@@ -165,6 +228,13 @@ class BuoyUI(QWidget, Ui_MainWindow):
         self.buoy.accessPoint.wpa_passphrase = self.accessPoint_PWD_lineEdit.text()
     
     def showMsgBox(self, MsgType, title, text):
+        """Display a custom pop up message box to inform user.
+
+        Args:
+            MsgType (string): Type of message box to display ('Information' or 'Warning').
+            title (string): Message box title.
+            text (string): Text to display in the message box.
+        """
         msg = QMessageBox(self)
         if MsgType == 'Information':
             msg.setIcon(QMessageBox.Information)
@@ -175,10 +245,20 @@ class BuoyUI(QWidget, Ui_MainWindow):
         msg.setWindowTitle(title)
         msg.setStandardButtons(QMessageBox.Ok)
         msg.exec_()
+        
+    def saveFileDialog(self):
+        # options = QFileDialog.Options()
+        # options |= QFileDialog.DontUseNativeDialog
+        # fileName, _ = QFileDialog.getSaveFileName(self,"Save configuration","","Text Files (*.txt)", options=options)
+        fileName, _ = QFileDialog.getSaveFileName(self, "Save configuration", "", "Text Files (*.txt)")
+        return fileName
 
+    def openFileDialog(self):
+            fileName, _ = QFileDialog.getOpenFileName(self, "Load configuration", "", "Text Files (*.txt)")
+            return fileName
+        
+        
 if __name__ == '__main__':
-    app = QtWidgets.QApplication(sys.argv)
-    window = QtWidgets.QMainWindow()
-    ui = BuoyUI(window)
-    window.show()
-    sys.exit(app.exec_())
+    app = QApplication(sys.argv)
+    UIWindow = BuoyUI()
+    app.exec_()
