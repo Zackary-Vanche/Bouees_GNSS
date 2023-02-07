@@ -148,42 +148,30 @@ def read_nmea_ssh(hostname, username, password):
         for sentence in lines:
             
             s_type, sentence = pre_process_sentence(sentence)
+            
             if sentence:
-                msg = pynmea2.parse(sentence, check=True)
+                msg = pynmea2.parse(sentence, check=False)
                 
-                # sentence_type, nmea_sentence = pre_process_sentence(sentence)
 
                 # Check if the line is a GPGGA sentence
-                # if sentence_type == "$GPGGA":
                 if msg.sentence_type == 'GGA':
                     
                     # Save time 
                     times.append(msg.timestamp)
-                    
-                    # parsed_sentence = parse_gpgga_sentence(nmea_sentence)
-                    # x_utm, y_utm, n_utm = proj_to_UTM(np.array(parsed_sentence['lon']), np.array(parsed_sentence['lat']))
-                    x_utm, y_utm, n_utm = proj_to_UTM(np.array(msg.longitude), np.array(msg.latitude))
 
-                    
+                    # Proj to UTM 
+                    x_utm, y_utm, n_utm = proj_to_UTM(np.array(msg.longitude), np.array(msg.latitude))                   
                     x_utms.append(x_utm)
                     y_utms.append(y_utm)
-                    
-                    # lats.append(parsed_sentence['lat'])
-                    # lons.append(parsed_sentence['lon'])
-                    # pdops.append(parsed_sentence['pdop'])
-                    
+                                      
                     # Keep only a constant number of values to plot
                     if len(x_utms) > NMEA_VALUES_TO_PLOT:
                         x_utms.pop(0)
                         y_utms.pop(0)
                         times.pop(0)
-                        # lats.pop(0)
-                        # lons.pop(0)
-                        # pdops.pop(0)
 
                     # Plot the updated values
                     ax_pos.clear()
-                    # ax_pos.scatter(lons, lats, label='lat')
                     ax_pos.scatter(x_utms, y_utms)
                     ax_pos.set_xlabel('E [m]')
                     ax_pos.set_ylabel('N [m]')
@@ -199,12 +187,6 @@ def read_nmea_ssh(hostname, username, password):
                 # Check if the line is a GPGSV sentence
                 elif msg.sentence_type == "GSA":
                         
-                    # parsed_sentence = parse_gpgsa_sentence(nmea_sentence)
-                    
-                    # Append the hdop and vdop to the lists
-                    # hdops.append(parsed_sentence['hdop'])
-                    # vdops.append(parsed_sentence['vdop'])
-                    # pdops.append(parsed_sentence['pdop'])
                     hdops.append(msg.hdop)
                     vdops.append(msg.vdop)
                     pdops.append(msg.pdop)
@@ -235,7 +217,6 @@ def read_nmea_ssh(hostname, username, password):
                 
                 elif msg.sentence_type == "GSV":
                     
-                    # parsed_sentence = parse_gpgsv_sentence(nmea_sentence)
                     snr = np.empty((4))
                     ax_snr.clear()
                     for i in range(1, 4):
@@ -264,10 +245,7 @@ def read_nmea_ssh(hostname, username, password):
             
     client.close()
     plt.show()
-    # print(hdops)
-    # print(vdops)
-    print(lats)
-    print(lons)
+
 
 
 ##################################################################################
