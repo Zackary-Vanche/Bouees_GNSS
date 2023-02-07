@@ -1,11 +1,15 @@
 import time
 import subprocess as sp
+import numpy as np 
+import xml.etree.ElementTree as ET
 
 
 SSID = 'RPiZeroW_Bouee'
 INTERFACE = 'Wi-Fi'
-PROFILE = r'C:\Users\33686\Desktop\ENSTAB\Cours\3A\Guerledan\Bouees_GNSS\CodePython\UsedFunctions\AccessPoint\Wi-Fi-RPiZeroW_Bouee.xml'
-# PROFILE = r'.\Wi-Fi-RPiZeroW_Bouee.xml'
+AP_PROFILE_TEMPLATE = r'C:\Users\33686\Desktop\ENSTAB\Cours\3A\Guerledan\Bouees_GNSS\CodePython\UsedFunctions\AccessPoint\buoy_ap_profile_template.xml'
+AP_PROFILE = r'C:\Users\33686\Desktop\ENSTAB\Cours\3A\Guerledan\Bouees_GNSS\CodePython\UsedFunctions\AccessPoint\buoy_ap_profile.xml'
+
+# AP_PROFILE = r'.\buoy_ap_profile.xml'
 PASSWORD = 'hydro'
 AP_IP = '192.168.4.1'
 
@@ -40,7 +44,8 @@ def APisConnected():
 def connectToAP():
     """ Try to connect to buoy access point if available. """
 
-    cmd = f'netsh wlan add profile filename="{PROFILE}"'
+    start_time = time.time()
+    cmd = f'netsh wlan add profile filename="{AP_PROFILE}"'
     result = sp.run(cmd, shell=True, stdout=sp.DEVNULL)
 
     while not APisConnected():
@@ -58,7 +63,13 @@ def connectToAP():
                 print("Connection to buoy failed !\n")
         else:
             # buoy AP is out of range or not activated
-            print("Buoy AP not available.\n")
+            elapsed_time = np.round(time.time() - start_time, 0)
+            if elapsed_time < 60:
+                print(f"Buoy AP not available,  elapsed time = {elapsed_time}s.\n")
+            elif elapsed_time < 3600:
+                elapsed_time_min = elapsed_time // 60
+                elapsed_time_sec = elapsed_time % 60
+                print(f"Buoy AP not available,  elapsed time = {elapsed_time_min}m, {elapsed_time_sec}s.\n")
 
         time.sleep(5)
 
@@ -115,11 +126,35 @@ def getDataFromAP(dataType='all'):
         dest = r"C:\Users\33686\Desktop\ENSTAB\Cours\3A\Guerledan\CONFIG"
         transferFileFromAP(src, dest)
 
+def set_ap_profile(ssid, pwd):
+    ssid_hex = str_to_hex(ssid)
+        
+    with open(AP_PROFILE_TEMPLATE, 'r') as f:
+        lines = f.readlines()
+        
+        lines[2] = lines[2].replace('ap_name', ssid)
+        lines[5] = lines[5].replace('5250695A65726F575F426F756565', ssid_hex)
+        lines[6] = lines[6].replace('ap_name', ssid)
+        lines[21] = lines[21].replace('ap_pwd', pwd)
+    
+    with open(AP_PROFILE, 'w') as f:
+        f.writelines(lines)     
+   
+def str_to_hex(txt_to_convert):
+    string = txt_to_convert.encode('utf-8')
+    txt_hex = string.hex().upper()
+    return txt_hex
+    
 if __name__=="__main__":
     # pass
 
     # forgetAP()
     # disconnectFromAP()
+    ssid = 'buoy_AccessPoint'
+    pwd = 'password!'
+    set_ap_profile(ssid, pwd)
+    
+    
     connectToAP()
 
     # APisAvailable()
@@ -129,3 +164,4 @@ if __name__=="__main__":
     # transferFileFromAP(src, dest)
 
     # getDataFromAP(dataType='all')
+    

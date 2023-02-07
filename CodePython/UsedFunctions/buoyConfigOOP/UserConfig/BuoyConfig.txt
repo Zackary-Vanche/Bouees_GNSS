@@ -1,7 +1,7 @@
 # Default Wifi Network to connect to when Wifi mode is activated
-vdfdbvfd!
-vdfdbvfd!
+BoueeGNSS
+password!
 # Access Point properties
-vdfdbvfd!
-vdfdbvfd!
+buoyAccessPoint
+password!
 # End of configuration

@@ -15,33 +15,45 @@ class Buoy:
     Main class describing the buoy configuration
     """
 
-    def __init__(self):
-        """
-        Define the default attributes of the class
-        """
+    def __init__(self, parent='GUI'):
+        # parent = 'GUI' or 'RPI'
+        self.parent_is_GUI = (parent == 'GUI') # Bool to differentiate GUI use and RPI use 
+        
         self.runningOSisLinux = self.getOS()
         self.nbItems = 0
 
-        if self.runningOSisLinux:
+        if self.parent_is_GUI:  # Buoy object instanciated by the GUI 
+            
+            # Build path depending on the os 
+            if self.runningOSisLinux:
+                self.configFiles_Path = r'./UserConfig'
+            else:
+                # self.configFiles_Path = r'C:\Users\33686\Desktop\ENSTAB\Cours\3A\Guerledan\Bouees_GNSS\CodePython\UsedFunctions\setBuoyConfig\UserConfig'
+                self.configFiles_Path = r'.\UserConfig'
+                
+            if not os.path.isdir(self.configFiles_Path):
+                os.mkdir(configFiles_Path)
+
+        else:   # Buoy object instanciated by the RPI
             self.configFiles_Path = '/home/pi/BuoyConfig/UserConfig'
-        else:
-            # self.configFiles_Path = r'C:\Users\33686\Desktop\ENSTAB\Cours\3A\Guerledan\Bouees_GNSS\CodePython\UsedFunctions\setBuoyConfig\UserConfig'
-            self.configFiles_Path = r'.\UserConfig'
-            if not os.path.isdir(r'.\UserConfig'):
-                os.mkdir(r'.\UserConfig')
 
 
-        if self.runningOSisLinux:
+        if self.parent_is_GUI:  # Buoy object instanciated by the GUI 
+            
+            # Build path depending on the os 
+            if self.runningOSisLinux:
+                self.configMainFile_Path = r'./UserConfig/BuoyConfig.txt'
+            else:
+                self.configMainFile_Path = r'.\UserConfig\BuoyConfig.txt'
+                
+        else:   # Buoy object instanciated by the RPI
             self.configMainFile_Path = '/boot/BuoyConfig.txt'
-        else:
-            self.configMainFile_Path = r'.\UserConfig\BuoyConfig.txt'
-            # self.configMainFile_Path = r'C:\Users\33686\Desktop\ENSTAB\Cours\3A\Guerledan\Bouees_GNSS\CodePython\UsedFunctions\setBuoyConfig\BuoyConfig.txt'
-
+            
+            
         self.wifi = Wifi(self)
         self.accessPoint = AccessPoint(self)
         
-        self.items = [self.wifi, self.accessPoint]
-
+        # self.items = [self.wifi, self.accessPoint]
         # self.readConfig()
 
     def copyMainConfigFileToSDCard(self, dest):
@@ -104,9 +116,17 @@ class Buoy:
 
     def applyConfig(self):
         """Applies item-related configuration for each item (updates item-related configuration files)."""
-        for item in self.items:
-            item.applyConfig()
 
+        # Wifi / AP
+        cmd = : f'sudo ./setup_wlan_and_AP_modes.sh \
+                    -s {self.wifi.ssid} -p {self.wifi.psk} \
+                    -a {self.accessPoint.ssid} -r {self.accessPoint.wpa_passphrase}'
+        os.system(cmd)
+        
+        # UBlox
+        # TODO: complete with the dedicated python function
+        # cmd = '/home/pi/ScriptPython/'
+        
     def updateConfig(self):
         """Reads and apply new configuration."""
         self.readConfig()
@@ -164,12 +184,9 @@ class Item:
     Inputs :
           buoy: associated buoy configuration
           name: name of the item
-          dest: path of the configuration file to modify 
     Outputs :
         self.buoy: associated buoy configuration
         self.name: name of the item
-        self.dest: path of the configuration file to modify
-        self.src: path of the configuration file to use  
     """
     def __init__(self, buoy):
         """Update the number of items handled by the Buoy object. 
@@ -180,40 +197,6 @@ class Item:
         self.buoy = buoy
         self.buoy.nbItems += 1
         self.name = '' 
-        self.dest = ''
-        self.configFilename = ''
-
-    def setSrc(self):
-        """Path to configuration file."""
-        if self.buoy.runningOSisLinux:
-            self.src = f'{self.buoy.configFiles_Path}/{self.configFilename}'
-        else:
-            self.src = f'{self.buoy.configFiles_Path}\{self.configFilename}'
-
-        # if not os.path.exists(self.src):
-        #     self.createEmptyConfigFile()
-
-    def createEmptyConfigFile(self):
-        """Create empty configuration file."""   
-        cmd = f'touch {self.src}'                
-        os.system(cmd)
-
-    def writeUserItemFile(self):
-        """Write configuration file for current item."""
-        lines = [line + '\n' for line in self.lines]
-        with open(self.src, 'w') as f:
-            f.writelines(lines)
-
-    def copyConfig(self):
-        """Copy configuration to destination file to update item configuration."""
-        cmd = f'sudo cp {self.src} {self.dest}'
-        os.system(cmd)
-
-    def applyConfig(self):
-        """Apply item configuration."""
-        self.writeUserItemFile()
-        self.copyConfig()
-
 
     
 class Wifi(Item):
@@ -226,10 +209,6 @@ class Wifi(Item):
     def __init__(self, buoy):
         super().__init__(buoy)
         self.name = 'wifi'
-        self.dest = '/etc/wpa_supplicant/wpa_supplicant.conf'
-        self.configFilename = 'userWifiConfig.txt'
-        self.setSrc()
-
         self.content = ['BoueesGNSS', '12345689']
 
         self.ssid_MinLength = 1
@@ -238,16 +217,6 @@ class Wifi(Item):
         self.psk_MaxLength = 20
         self.psk_RequiredCharacter = "!#$%&'()*+,-./:;<=>?@[\]^_{|}~"
                
-    
-    def setLines(self):
-        self.lines = ['ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev', 
-                'update_config=1', 
-                'country=FR', 
-                'network={', 
-                f'ssid="{self.ssid}"', 
-                f'psk="{self.psk}"',
-                '}']
-
     @property
     def ssid(self):
         return self._ssid
@@ -255,7 +224,6 @@ class Wifi(Item):
     @ssid.setter
     def ssid(self, new_ssid):
         self._ssid = new_ssid
-        self.setLines()
 
     @property
     def psk(self):
@@ -264,7 +232,6 @@ class Wifi(Item):
     @psk.setter
     def psk(self, new_psk):
         self._psk = new_psk
-        self.setLines()
 
     @property
     def content(self):
@@ -275,35 +242,19 @@ class Wifi(Item):
         self._ssid = new_content[0]
         self._psk = new_content[1]
         self._content = new_content
-        self.setLines()
+
 
 class AccessPoint(Item):
     def __init__(self, buoy):
         super().__init__(buoy)
-        self.name = 'wifi'
-        self.dest = '/etc/hostapd/hostapd.conf'
-        self.configFilename = 'userAccessPointConfig.txt'
-        self.setSrc()
-
-        self.content = ['RPiZeroW_Bouee', 'MyPassword']
+        self.name = 'accessPoint'
+        self.content = ['RPiZeroW_Bouee', 'MyPassword']     # Default
 
         self.ssid_MinLength = 1
         self.ssid_MaxLength = 50
         self.pwd_MinLength = 6
         self.pwd_MaxLength = 20
         self.pwd_RequiredCharacter = "!#$%&'()*+,-./:;<=>?@[\]^_{|}~"
-
-    def setLines(self):
-        self.lines = ['country_code=FR', 
-                'interface=wlan0',
-                f'ssid={self.ssid}', 
-                'channel=9',
-                'auth_algs=1',
-                'wpa=2', 
-                f'wpa_passphrase={self.wpa_passphrase}',
-                'wpa_key_mgmt=WPA-PSK',
-                'wpa_pairwise=TKIP CCMP', 
-                'rsn_pairwise=CCMP']
 
     @property
     def ssid(self):
@@ -312,8 +263,7 @@ class AccessPoint(Item):
     @ssid.setter
     def ssid(self, new_ssid):
         self._ssid = new_ssid
-        self.setLines()
-
+        
     @property
     def wpa_passphrase(self):
         return self._wpa_passphrase
@@ -321,7 +271,6 @@ class AccessPoint(Item):
     @wpa_passphrase.setter
     def wpa_passphrase(self, new_wpa_passphrase):
         self._wpa_passphrase = new_wpa_passphrase
-        self.setLines()
 
     @property
     def content(self):
@@ -332,6 +281,5 @@ class AccessPoint(Item):
         self._ssid = new_content[0]
         self._wpa_passphrase = new_content[1]
         self._content = new_content
-        self.setLines()
 
 

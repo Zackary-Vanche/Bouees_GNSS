@@ -194,7 +194,7 @@ class BuoyUI(QMainWindow):
             dest = QFileDialog.getExistingDirectory(self, 'Select Folder')
             self.buoy.copyMainConfigFileToSDCard(dest)
         else: 
-            self.saveConfig()
+            self.validateConfig()
             dest = QFileDialog.getExistingDirectory(self, 'Select Folder')
             self.buoy.copyMainConfigFileToSDCard(dest)
     

@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
-	<name>RPiZeroW_Bouee</name>
+	<name>ap_name</name>
 	<SSIDConfig>
 		<SSID>
 			<hex>5250695A65726F575F426F756565</hex>
-			<name>RPiZeroW_Bouee</name>
+			<name>ap_name</name>
 		</SSID>
 	</SSIDConfig>
 	<connectionType>ESS</connectionType>
@@ -19,7 +19,7 @@
 			<sharedKey>
 				<keyType>passPhrase</keyType>
 				<protected>false</protected>
-				<keyMaterial>MyPassword</keyMaterial>
+				<keyMaterial>ap_pwd</keyMaterial>
 			</sharedKey>
 		</security>
 	</MSM>

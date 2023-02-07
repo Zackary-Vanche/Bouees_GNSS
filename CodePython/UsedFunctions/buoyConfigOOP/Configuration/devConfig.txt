@@ -1,7 +1,7 @@
 # Default Wifi Network to connect to when Wifi mode is activated
-WIFI_devConfig
+BoueeGNSS
 password!
 # Access Point properties
-AccessPoint_devConfig
+buoyAccessPoint
 password!
 # End of configuration
