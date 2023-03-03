@@ -16,3 +16,6 @@ Ubx2ConcatRnx prend en entrée :
   Ubx2Rnx : convertit les UBX extraits en RNX (Chaque RNX créé correspond à un UBX)
   ConcatRnx : concatène les fichiers RNX. On obtient un fichier RNX avec toutes les observations, ainsi que des fichiers journaliers.s
 
+Pour Pride-PPP(vous devriez avoir le dossier Pride-PPP-Master)
+IMPORTANT: le contenu du fichier *.atx fourni doit être incorporé aux listes d'antennes (*.atx) du dossier Pride-PPP-Master/tables afin de comporter l'antenne utilisée
+           le contenue du fichier ocean_bouée doit être incorporé au fichier océan du dossier Pride-PPP-Master/tables afin d'utiliser la surcharge océanique.
