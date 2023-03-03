@@ -1,0 +1,20 @@
+# Default Wifi Network to connect to when Wifi mode is activated
+BoueeGNSS
+password!
+# Access Point properties
+buoyAccessPoint
+password!
+# GNSS Receiver properties
+1
+0
+1
+1
+0
+1
+1
+# Meteo Sensor properties
+0
+1
+1
+5
+# End of configuration
