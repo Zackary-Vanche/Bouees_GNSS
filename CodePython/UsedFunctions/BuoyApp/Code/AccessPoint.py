@@ -16,10 +16,10 @@ import platform
 import time
 import numpy as np
 
-AP_PROFILE_TEMPLATE = r'C:\Users\33686\Desktop\ENSTAB\Cours\3A\Guerledan\Bouees_GNSS\CodePython\UsedFunctions\BuoyApp\AccessPoint\buoy_ap_profile_template.xml'
-AP_PROFILE = r'C:\Users\33686\Desktop\ENSTAB\Cours\3A\Guerledan\Bouees_GNSS\CodePython\UsedFunctions\BuoyApp\AccessPoint\buoy_ap_profile.xml'
-# AP_PROFILE_TEMPLATE = r'.\AccessPoint\buoy_ap_profile_template.xml'
-# AP_PROFILE = r'.\AccessPoint\buoy_ap_profile.xml'
+# AP_PROFILE_TEMPLATE = r'C:\Users\33686\Desktop\ENSTAB\Cours\3A\Guerledan\Bouees_GNSS\CodePython\UsedFunctions\BuoyApp\AccessPoint\buoy_ap_profile_template.xml'
+# AP_PROFILE = r'C:\Users\33686\Desktop\ENSTAB\Cours\3A\Guerledan\Bouees_GNSS\CodePython\UsedFunctions\BuoyApp\AccessPoint\buoy_ap_profile.xml'
+AP_PROFILE_TEMPLATE = r'.\AccessPoint\buoy_ap_profile_template.xml'
+AP_PROFILE = r'.\AccessPoint\buoy_ap_profile.xml'
 
 # AP_PROFILE = r'.\buoy_ap_profile.xml'
 PASSWORD = 'hydro'

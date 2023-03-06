@@ -45,8 +45,8 @@ class APConnectionUI(QMainWindow):
         super(APConnectionUI, self).__init__()
         
         # Load the ui file 
-        uic.loadUi(r"C:\Users\33686\Desktop\ENSTAB\Cours\3A\Guerledan\Bouees_GNSS\CodePython\UsedFunctions\buoyApp\UI\AP_ConnectionDialogWindow.ui", self)
-        # uic.loadUi(r".\UI\AP_ConnectionDialogWindow.ui", self)
+        # uic.loadUi(r"C:\Users\33686\Desktop\ENSTAB\Cours\3A\Guerledan\Bouees_GNSS\CodePython\UsedFunctions\buoyApp\UI\AP_ConnectionDialogWindow.ui", self)
+        uic.loadUi(r".\UI\AP_ConnectionDialogWindow.ui", self)
 
         self.mainUI = mainUI
         
@@ -147,8 +147,8 @@ class BuoyUI(QMainWindow):
         super(BuoyUI, self).__init__()
         
         # Load the ui file 
-        uic.loadUi(r"C:\Users\33686\Desktop\ENSTAB\Cours\3A\Guerledan\Bouees_GNSS\CodePython\UsedFunctions\buoyApp\UI\buoyApp.ui", self)
-        # uic.loadUi(r".\UI\buoyApp.ui", self)
+        # uic.loadUi(r"C:\Users\33686\Desktop\ENSTAB\Cours\3A\Guerledan\Bouees_GNSS\CodePython\UsedFunctions\buoyApp\UI\buoyApp.ui", self)
+        uic.loadUi(r".\UI\buoyApp.ui", self)
 
         ################################################
         #######        Widgets definition        #######
