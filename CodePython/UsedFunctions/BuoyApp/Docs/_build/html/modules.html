@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Code &mdash; GNSSBuoy 06/03/2023 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="AccessPoint module" href="AccessPoint.html" />
+    <link rel="prev" title="Welcome to GNSSBuoy’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            GNSSBuoy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Code</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="AccessPoint.html">AccessPoint module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="buoy.html">buoy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="buoyApp.html">buoyApp module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deployUserConfig.html">deployUserConfig module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geodesy.html">geodesy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raw_data_in_real_time.html">raw_data_in_real_time module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">GNSSBuoy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Code</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/modules.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="code">
+<h1>Code<a class="headerlink" href="#code" title="Permalink to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="AccessPoint.html">AccessPoint module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="AccessPoint.html#AccessPoint.APisAvailable"><code class="docutils literal notranslate"><span class="pre">APisAvailable()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="AccessPoint.html#AccessPoint.APisConnected"><code class="docutils literal notranslate"><span class="pre">APisConnected()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="AccessPoint.html#AccessPoint.add_accessPoint_profile"><code class="docutils literal notranslate"><span class="pre">add_accessPoint_profile()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="AccessPoint.html#AccessPoint.connectToAP"><code class="docutils literal notranslate"><span class="pre">connectToAP()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="AccessPoint.html#AccessPoint.disconnectFromAP"><code class="docutils literal notranslate"><span class="pre">disconnectFromAP()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="AccessPoint.html#AccessPoint.forgetAP"><code class="docutils literal notranslate"><span class="pre">forgetAP()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="AccessPoint.html#AccessPoint.getDataFromAP"><code class="docutils literal notranslate"><span class="pre">getDataFromAP()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="AccessPoint.html#AccessPoint.set_ap_profile"><code class="docutils literal notranslate"><span class="pre">set_ap_profile()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="AccessPoint.html#AccessPoint.str_to_hex"><code class="docutils literal notranslate"><span class="pre">str_to_hex()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="AccessPoint.html#AccessPoint.transferFileFromAP"><code class="docutils literal notranslate"><span class="pre">transferFileFromAP()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="buoy.html">buoy module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="buoy.html#buoy.AccessPoint"><code class="docutils literal notranslate"><span class="pre">AccessPoint</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="buoy.html#buoy.AccessPoint.content"><code class="docutils literal notranslate"><span class="pre">AccessPoint.content</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoy.html#buoy.AccessPoint.ssid"><code class="docutils literal notranslate"><span class="pre">AccessPoint.ssid</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoy.html#buoy.AccessPoint.wpa_passphrase"><code class="docutils literal notranslate"><span class="pre">AccessPoint.wpa_passphrase</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="buoy.html#buoy.Buoy"><code class="docutils literal notranslate"><span class="pre">Buoy</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="buoy.html#buoy.Buoy.applyConfig"><code class="docutils literal notranslate"><span class="pre">Buoy.applyConfig()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoy.html#buoy.Buoy.changeUserConfigDeployementStatus"><code class="docutils literal notranslate"><span class="pre">Buoy.changeUserConfigDeployementStatus()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoy.html#buoy.Buoy.copyMainConfigFileToSDCard"><code class="docutils literal notranslate"><span class="pre">Buoy.copyMainConfigFileToSDCard()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoy.html#buoy.Buoy.getBaliseIdx"><code class="docutils literal notranslate"><span class="pre">Buoy.getBaliseIdx()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoy.html#buoy.Buoy.getContent"><code class="docutils literal notranslate"><span class="pre">Buoy.getContent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoy.html#buoy.Buoy.getLines"><code class="docutils literal notranslate"><span class="pre">Buoy.getLines()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoy.html#buoy.Buoy.getOS"><code class="docutils literal notranslate"><span class="pre">Buoy.getOS()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoy.html#buoy.Buoy.readConfig"><code class="docutils literal notranslate"><span class="pre">Buoy.readConfig()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoy.html#buoy.Buoy.updateConfig"><code class="docutils literal notranslate"><span class="pre">Buoy.updateConfig()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoy.html#buoy.Buoy.writeMainConfig"><code class="docutils literal notranslate"><span class="pre">Buoy.writeMainConfig()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="buoy.html#buoy.GNSSReceiver"><code class="docutils literal notranslate"><span class="pre">GNSSReceiver</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="buoy.html#buoy.GNSSReceiver.acquisitionPeriod"><code class="docutils literal notranslate"><span class="pre">GNSSReceiver.acquisitionPeriod</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoy.html#buoy.GNSSReceiver.beidou"><code class="docutils literal notranslate"><span class="pre">GNSSReceiver.beidou</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoy.html#buoy.GNSSReceiver.content"><code class="docutils literal notranslate"><span class="pre">GNSSReceiver.content</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoy.html#buoy.GNSSReceiver.galileo"><code class="docutils literal notranslate"><span class="pre">GNSSReceiver.galileo</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoy.html#buoy.GNSSReceiver.glonass"><code class="docutils literal notranslate"><span class="pre">GNSSReceiver.glonass</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoy.html#buoy.GNSSReceiver.gps"><code class="docutils literal notranslate"><span class="pre">GNSSReceiver.gps</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoy.html#buoy.GNSSReceiver.qzss"><code class="docutils literal notranslate"><span class="pre">GNSSReceiver.qzss</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoy.html#buoy.GNSSReceiver.sbas"><code class="docutils literal notranslate"><span class="pre">GNSSReceiver.sbas</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="buoy.html#buoy.Item"><code class="docutils literal notranslate"><span class="pre">Item</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="buoy.html#buoy.MeteoSensor"><code class="docutils literal notranslate"><span class="pre">MeteoSensor</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="buoy.html#buoy.MeteoSensor.acquisitionPeriod"><code class="docutils literal notranslate"><span class="pre">MeteoSensor.acquisitionPeriod</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoy.html#buoy.MeteoSensor.content"><code class="docutils literal notranslate"><span class="pre">MeteoSensor.content</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoy.html#buoy.MeteoSensor.humidity"><code class="docutils literal notranslate"><span class="pre">MeteoSensor.humidity</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoy.html#buoy.MeteoSensor.pressure"><code class="docutils literal notranslate"><span class="pre">MeteoSensor.pressure</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoy.html#buoy.MeteoSensor.temperature"><code class="docutils literal notranslate"><span class="pre">MeteoSensor.temperature</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="buoy.html#buoy.Wifi"><code class="docutils literal notranslate"><span class="pre">Wifi</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="buoy.html#buoy.Wifi.content"><code class="docutils literal notranslate"><span class="pre">Wifi.content</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoy.html#buoy.Wifi.psk"><code class="docutils literal notranslate"><span class="pre">Wifi.psk</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoy.html#buoy.Wifi.ssid"><code class="docutils literal notranslate"><span class="pre">Wifi.ssid</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="buoyApp.html">buoyApp module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="buoyApp.html#buoyApp.APConnectionUI"><code class="docutils literal notranslate"><span class="pre">APConnectionUI</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.APConnectionUI.connectToAP"><code class="docutils literal notranslate"><span class="pre">APConnectionUI.connectToAP()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.APConnectionUI.loadConfig"><code class="docutils literal notranslate"><span class="pre">APConnectionUI.loadConfig()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.APConnectionUI.openFileDialog"><code class="docutils literal notranslate"><span class="pre">APConnectionUI.openFileDialog()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.APConnectionUI.updateContent"><code class="docutils literal notranslate"><span class="pre">APConnectionUI.updateContent()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI"><code class="docutils literal notranslate"><span class="pre">BuoyUI</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.checkAccessPoint"><code class="docutils literal notranslate"><span class="pre">BuoyUI.checkAccessPoint()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.checkAccessPoint_PWD"><code class="docutils literal notranslate"><span class="pre">BuoyUI.checkAccessPoint_PWD()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.checkAccessPoint_SSID"><code class="docutils literal notranslate"><span class="pre">BuoyUI.checkAccessPoint_SSID()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.checkConfig"><code class="docutils literal notranslate"><span class="pre">BuoyUI.checkConfig()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.checkWifi"><code class="docutils literal notranslate"><span class="pre">BuoyUI.checkWifi()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.checkWifi_PSK"><code class="docutils literal notranslate"><span class="pre">BuoyUI.checkWifi_PSK()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.checkWifi_SSID"><code class="docutils literal notranslate"><span class="pre">BuoyUI.checkWifi_SSID()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.closeEvent"><code class="docutils literal notranslate"><span class="pre">BuoyUI.closeEvent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.confirmAccessPointPWD"><code class="docutils literal notranslate"><span class="pre">BuoyUI.confirmAccessPointPWD()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.confirmWifiPSK"><code class="docutils literal notranslate"><span class="pre">BuoyUI.confirmWifiPSK()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.getAccessPointConfig"><code class="docutils literal notranslate"><span class="pre">BuoyUI.getAccessPointConfig()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.getConfig"><code class="docutils literal notranslate"><span class="pre">BuoyUI.getConfig()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.getGNSSConfig"><code class="docutils literal notranslate"><span class="pre">BuoyUI.getGNSSConfig()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.getMETEOConfig"><code class="docutils literal notranslate"><span class="pre">BuoyUI.getMETEOConfig()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.getMeteoRate"><code class="docutils literal notranslate"><span class="pre">BuoyUI.getMeteoRate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.getUbloxRate"><code class="docutils literal notranslate"><span class="pre">BuoyUI.getUbloxRate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.getWifiConfig"><code class="docutils literal notranslate"><span class="pre">BuoyUI.getWifiConfig()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.get_gnss_data"><code class="docutils literal notranslate"><span class="pre">BuoyUI.get_gnss_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.get_meteo_data"><code class="docutils literal notranslate"><span class="pre">BuoyUI.get_meteo_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.loadConfig"><code class="docutils literal notranslate"><span class="pre">BuoyUI.loadConfig()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.openFileDialog"><code class="docutils literal notranslate"><span class="pre">BuoyUI.openFileDialog()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.plot_live_GNSS_data"><code class="docutils literal notranslate"><span class="pre">BuoyUI.plot_live_GNSS_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.plot_live_METEO_data"><code class="docutils literal notranslate"><span class="pre">BuoyUI.plot_live_METEO_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.resetAccessPoint_PWDConfirm"><code class="docutils literal notranslate"><span class="pre">BuoyUI.resetAccessPoint_PWDConfirm()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.resetWifi_PSKConfirm"><code class="docutils literal notranslate"><span class="pre">BuoyUI.resetWifi_PSKConfirm()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.saveConfig"><code class="docutils literal notranslate"><span class="pre">BuoyUI.saveConfig()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.saveFileDialog"><code class="docutils literal notranslate"><span class="pre">BuoyUI.saveFileDialog()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.showMsgBox"><code class="docutils literal notranslate"><span class="pre">BuoyUI.showMsgBox()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.show_connection_window"><code class="docutils literal notranslate"><span class="pre">BuoyUI.show_connection_window()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.stop_gnssLive"><code class="docutils literal notranslate"><span class="pre">BuoyUI.stop_gnssLive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.stop_meteoLive"><code class="docutils literal notranslate"><span class="pre">BuoyUI.stop_meteoLive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.transferConfig"><code class="docutils literal notranslate"><span class="pre">BuoyUI.transferConfig()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.updateContent"><code class="docutils literal notranslate"><span class="pre">BuoyUI.updateContent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.update_GNSS_plot"><code class="docutils literal notranslate"><span class="pre">BuoyUI.update_GNSS_plot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.update_METEO_plot"><code class="docutils literal notranslate"><span class="pre">BuoyUI.update_METEO_plot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.update_status"><code class="docutils literal notranslate"><span class="pre">BuoyUI.update_status()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="buoyApp.html#buoyApp.BuoyUI.validateConfig"><code class="docutils literal notranslate"><span class="pre">BuoyUI.validateConfig()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="buoyApp.html#buoyApp.MplCanvas"><code class="docutils literal notranslate"><span class="pre">MplCanvas</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="deployUserConfig.html">deployUserConfig module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="deployUserConfig.html#deployUserConfig.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="geodesy.html">geodesy module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="geodesy.html#geodesy.L93_geod2map"><code class="docutils literal notranslate"><span class="pre">L93_geod2map()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geodesy.html#geodesy.apply_vel"><code class="docutils literal notranslate"><span class="pre">apply_vel()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geodesy.html#geodesy.beta"><code class="docutils literal notranslate"><span class="pre">beta()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geodesy.html#geodesy.convert_angle_to_0_2pi_interval"><code class="docutils literal notranslate"><span class="pre">convert_angle_to_0_2pi_interval()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geodesy.html#geodesy.convert_deg"><code class="docutils literal notranslate"><span class="pre">convert_deg()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geodesy.html#geodesy.convert_rad"><code class="docutils literal notranslate"><span class="pre">convert_rad()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geodesy.html#geodesy.ecef2geod"><code class="docutils literal notranslate"><span class="pre">ecef2geod()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geodesy.html#geodesy.enu2geod"><code class="docutils literal notranslate"><span class="pre">enu2geod()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geodesy.html#geodesy.geod2ecef"><code class="docutils literal notranslate"><span class="pre">geod2ecef()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geodesy.html#geodesy.geod2enu"><code class="docutils literal notranslate"><span class="pre">geod2enu()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geodesy.html#geodesy.geod2iso"><code class="docutils literal notranslate"><span class="pre">geod2iso()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geodesy.html#geodesy.getUTM_zone"><code class="docutils literal notranslate"><span class="pre">getUTM_zone()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geodesy.html#geodesy.get_similitude"><code class="docutils literal notranslate"><span class="pre">get_similitude()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geodesy.html#geodesy.get_vel"><code class="docutils literal notranslate"><span class="pre">get_vel()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geodesy.html#geodesy.itrf2rgf"><code class="docutils literal notranslate"><span class="pre">itrf2rgf()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geodesy.html#geodesy.utm_gamma"><code class="docutils literal notranslate"><span class="pre">utm_gamma()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geodesy.html#geodesy.utm_geod2map"><code class="docutils literal notranslate"><span class="pre">utm_geod2map()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geodesy.html#geodesy.utm_geod2mapOpti"><code class="docutils literal notranslate"><span class="pre">utm_geod2mapOpti()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geodesy.html#geodesy.utm_map2geod"><code class="docutils literal notranslate"><span class="pre">utm_map2geod()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geodesy.html#geodesy.utm_mu"><code class="docutils literal notranslate"><span class="pre">utm_mu()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="raw_data_in_real_time.html">raw_data_in_real_time module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="raw_data_in_real_time.html#raw_data_in_real_time.check_sentence_is_nmea_sentence"><code class="docutils literal notranslate"><span class="pre">check_sentence_is_nmea_sentence()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="raw_data_in_real_time.html#raw_data_in_real_time.compute_nmea_checksum"><code class="docutils literal notranslate"><span class="pre">compute_nmea_checksum()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="raw_data_in_real_time.html#raw_data_in_real_time.init_ssh_client"><code class="docutils literal notranslate"><span class="pre">init_ssh_client()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="raw_data_in_real_time.html#raw_data_in_real_time.pre_process_sentence"><code class="docutils literal notranslate"><span class="pre">pre_process_sentence()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="raw_data_in_real_time.html#raw_data_in_real_time.proj_to_UTM"><code class="docutils literal notranslate"><span class="pre">proj_to_UTM()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="raw_data_in_real_time.html#raw_data_in_real_time.remove_unneeded_character_from_sentence"><code class="docutils literal notranslate"><span class="pre">remove_unneeded_character_from_sentence()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to GNSSBuoy’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="AccessPoint.html" class="btn btn-neutral float-right" title="AccessPoint module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Baptiste Menetrier.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>raw_data_in_real_time &mdash; GNSSBuoy 06/03/2023 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            GNSSBuoy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Code</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GNSSBuoy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">raw_data_in_real_time</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for raw_data_in_real_time</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#----------------------------------------------------------------------------</span>
+<span class="c1"># Created By  : Menetrier Baptiste</span>
+<span class="c1"># Created Date: 04/03/2023</span>
+<span class="c1"># version =&#39;1.0&#39;</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Package with basic functions for real time data visualisation. </span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Imports</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="kn">import</span> <span class="nn">paramiko</span>  <span class="c1"># SSH package</span>
+<span class="kn">from</span> <span class="nn">geodesy</span> <span class="kn">import</span> <span class="n">getUTM_zone</span><span class="p">,</span> <span class="n">utm_geod2map</span> <span class="c1"># Geodesy functions</span>
+
+
+<span class="c1">##################stdin, stdout, stderr = client.exec_command(com)###########################################################</span>
+<span class="c1">###########               Initialise ssh connection               ########### </span>
+<span class="c1">#############################################################################</span>
+<div class="viewcode-block" id="init_ssh_client"><a class="viewcode-back" href="../raw_data_in_real_time.html#raw_data_in_real_time.init_ssh_client">[docs]</a><span class="k">def</span> <span class="nf">init_ssh_client</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+    <span class="c1"># Initialize an SSH client</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">SSHClient</span><span class="p">()</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">set_missing_host_key_policy</span><span class="p">(</span><span class="n">paramiko</span><span class="o">.</span><span class="n">AutoAddPolicy</span><span class="p">())</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">)</span>
+
+    <span class="c1"># Open a channel to run the command</span>
+    <span class="n">channel</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">invoke_shell</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">client</span><span class="p">,</span> <span class="n">channel</span> </div>
+
+
+<span class="c1">#############################################################################</span>
+<span class="c1">###########                        Geodesy                        ###########</span>
+<span class="c1">#############################################################################</span>
+
+<div class="viewcode-block" id="proj_to_UTM"><a class="viewcode-back" href="../raw_data_in_real_time.html#raw_data_in_real_time.proj_to_UTM">[docs]</a><span class="k">def</span> <span class="nf">proj_to_UTM</span><span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">getUTM_zone</span><span class="p">(</span><span class="n">lon</span><span class="p">)</span>
+    <span class="n">x_utm</span><span class="p">,</span> <span class="n">y_utm</span> <span class="o">=</span> <span class="n">utm_geod2map</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x_utm</span><span class="p">,</span> <span class="n">y_utm</span><span class="p">,</span> <span class="n">n</span></div>
+
+<span class="c1">#############################################################################</span>
+<span class="c1">###########         Assert NMEA sentences are valid               ###########</span>
+<span class="c1">#############################################################################</span>
+
+<div class="viewcode-block" id="pre_process_sentence"><a class="viewcode-back" href="../raw_data_in_real_time.html#raw_data_in_real_time.pre_process_sentence">[docs]</a><span class="k">def</span> <span class="nf">pre_process_sentence</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    
+    <span class="c1"># Assert sentence is an NMEA sentence</span>
+    <span class="k">if</span> <span class="n">check_sentence_is_nmea_sentence</span><span class="p">(</span><span class="n">sentence</span><span class="p">):</span>
+        
+        <span class="n">nmea_sentence</span> <span class="o">=</span> <span class="n">remove_unneeded_character_from_sentence</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
+        
+        <span class="c1"># Assert sentence is valid</span>
+        <span class="n">computed_checksum</span> <span class="o">=</span> <span class="n">compute_nmea_checksum</span><span class="p">(</span><span class="n">nmea_sentence</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span>
+        <span class="n">received_checksum</span> <span class="o">=</span> <span class="n">nmea_sentence</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
+        
+        <span class="k">if</span> <span class="n">computed_checksum</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="n">received_checksum</span><span class="o">.</span><span class="n">upper</span><span class="p">():</span>
+            
+            <span class="n">sentence_type</span> <span class="o">=</span> <span class="n">nmea_sentence</span><span class="p">[:</span><span class="mi">6</span><span class="p">]</span>   <span class="c1"># Get type of sentence </span>
+            <span class="c1"># nmea_sentence = nmea_sentence[:-3]  # Get rid of checksum </span>
+            
+            <span class="k">return</span> <span class="n">sentence_type</span><span class="p">,</span> <span class="n">nmea_sentence</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Checksum error&#39;</span><span class="p">)</span>
+                
+            <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+        
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Not a valid nmea sentence&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span></div>
+    
+    
+<div class="viewcode-block" id="check_sentence_is_nmea_sentence"><a class="viewcode-back" href="../raw_data_in_real_time.html#raw_data_in_real_time.check_sentence_is_nmea_sentence">[docs]</a><span class="k">def</span> <span class="nf">check_sentence_is_nmea_sentence</span><span class="p">(</span><span class="n">sentence</span><span class="p">):</span>
+    <span class="n">available_nmea_sentences</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;$GPGGA&quot;</span><span class="p">,</span> <span class="s2">&quot;$GPGLL&quot;</span><span class="p">,</span> <span class="s2">&quot;$GPGSA&quot;</span><span class="p">,</span> <span class="s2">&quot;$GPGSV&quot;</span><span class="p">,</span> <span class="s2">&quot;$GPVTG&quot;</span><span class="p">,</span> <span class="s2">&quot;$GPRMC&quot;</span><span class="p">,</span> <span class="s1">&#39;$GPDZDA&#39;</span><span class="p">]</span>
+    <span class="n">is_nmea_sentence</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">for</span> <span class="n">nmea_sentence</span> <span class="ow">in</span> <span class="n">available_nmea_sentences</span><span class="p">:</span>
+        <span class="n">is_nmea_sentence</span> <span class="o">=</span> <span class="n">is_nmea_sentence</span> <span class="ow">or</span> <span class="n">sentence</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">nmea_sentence</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">is_nmea_sentence</span></div>
+
+<div class="viewcode-block" id="remove_unneeded_character_from_sentence"><a class="viewcode-back" href="../raw_data_in_real_time.html#raw_data_in_real_time.remove_unneeded_character_from_sentence">[docs]</a><span class="k">def</span> <span class="nf">remove_unneeded_character_from_sentence</span><span class="p">(</span><span class="n">sentence</span><span class="p">):</span>
+    <span class="c1"># Split the sentence into a list of characters</span>
+    <span class="n">char_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
+    <span class="c1"># Remove extra &#39;\r&#39; characters</span>
+    <span class="k">while</span> <span class="n">char_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">:</span>
+        <span class="n">char_list</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        
+    <span class="k">while</span> <span class="n">char_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">:</span>
+        <span class="n">char_list</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        
+    <span class="c1"># Join the characters back into a sentence string</span>
+    <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">char_list</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="compute_nmea_checksum"><a class="viewcode-back" href="../raw_data_in_real_time.html#raw_data_in_real_time.compute_nmea_checksum">[docs]</a><span class="k">def</span> <span class="nf">compute_nmea_checksum</span><span class="p">(</span><span class="n">sentence</span><span class="p">):</span>
+    <span class="c1"># Convert the sentence into a list of hexadecimal values</span>
+    <span class="n">hex_list</span> <span class="o">=</span> <span class="p">[</span><span class="nb">format</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">sentence</span><span class="p">]</span>
+    <span class="c1"># XOR the values in the list</span>
+    <span class="n">checksum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">hex_list</span><span class="p">:</span>
+        <span class="n">checksum</span> <span class="o">^=</span> <span class="nb">int</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+    <span class="c1"># Return the checksum as a 2-digit hexadecimal string</span>
+    <span class="k">return</span> <span class="nb">format</span><span class="p">(</span><span class="n">checksum</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span></div>
+
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">hostname</span> <span class="o">=</span> <span class="s1">&#39;192.168.4.1&#39;</span>
+    <span class="n">username</span> <span class="o">=</span> <span class="s1">&#39;pi&#39;</span>
+    <span class="n">password</span> <span class="o">=</span> <span class="s1">&#39;hydro&#39;</span>
+    
+    <span class="n">METEO_VALUES_TO_PLOT</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="n">NMEA_VALUES_TO_PLOT</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">DATE_ROTATION</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="n">NB_DATES_TO_DISPLAY</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">POS_ON_MAP</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1"># Plot lon lat on map </span>
+    <span class="c1"># read_nmea_ssh(hostname, username, password)</span>
+    <span class="c1"># read_meteo_ssh(hostname, username, password)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Baptiste Menetrier.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

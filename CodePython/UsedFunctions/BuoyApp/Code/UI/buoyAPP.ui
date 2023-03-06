@@ -1,0 +1,715 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>buoyApp</class>
+ <widget class="QMainWindow" name="buoyApp">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1429</width>
+    <height>930</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>buoyApp</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout_3">
+    <item row="0" column="0">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="palette">
+       <palette>
+        <active>
+         <colorrole role="Text">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>0</red>
+            <green>0</green>
+            <blue>0</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </active>
+        <inactive>
+         <colorrole role="Text">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>0</red>
+            <green>0</green>
+            <blue>0</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </inactive>
+        <disabled>
+         <colorrole role="Text">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>120</red>
+            <green>120</green>
+            <blue>120</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </disabled>
+       </palette>
+      </property>
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
+      <widget class="QWidget" name="configuration_tab">
+       <attribute name="icon">
+        <iconset>
+         <normaloff>../../../../../../../../../../../.designer/backup/AppIcons/icons8-gear-64.png</normaloff>../../../../../../../../../../../.designer/backup/AppIcons/icons8-gear-64.png</iconset>
+       </attribute>
+       <attribute name="title">
+        <string>Buoy configuration</string>
+       </attribute>
+       <widget class="QWidget" name="layoutWidget">
+        <property name="geometry">
+         <rect>
+          <x>23</x>
+          <y>23</y>
+          <width>1361</width>
+          <height>801</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="global_VLayout">
+         <property name="spacing">
+          <number>60</number>
+         </property>
+         <item>
+          <layout class="QVBoxLayout" name="connectivity_VLayout">
+           <property name="spacing">
+            <number>20</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="connectivity_label">
+             <property name="font">
+              <font>
+               <pointsize>26</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Connectivity settings</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="connectivity_HLayout">
+             <property name="spacing">
+              <number>30</number>
+             </property>
+             <item>
+              <layout class="QVBoxLayout" name="wifi_VLayout">
+               <property name="spacing">
+                <number>10</number>
+               </property>
+               <item>
+                <widget class="QLabel" name="wifi_TITLE_label">
+                 <property name="font">
+                  <font>
+                   <pointsize>20</pointsize>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>Wifi settings</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="wifi_SSID_HLayout">
+                 <property name="spacing">
+                  <number>20</number>
+                 </property>
+                 <item>
+                  <widget class="QLabel" name="wifi_SSID_label">
+                   <property name="font">
+                    <font>
+                     <pointsize>12</pointsize>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>SSID:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="wifi_SSID_lineEdit"/>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="wifi_PSK_HLayout">
+                 <property name="spacing">
+                  <number>20</number>
+                 </property>
+                 <item>
+                  <widget class="QLabel" name="wifi_PSK_label">
+                   <property name="font">
+                    <font>
+                     <pointsize>12</pointsize>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Password:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="wifi_PSK_lineEdit">
+                   <property name="echoMode">
+                    <enum>QLineEdit::Password</enum>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="wifi_ConfirmPSK_label">
+                   <property name="font">
+                    <font>
+                     <pointsize>12</pointsize>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Confirm Password:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="wifi_ConfirmPSK_lineEdit">
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="echoMode">
+                    <enum>QLineEdit::Password</enum>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QVBoxLayout" name="accessPoint_VLayout">
+               <property name="spacing">
+                <number>10</number>
+               </property>
+               <item>
+                <widget class="QLabel" name="accessPoint_TITLE_label">
+                 <property name="font">
+                  <font>
+                   <pointsize>20</pointsize>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>Access point settings</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="accessPoint_SSID_HLayout">
+                 <property name="spacing">
+                  <number>20</number>
+                 </property>
+                 <item>
+                  <widget class="QLabel" name="accessPoint_SSID_label">
+                   <property name="font">
+                    <font>
+                     <pointsize>12</pointsize>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>SSID:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="accessPoint_SSID_lineEdit"/>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="accessPoint_PWD_HLayout">
+                 <property name="spacing">
+                  <number>20</number>
+                 </property>
+                 <item>
+                  <widget class="QLabel" name="accessPoint_PWD_label">
+                   <property name="font">
+                    <font>
+                     <pointsize>12</pointsize>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Password:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="accessPoint_PWD_lineEdit">
+                   <property name="echoMode">
+                    <enum>QLineEdit::Password</enum>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="accessPoint_ConfirmPWD_label">
+                   <property name="font">
+                    <font>
+                     <pointsize>12</pointsize>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Confirm Password:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="accessPoint_ConfirmPWD_lineEdit">
+                   <property name="echoMode">
+                    <enum>QLineEdit::Password</enum>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="GNSS_VLayout">
+           <property name="spacing">
+            <number>20</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="gnss_settings_label">
+             <property name="font">
+              <font>
+               <pointsize>26</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>GNSS settings</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="gnss_settings_VLayout">
+             <property name="spacing">
+              <number>10</number>
+             </property>
+             <item>
+              <layout class="QHBoxLayout" name="gnss_acquisitionRate_HLayout">
+               <property name="spacing">
+                <number>20</number>
+               </property>
+               <item>
+                <widget class="QLabel" name="gnss_acquisitionPeriod_label">
+                 <property name="font">
+                  <font>
+                   <pointsize>12</pointsize>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>Acquisition period (s)</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QSpinBox" name="gnss_acquisitionPeriod_spinBox">
+                 <property name="suffix">
+                  <string/>
+                 </property>
+                 <property name="prefix">
+                  <string/>
+                 </property>
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>60</number>
+                 </property>
+                 <property name="singleStep">
+                  <number>1</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="gnss_constellations_HLayout">
+               <property name="spacing">
+                <number>20</number>
+               </property>
+               <item>
+                <widget class="QLabel" name="GNSS_constellation_label">
+                 <property name="font">
+                  <font>
+                   <pointsize>12</pointsize>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>GNSS constellations</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout">
+                 <item>
+                  <widget class="QCheckBox" name="GPS_checkBox">
+                   <property name="text">
+                    <string>GPS</string>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="SBAS_checkBox">
+                   <property name="text">
+                    <string>SBAS</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="Galileo_checkBox">
+                   <property name="text">
+                    <string>Galileo</string>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="BeiDou_checkBox">
+                   <property name="text">
+                    <string>BeiDou</string>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="QZSS_checkBox">
+                   <property name="text">
+                    <string>QZSS</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="GLONASS_checkBox">
+                   <property name="text">
+                    <string>GLONASS</string>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="METEO_VLayout">
+           <property name="spacing">
+            <number>20</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="meteo_settings_label">
+             <property name="font">
+              <font>
+               <pointsize>26</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>METEO settings</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="meteo_settings_VLayout">
+             <item>
+              <layout class="QHBoxLayout" name="meteo_acquisition_HLayout">
+               <property name="spacing">
+                <number>20</number>
+               </property>
+               <item>
+                <widget class="QLabel" name="meteo_acquisitionPeriod_label">
+                 <property name="font">
+                  <font>
+                   <pointsize>12</pointsize>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>Acquisition period (s)</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QSpinBox" name="meteo_acquisitionPeriod_spinBox">
+                 <property name="suffix">
+                  <string/>
+                 </property>
+                 <property name="prefix">
+                  <string/>
+                 </property>
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>600</number>
+                 </property>
+                 <property name="singleStep">
+                  <number>1</number>
+                 </property>
+                 <property name="value">
+                  <number>1</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="meteo_properties_HLayout">
+               <property name="spacing">
+                <number>20</number>
+               </property>
+               <item>
+                <widget class="QLabel" name="meteo_properties_label">
+                 <property name="font">
+                  <font>
+                   <pointsize>12</pointsize>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>Properties</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="meteo_spinBox_HLayout">
+                 <item>
+                  <widget class="QCheckBox" name="temperature_checkBox">
+                   <property name="text">
+                    <string>Tempertaure</string>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="pressure_checkBox">
+                   <property name="text">
+                    <string>Pressure</string>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="humidity_checkBox">
+                   <property name="text">
+                    <string>Humidity</string>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="buttonConfig_VLayout">
+           <property name="spacing">
+            <number>10</number>
+           </property>
+           <item>
+            <widget class="QPushButton" name="validateConfig_pushButton">
+             <property name="text">
+              <string>Validate configuration</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="saveConfig_pushButton">
+             <property name="text">
+              <string>Save configuration</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="transferConfig_pushButton">
+             <property name="text">
+              <string>Transfer configuration to SD card</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="loadConfig_pushButton">
+             <property name="text">
+              <string>Load configuration</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="data_raw_GNSS">
+       <attribute name="icon">
+        <iconset>
+         <normaloff>../../../../../../../../../../../.designer/backup/AppIcons/icons8-cosinus-40.png</normaloff>../../../../../../../../../../../.designer/backup/AppIcons/icons8-cosinus-40.png</iconset>
+       </attribute>
+       <attribute name="title">
+        <string>GNSS data</string>
+       </attribute>
+       <widget class="QWidget" name="verticalLayoutWidget">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>50</y>
+          <width>591</width>
+          <height>371</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_data_dop"/>
+       </widget>
+       <widget class="QWidget" name="verticalLayoutWidget_2">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>440</y>
+          <width>591</width>
+          <height>401</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_data_snr"/>
+       </widget>
+       <widget class="QWidget" name="verticalLayoutWidget_3">
+        <property name="geometry">
+         <rect>
+          <x>660</x>
+          <y>60</y>
+          <width>731</width>
+          <height>741</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_data_pos"/>
+       </widget>
+       <widget class="QPushButton" name="show_live_data_GNSS_pushButton">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>10</y>
+          <width>261</width>
+          <height>28</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Start visualisation</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="stop_live_data_GNSS_pushButton">
+        <property name="geometry">
+         <rect>
+          <x>300</x>
+          <y>10</y>
+          <width>261</width>
+          <height>28</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Stop visualisation</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="data_raw_METEO">
+       <attribute name="title">
+        <string>Meteo data</string>
+       </attribute>
+       <widget class="QPushButton" name="show_live_data_METEO_pushButton">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>10</y>
+          <width>231</width>
+          <height>28</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Start visualisation</string>
+        </property>
+       </widget>
+       <widget class="QWidget" name="layoutWidget">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>50</y>
+          <width>1371</width>
+          <height>781</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <property name="spacing">
+          <number>20</number>
+         </property>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_data_humidity"/>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_data_temperature"/>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_data_pressure"/>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QPushButton" name="stop_live_data_METEO_pushButton">
+        <property name="geometry">
+         <rect>
+          <x>260</x>
+          <y>10</y>
+          <width>231</width>
+          <height>28</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Stop visualisation</string>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

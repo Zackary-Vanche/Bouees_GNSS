@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>buoy module &mdash; GNSSBuoy 06/03/2023 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="buoyApp module" href="buoyApp.html" />
+    <link rel="prev" title="AccessPoint module" href="AccessPoint.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            GNSSBuoy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Code</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="AccessPoint.html">AccessPoint module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">buoy module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#buoy.AccessPoint"><code class="docutils literal notranslate"><span class="pre">AccessPoint</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#buoy.AccessPoint.content"><code class="docutils literal notranslate"><span class="pre">AccessPoint.content</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoy.AccessPoint.ssid"><code class="docutils literal notranslate"><span class="pre">AccessPoint.ssid</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoy.AccessPoint.wpa_passphrase"><code class="docutils literal notranslate"><span class="pre">AccessPoint.wpa_passphrase</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#buoy.Buoy"><code class="docutils literal notranslate"><span class="pre">Buoy</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#buoy.Buoy.applyConfig"><code class="docutils literal notranslate"><span class="pre">Buoy.applyConfig()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoy.Buoy.changeUserConfigDeployementStatus"><code class="docutils literal notranslate"><span class="pre">Buoy.changeUserConfigDeployementStatus()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoy.Buoy.copyMainConfigFileToSDCard"><code class="docutils literal notranslate"><span class="pre">Buoy.copyMainConfigFileToSDCard()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoy.Buoy.getBaliseIdx"><code class="docutils literal notranslate"><span class="pre">Buoy.getBaliseIdx()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoy.Buoy.getContent"><code class="docutils literal notranslate"><span class="pre">Buoy.getContent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoy.Buoy.getLines"><code class="docutils literal notranslate"><span class="pre">Buoy.getLines()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoy.Buoy.getOS"><code class="docutils literal notranslate"><span class="pre">Buoy.getOS()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoy.Buoy.readConfig"><code class="docutils literal notranslate"><span class="pre">Buoy.readConfig()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoy.Buoy.updateConfig"><code class="docutils literal notranslate"><span class="pre">Buoy.updateConfig()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoy.Buoy.writeMainConfig"><code class="docutils literal notranslate"><span class="pre">Buoy.writeMainConfig()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#buoy.GNSSReceiver"><code class="docutils literal notranslate"><span class="pre">GNSSReceiver</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#buoy.GNSSReceiver.acquisitionPeriod"><code class="docutils literal notranslate"><span class="pre">GNSSReceiver.acquisitionPeriod</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoy.GNSSReceiver.beidou"><code class="docutils literal notranslate"><span class="pre">GNSSReceiver.beidou</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoy.GNSSReceiver.content"><code class="docutils literal notranslate"><span class="pre">GNSSReceiver.content</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoy.GNSSReceiver.galileo"><code class="docutils literal notranslate"><span class="pre">GNSSReceiver.galileo</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoy.GNSSReceiver.glonass"><code class="docutils literal notranslate"><span class="pre">GNSSReceiver.glonass</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoy.GNSSReceiver.gps"><code class="docutils literal notranslate"><span class="pre">GNSSReceiver.gps</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoy.GNSSReceiver.qzss"><code class="docutils literal notranslate"><span class="pre">GNSSReceiver.qzss</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoy.GNSSReceiver.sbas"><code class="docutils literal notranslate"><span class="pre">GNSSReceiver.sbas</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#buoy.Item"><code class="docutils literal notranslate"><span class="pre">Item</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#buoy.MeteoSensor"><code class="docutils literal notranslate"><span class="pre">MeteoSensor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#buoy.MeteoSensor.acquisitionPeriod"><code class="docutils literal notranslate"><span class="pre">MeteoSensor.acquisitionPeriod</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoy.MeteoSensor.content"><code class="docutils literal notranslate"><span class="pre">MeteoSensor.content</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoy.MeteoSensor.humidity"><code class="docutils literal notranslate"><span class="pre">MeteoSensor.humidity</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoy.MeteoSensor.pressure"><code class="docutils literal notranslate"><span class="pre">MeteoSensor.pressure</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoy.MeteoSensor.temperature"><code class="docutils literal notranslate"><span class="pre">MeteoSensor.temperature</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#buoy.Wifi"><code class="docutils literal notranslate"><span class="pre">Wifi</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#buoy.Wifi.content"><code class="docutils literal notranslate"><span class="pre">Wifi.content</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoy.Wifi.psk"><code class="docutils literal notranslate"><span class="pre">Wifi.psk</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoy.Wifi.ssid"><code class="docutils literal notranslate"><span class="pre">Wifi.ssid</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="buoyApp.html">buoyApp module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deployUserConfig.html">deployUserConfig module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geodesy.html">geodesy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raw_data_in_real_time.html">raw_data_in_real_time module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">GNSSBuoy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Code</a></li>
+      <li class="breadcrumb-item active">buoy module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/buoy.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-buoy">
+<span id="buoy-module"></span><h1>buoy module<a class="headerlink" href="#module-buoy" title="Permalink to this heading"></a></h1>
+<p>Main classes to handle the buoy configuration.
+The Buoy class is both used:
+- To write the configuration file (with the configuration defined using
+the dedicated UI BuoyApp).
+- To deploy the configuration on the RPi using the configuration file
+previously created (reboot routine on RPi).
+Item classes handle the different items than can be configured by user.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="buoy.AccessPoint">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">buoy.</span></span><span class="sig-name descname"><span class="pre">AccessPoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buoy</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoy.html#AccessPoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoy.AccessPoint" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#buoy.Item" title="buoy.Item"><code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="buoy.AccessPoint.content">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">content</span></span><a class="headerlink" href="#buoy.AccessPoint.content" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="buoy.AccessPoint.ssid">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ssid</span></span><a class="headerlink" href="#buoy.AccessPoint.ssid" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="buoy.AccessPoint.wpa_passphrase">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">wpa_passphrase</span></span><a class="headerlink" href="#buoy.AccessPoint.wpa_passphrase" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="buoy.Buoy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">buoy.</span></span><span class="sig-name descname"><span class="pre">Buoy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'GUI'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoy.html#Buoy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoy.Buoy" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Main class describing the buoy configuration</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="buoy.Buoy.applyConfig">
+<span class="sig-name descname"><span class="pre">applyConfig</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoy.html#Buoy.applyConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoy.Buoy.applyConfig" title="Permalink to this definition"></a></dt>
+<dd><p>Applies item-related configuration for each item (updates item-related configuration files).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoy.Buoy.changeUserConfigDeployementStatus">
+<span class="sig-name descname"><span class="pre">changeUserConfigDeployementStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dest</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoy.html#Buoy.changeUserConfigDeployementStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoy.Buoy.changeUserConfigDeployementStatus" title="Permalink to this definition"></a></dt>
+<dd><p>Update deployment status. The deployement status is read by the function
+deployUserConfig.py to check if config needs to be updated.
+- status = 0: new config has been loaded and need to be used.
+- status = 1: current config is up to date.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoy.Buoy.copyMainConfigFileToSDCard">
+<span class="sig-name descname"><span class="pre">copyMainConfigFileToSDCard</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dest</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoy.html#Buoy.copyMainConfigFileToSDCard"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoy.Buoy.copyMainConfigFileToSDCard" title="Permalink to this definition"></a></dt>
+<dd><p>Copy main configuration file to the SD card holding the RPi OS.
+Set deployment status to 0 to tell RPi that config needs to be updated.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoy.Buoy.getBaliseIdx">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getBaliseIdx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lines</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoy.html#Buoy.getBaliseIdx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoy.Buoy.getBaliseIdx" title="Permalink to this definition"></a></dt>
+<dd><p>Gets balise indexes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoy.Buoy.getContent">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getContent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lines</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baliseIdx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoy.html#Buoy.getContent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoy.Buoy.getContent" title="Permalink to this definition"></a></dt>
+<dd><p>Separates information read from configuration file into item-related categories.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoy.Buoy.getLines">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getLines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoy.html#Buoy.getLines"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoy.Buoy.getLines" title="Permalink to this definition"></a></dt>
+<dd><p>Reads usefull information from configuration file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoy.Buoy.getOS">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getOS</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoy.html#Buoy.getOS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoy.Buoy.getOS" title="Permalink to this definition"></a></dt>
+<dd><p>Differentiates between deployed and dev configuration.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoy.Buoy.readConfig">
+<span class="sig-name descname"><span class="pre">readConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoy.html#Buoy.readConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoy.Buoy.readConfig" title="Permalink to this definition"></a></dt>
+<dd><p>Reads configuration informations from configuration file and associates
+each element with its item’s attribute.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoy.Buoy.updateConfig">
+<span class="sig-name descname"><span class="pre">updateConfig</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoy.html#Buoy.updateConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoy.Buoy.updateConfig" title="Permalink to this definition"></a></dt>
+<dd><p>Reads and apply new configuration.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoy.Buoy.writeMainConfig">
+<span class="sig-name descname"><span class="pre">writeMainConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoy.html#Buoy.writeMainConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoy.Buoy.writeMainConfig" title="Permalink to this definition"></a></dt>
+<dd><p>Write main configuration file to be used by the raspberry pi when setting up.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="buoy.GNSSReceiver">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">buoy.</span></span><span class="sig-name descname"><span class="pre">GNSSReceiver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buoy</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoy.html#GNSSReceiver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoy.GNSSReceiver" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#buoy.Item" title="buoy.Item"><code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="buoy.GNSSReceiver.acquisitionPeriod">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">acquisitionPeriod</span></span><a class="headerlink" href="#buoy.GNSSReceiver.acquisitionPeriod" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="buoy.GNSSReceiver.beidou">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">beidou</span></span><a class="headerlink" href="#buoy.GNSSReceiver.beidou" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="buoy.GNSSReceiver.content">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">content</span></span><a class="headerlink" href="#buoy.GNSSReceiver.content" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="buoy.GNSSReceiver.galileo">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">galileo</span></span><a class="headerlink" href="#buoy.GNSSReceiver.galileo" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="buoy.GNSSReceiver.glonass">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">glonass</span></span><a class="headerlink" href="#buoy.GNSSReceiver.glonass" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="buoy.GNSSReceiver.gps">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">gps</span></span><a class="headerlink" href="#buoy.GNSSReceiver.gps" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="buoy.GNSSReceiver.qzss">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">qzss</span></span><a class="headerlink" href="#buoy.GNSSReceiver.qzss" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="buoy.GNSSReceiver.sbas">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sbas</span></span><a class="headerlink" href="#buoy.GNSSReceiver.sbas" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="buoy.Item">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">buoy.</span></span><span class="sig-name descname"><span class="pre">Item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buoy</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoy.html#Item"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoy.Item" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class to handle general methods for the different items to configure (wifi, access point, …)
+Inputs :
+buoy: associated buoy configuration
+name: name of the item
+Outputs :
+self.buoy: associated buoy configuration
+self.name: name of the item</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="buoy.MeteoSensor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">buoy.</span></span><span class="sig-name descname"><span class="pre">MeteoSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buoy</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoy.html#MeteoSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoy.MeteoSensor" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#buoy.Item" title="buoy.Item"><code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="buoy.MeteoSensor.acquisitionPeriod">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">acquisitionPeriod</span></span><a class="headerlink" href="#buoy.MeteoSensor.acquisitionPeriod" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="buoy.MeteoSensor.content">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">content</span></span><a class="headerlink" href="#buoy.MeteoSensor.content" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="buoy.MeteoSensor.humidity">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">humidity</span></span><a class="headerlink" href="#buoy.MeteoSensor.humidity" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="buoy.MeteoSensor.pressure">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pressure</span></span><a class="headerlink" href="#buoy.MeteoSensor.pressure" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="buoy.MeteoSensor.temperature">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">temperature</span></span><a class="headerlink" href="#buoy.MeteoSensor.temperature" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="buoy.Wifi">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">buoy.</span></span><span class="sig-name descname"><span class="pre">Wifi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buoy</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoy.html#Wifi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoy.Wifi" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#buoy.Item" title="buoy.Item"><code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code></a></p>
+<p>Class handling the wifi configuration. Wifi can be used either to provide connection
+to the Raspberrry Pi (for update purposes for instance) or as a ssh connection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>Item</strong> (<a class="reference internal" href="#buoy.Item" title="buoy.Item"><em>Item</em></a>) – Mother class.</p>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="buoy.Wifi.content">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">content</span></span><a class="headerlink" href="#buoy.Wifi.content" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="buoy.Wifi.psk">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">psk</span></span><a class="headerlink" href="#buoy.Wifi.psk" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="buoy.Wifi.ssid">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ssid</span></span><a class="headerlink" href="#buoy.Wifi.ssid" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="AccessPoint.html" class="btn btn-neutral float-left" title="AccessPoint module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="buoyApp.html" class="btn btn-neutral float-right" title="buoyApp module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Baptiste Menetrier.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

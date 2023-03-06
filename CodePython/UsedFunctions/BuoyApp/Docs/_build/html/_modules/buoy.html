@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>buoy &mdash; GNSSBuoy 06/03/2023 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            GNSSBuoy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Code</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GNSSBuoy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">buoy</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for buoy</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#----------------------------------------------------------------------------</span>
+<span class="c1"># Created By  : Menetrier Baptiste</span>
+<span class="c1"># Created Date: 04/03/2023</span>
+<span class="c1"># version =&#39;1.0&#39;</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Main classes to handle the buoy configuration. </span>
+<span class="sd">The Buoy class is both used:</span>
+<span class="sd">- To write the configuration file (with the configuration defined using</span>
+<span class="sd">the dedicated UI BuoyApp).</span>
+<span class="sd">- To deploy the configuration on the RPi using the configuration file</span>
+<span class="sd">previously created (reboot routine on RPi). </span>
+<span class="sd">Item classes handle the different items than can be configured by user.</span>
+<span class="sd"> </span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Imports</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="Buoy"><a class="viewcode-back" href="../buoy.html#buoy.Buoy">[docs]</a><span class="k">class</span> <span class="nc">Buoy</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Main class describing the buoy configuration</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="s1">&#39;GUI&#39;</span><span class="p">):</span>
+        <span class="c1"># parent = &#39;GUI&#39; or &#39;RPI&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parent_is_GUI</span> <span class="o">=</span> <span class="p">(</span><span class="n">parent</span> <span class="o">==</span> <span class="s1">&#39;GUI&#39;</span><span class="p">)</span> <span class="c1"># Bool to differentiate GUI use and RPI use </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parent_is_RPI</span> <span class="o">=</span> <span class="p">(</span><span class="n">parent</span> <span class="o">==</span> <span class="s1">&#39;RPI&#39;</span><span class="p">)</span>
+                
+        <span class="bp">self</span><span class="o">.</span><span class="n">runningOSisLinux</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getOS</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nbItems</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent_is_GUI</span><span class="p">:</span>  <span class="c1"># Buoy object instanciated by the GUI </span>
+            
+            <span class="c1"># Build path depending on the os </span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runningOSisLinux</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">configFiles_Path</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;./UserConfig&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># self.configFiles_Path = r&#39;C:\Users\33686\Desktop\ENSTAB\Cours\3A\Guerledan\Bouees_GNSS\CodePython\UsedFunctions\setBuoyConfig\UserConfig&#39;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">configFiles_Path</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;.\UserConfig&#39;</span>
+                
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">configFiles_Path</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">configFiles_Path</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>   <span class="c1"># Buoy object instanciated by the RPI</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">configFiles_Path</span> <span class="o">=</span> <span class="s1">&#39;/home/pi/BuoyConfig/UserConfig&#39;</span>
+
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent_is_GUI</span><span class="p">:</span>  <span class="c1"># Buoy object instanciated by the GUI </span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Buoy object instanciated by GUI&#39;</span><span class="p">)</span>
+
+            <span class="c1"># Build path depending on the os </span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runningOSisLinux</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">configMainFile_Path</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;./UserConfig/BuoyConfig.txt&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">configMainFile_Path</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;.\UserConfig\BuoyConfig.txt&#39;</span>
+                
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent_is_RPI</span><span class="p">:</span>   <span class="c1"># Buoy object instanciated by the RPI</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Buoy object instanciated by RPI&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">configMainFile_Path</span> <span class="o">=</span> <span class="s1">&#39;/boot/BuoyConfig.txt&#39;</span>
+            
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">wifi</span> <span class="o">=</span> <span class="n">Wifi</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accessPoint</span> <span class="o">=</span> <span class="n">AccessPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meteoSensor</span> <span class="o">=</span> <span class="n">MeteoSensor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gnssReceiver</span> <span class="o">=</span> <span class="n">GNSSReceiver</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">wifi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">accessPoint</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gnssReceiver</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">meteoSensor</span><span class="p">]</span>
+        <span class="c1"># self.readConfig()</span>
+
+<div class="viewcode-block" id="Buoy.copyMainConfigFileToSDCard"><a class="viewcode-back" href="../buoy.html#buoy.Buoy.copyMainConfigFileToSDCard">[docs]</a>    <span class="k">def</span> <span class="nf">copyMainConfigFileToSDCard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dest</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Copy main configuration file to the SD card holding the RPi OS. </span>
+<span class="sd">        Set deployment status to 0 to tell RPi that config needs to be updated.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">runningOSisLinux</span><span class="p">:</span>
+            <span class="n">dest</span> <span class="o">=</span> <span class="n">dest</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;copy </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">configMainFile_Path</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">dest</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+
+        <span class="c1"># Change status </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">changeUserConfigDeployementStatus</span><span class="p">(</span><span class="n">dest</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Buoy.changeUserConfigDeployementStatus"><a class="viewcode-back" href="../buoy.html#buoy.Buoy.changeUserConfigDeployementStatus">[docs]</a>    <span class="k">def</span> <span class="nf">changeUserConfigDeployementStatus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dest</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update deployment status. The deployement status is read by the function </span>
+<span class="sd">        deployUserConfig.py to check if config needs to be updated. </span>
+<span class="sd">        - status = 0: new config has been loaded and need to be used. </span>
+<span class="sd">        - status = 1: current config is up to date. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">runningOSisLinux</span><span class="p">:</span>
+            <span class="n">dest</span> <span class="o">=</span> <span class="n">dest</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">flagFile</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dest</span><span class="si">}</span><span class="se">\\</span><span class="s1">userConfigIsDeployed.txt&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">flagFile</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dest</span><span class="si">}</span><span class="s1">/userConfigIsDeployed.txt&#39;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">flagFile</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">)</span></div>
+        
+
+<div class="viewcode-block" id="Buoy.writeMainConfig"><a class="viewcode-back" href="../buoy.html#buoy.Buoy.writeMainConfig">[docs]</a>    <span class="k">def</span> <span class="nf">writeMainConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write main configuration file to be used by the raspberry pi when setting up.&quot;&quot;&quot;</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="c1"># WiFi</span>
+        <span class="n">lines</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;# Default Wifi Network to connect to when Wifi mode is activated&#39;</span><span class="p">,</span> 
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wifi</span><span class="o">.</span><span class="n">ssid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> 
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wifi</span><span class="o">.</span><span class="n">psk</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span>
+         
+        <span class="c1"># Access Point</span>
+        <span class="n">lines</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;# Access Point properties&#39;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">accessPoint</span><span class="o">.</span><span class="n">ssid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> 
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">accessPoint</span><span class="o">.</span><span class="n">wpa_passphrase</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span>
+
+        <span class="c1"># GNSS</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;# GNSS Receiver properties&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">gnss_constellation</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">gnssReceiver</span><span class="o">.</span><span class="n">available_constellations</span><span class="p">:</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="w"> </span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gnssReceiver</span><span class="p">,</span><span class="w"> </span><span class="n">gnss_constellation</span><span class="p">)</span><span class="w"> </span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">gnssReceiver</span><span class="o">.</span><span class="n">acquisitionPeriod</span><span class="w"> </span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># METEO</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;# Meteo Sensor properties&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">meteo_property</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">meteoSensor</span><span class="o">.</span><span class="n">available_properties</span><span class="p">:</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="w"> </span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meteoSensor</span><span class="p">,</span><span class="w"> </span><span class="n">meteo_property</span><span class="p">)</span><span class="w"> </span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">meteoSensor</span><span class="o">.</span><span class="n">acquisitionPeriod</span><span class="w"> </span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;# End of configuration&#39;</span><span class="p">)</span>
+
+        <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">path</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configMainFile_Path</span>
+            
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="Buoy.readConfig"><a class="viewcode-back" href="../buoy.html#buoy.Buoy.readConfig">[docs]</a>    <span class="k">def</span> <span class="nf">readConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Reads configuration informations from configuration file and associates </span>
+<span class="sd">        each element with its item&#39;s attribute.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="n">path</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configMainFile_Path</span>
+            
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getLines</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="n">baliseIdx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getBaliseIdx</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getContent</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">baliseIdx</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nbItems</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">[</span><span class="n">it</span><span class="p">]</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">content</span><span class="p">[</span><span class="n">it</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Buoy.applyConfig"><a class="viewcode-back" href="../buoy.html#buoy.Buoy.applyConfig">[docs]</a>    <span class="k">def</span> <span class="nf">applyConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Applies item-related configuration for each item (updates item-related configuration files).&quot;&quot;&quot;</span>
+
+        <span class="c1"># Meteo</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Configuration of the meteo sensor...&#39;</span><span class="p">)</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="s1">&#39;/home/pi/ScriptPython/capteur_settings.txt&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;sudo touch </span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;sudo chmod 666 </span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+            
+        <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s1">,&#39;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">meteoSensor</span><span class="o">.</span><span class="n">content</span><span class="p">]</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Configuration of the meteo sensor...DONE&#39;</span><span class="p">)</span>
+    
+        <span class="c1"># GNSS</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Configuration of the GNSS receiver...&#39;</span><span class="p">)</span>
+        <span class="c1"># Update constelattions </span>
+        <span class="k">for</span> <span class="n">i_const</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gnssReceiver</span><span class="o">.</span><span class="n">available_constellations</span><span class="p">)):</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;ubxtool &#39;</span>
+            <span class="n">constellation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gnssReceiver</span><span class="o">.</span><span class="n">available_constellations</span><span class="p">[</span><span class="n">i_const</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gnssReceiver</span><span class="o">.</span><span class="n">content</span><span class="p">[</span><span class="n">i_const</span><span class="p">]:</span> <span class="c1"># Enable constellation</span>
+                <span class="n">n_freq</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1"># TODO: we use 2 to enable both frequencies to re-enable constellation, it might be possible to select single freq to enable (to investigate) </span>
+                <span class="k">if</span> <span class="n">constellation</span> <span class="o">==</span> <span class="s1">&#39;qzss&#39;</span><span class="p">:</span>
+                    <span class="n">constellation</span> <span class="o">=</span> <span class="s1">&#39;gps&#39;</span> <span class="c1"># ubxtool disable both gps and qzss at the same time with -d gps command</span>
+                    <span class="c1"># TODO: assert gps is selected when using qzss in the GUI </span>
+                <span class="n">cmd</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;-e </span><span class="si">{</span><span class="n">constellation</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s1">,</span><span class="si">{</span><span class="n">n_freq</span><span class="si">}</span><span class="s1"> -v 0&#39;</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+                <span class="c1"># res = 0</span>
+                <span class="c1"># for item in self.gnssReceiver.ublox_constellations_items[constellation]:                   </span>
+                <span class="c1">#     cmd += f&#39;-z {item},1&#39;</span>
+                <span class="c1">#     res += os.system(cmd)</span>
+                    
+                <span class="c1"># TODO: Change behaviour to handle cases when constellation is already enabled (return 1)</span>
+                <span class="k">if</span> <span class="n">res</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># success</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Successfully enabled </span><span class="si">{</span><span class="n">constellation</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span> <span class="c1"># Failure</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Failed to enable </span><span class="si">{</span><span class="n">constellation</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    
+            <span class="k">else</span><span class="p">:</span> <span class="c1"># Disable constellation</span>
+                <span class="n">cmd</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;-d </span><span class="si">{</span><span class="n">constellation</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s1"> -v 0&#39;</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+                <span class="c1"># res = 0</span>
+                <span class="c1"># for item in self.gnssReceiver.ublox_constellations_items[constellation]:                   </span>
+                <span class="c1">#     cmd += f&#39;-z {item},0&#39;</span>
+                <span class="c1">#     res += os.system(cmd)</span>
+                    
+                <span class="k">if</span> <span class="n">res</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># success</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Successfully disabled </span><span class="si">{</span><span class="n">constellation</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span> <span class="c1"># Failure</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Failed to disable </span><span class="si">{</span><span class="n">constellation</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            
+            
+        <span class="c1"># Update Rate  </span>
+        <span class="c1"># cmd = f&#39;ubxtool -p CFG-RATE,{int(self.gnssReceiver.acquisitionPeriod * 1e4)} -v 0&#39;    # Update rate (rate in millisec)</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;ubxtool -z CFG-RATE-MEAS,</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gnssReceiver</span><span class="o">.</span><span class="n">acquisitionPeriod</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1e3</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>    <span class="c1"># Update rate (rate in millisec) (set in all layers except the default layer)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">res</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># success</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Successfully updated rate to </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gnssReceiver</span><span class="o">.</span><span class="n">acquisitionPeriod</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1e3</span><span class="p">)</span><span class="si">}</span><span class="s1">ms&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span> <span class="c1"># Failure</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Failded to update rate to </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gnssReceiver</span><span class="o">.</span><span class="n">acquisitionPeriod</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1e3</span><span class="p">)</span><span class="si">}</span><span class="s1">ms&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Configuration of the GNSS receiver...DONE&#39;</span><span class="p">)</span>
+                
+        <span class="c1"># Wifi / AP</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Configuration of the Wifi/AccessPoint...&#39;</span><span class="p">)</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;sudo ./setup_wlan_and_AP_modes.sh </span><span class="se">\</span>
+<span class="s1">                -s </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wifi</span><span class="o">.</span><span class="n">ssid</span><span class="si">}</span><span class="s1"> -p </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wifi</span><span class="o">.</span><span class="n">psk</span><span class="si">}</span><span class="s1"> </span><span class="se">\</span>
+<span class="s1">                -a </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">accessPoint</span><span class="o">.</span><span class="n">ssid</span><span class="si">}</span><span class="s1"> -r </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">accessPoint</span><span class="o">.</span><span class="n">wpa_passphrase</span><span class="si">}</span><span class="s1"> -d&#39;</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="Buoy.updateConfig"><a class="viewcode-back" href="../buoy.html#buoy.Buoy.updateConfig">[docs]</a>    <span class="k">def</span> <span class="nf">updateConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reads and apply new configuration.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">readConfig</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">applyConfig</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Buoy.getContent"><a class="viewcode-back" href="../buoy.html#buoy.Buoy.getContent">[docs]</a>    <span class="nd">@staticmethod</span>   
+    <span class="k">def</span> <span class="nf">getContent</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">baliseIdx</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Separates information read from configuration file into item-related categories.&quot;&quot;&quot;</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">baliseIdx</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">ib</span> <span class="o">=</span> <span class="n">baliseIdx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">ibp1</span> <span class="o">=</span> <span class="n">baliseIdx</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">itemLines</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">ib</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">ibp1</span><span class="p">]</span>
+            <span class="n">content</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">itemLines</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">content</span></div>
+    
+<div class="viewcode-block" id="Buoy.getLines"><a class="viewcode-back" href="../buoy.html#buoy.Buoy.getLines">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">getLines</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reads usefull information from configuration file.&quot;&quot;&quot;</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">())</span>
+        <span class="n">nbLines</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+        <span class="n">blankLines</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="kc">False</span><span class="p">]</span> <span class="o">*</span> <span class="n">nbLines</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">il</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nbLines</span><span class="p">):</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">il</span><span class="p">]</span>
+            <span class="c1"># Get rid of empty lines </span>
+            <span class="k">if</span> <span class="n">line</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">:</span>    
+                <span class="n">blankLines</span><span class="p">[</span><span class="n">il</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="c1"># Get rid of &#39;\n&#39; caracters </span>
+            <span class="n">lines</span><span class="p">[</span><span class="n">il</span><span class="p">]</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">il</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">lines</span><span class="p">[</span><span class="o">~</span><span class="n">blankLines</span><span class="p">]</span></div>
+    
+<div class="viewcode-block" id="Buoy.getBaliseIdx"><a class="viewcode-back" href="../buoy.html#buoy.Buoy.getBaliseIdx">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">getBaliseIdx</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets balise indexes.&quot;&quot;&quot;</span>
+        <span class="n">balise</span> <span class="o">=</span> <span class="s1">&#39;#&#39;</span>
+        <span class="n">baliseIdx</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">il</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)):</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">il</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">balise</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">baliseIdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">il</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">baliseIdx</span></div>
+
+<div class="viewcode-block" id="Buoy.getOS"><a class="viewcode-back" href="../buoy.html#buoy.Buoy.getOS">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">getOS</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Differentiates between deployed and dev configuration.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;nt&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span></div></div>
+
+
+<div class="viewcode-block" id="Item"><a class="viewcode-back" href="../buoy.html#buoy.Item">[docs]</a><span class="k">class</span> <span class="nc">Item</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to handle general methods for the different items to configure (wifi, access point, ...)</span>
+<span class="sd">    Inputs :</span>
+<span class="sd">    buoy: associated buoy configuration</span>
+<span class="sd">    name: name of the item</span>
+<span class="sd">    Outputs :</span>
+<span class="sd">    self.buoy: associated buoy configuration</span>
+<span class="sd">    self.name: name of the item</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buoy</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the number of items handled by the Buoy object. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            buoy (Buoy): Buoy object handling the configuration. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buoy</span> <span class="o">=</span> <span class="n">buoy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">nbItems</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span> </div>
+
+    
+<div class="viewcode-block" id="Wifi"><a class="viewcode-back" href="../buoy.html#buoy.Wifi">[docs]</a><span class="k">class</span> <span class="nc">Wifi</span><span class="p">(</span><span class="n">Item</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class handling the wifi configuration. Wifi can be used either to provide connection </span>
+<span class="sd">    to the Raspberrry Pi (for update purposes for instance) or as a ssh connection. </span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        Item (Item): Mother class. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buoy</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">buoy</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;wifi&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;BoueesGNSS&#39;</span><span class="p">,</span> <span class="s1">&#39;12345689&#39;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ssid_MinLength</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ssid_MaxLength</span> <span class="o">=</span> <span class="mi">50</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psk_MinLength</span> <span class="o">=</span> <span class="mi">6</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psk_MaxLength</span> <span class="o">=</span> <span class="mi">20</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psk_RequiredCharacter</span> <span class="o">=</span> <span class="s2">&quot;!#$%&amp;&#39;()*+,-./:;&lt;=&gt;?@[\]^_{|}~&quot;</span>
+               
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">ssid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ssid</span>
+    
+    <span class="nd">@ssid</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">ssid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_ssid</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ssid</span> <span class="o">=</span> <span class="n">new_ssid</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">psk</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_psk</span>
+    
+    <span class="nd">@psk</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">psk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_psk</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_psk</span> <span class="o">=</span> <span class="n">new_psk</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">content</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_content</span>
+
+    <span class="nd">@content</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">content</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_content</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ssid</span> <span class="o">=</span> <span class="n">new_content</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_psk</span> <span class="o">=</span> <span class="n">new_content</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_content</span> <span class="o">=</span> <span class="n">new_content</span></div>
+
+
+<div class="viewcode-block" id="AccessPoint"><a class="viewcode-back" href="../buoy.html#buoy.AccessPoint">[docs]</a><span class="k">class</span> <span class="nc">AccessPoint</span><span class="p">(</span><span class="n">Item</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buoy</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">buoy</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;accessPoint&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;RPiZeroW_Bouee&#39;</span><span class="p">,</span> <span class="s1">&#39;MyPassword&#39;</span><span class="p">]</span>     <span class="c1"># Default</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ssid_MinLength</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ssid_MaxLength</span> <span class="o">=</span> <span class="mi">50</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pwd_MinLength</span> <span class="o">=</span> <span class="mi">6</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pwd_MaxLength</span> <span class="o">=</span> <span class="mi">20</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pwd_RequiredCharacter</span> <span class="o">=</span> <span class="s2">&quot;!#$%&amp;&#39;()*+,-./:;&lt;=&gt;?@[\]^_{|}~&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">ssid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ssid</span>
+    
+    <span class="nd">@ssid</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">ssid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_ssid</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ssid</span> <span class="o">=</span> <span class="n">new_ssid</span>
+        
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">wpa_passphrase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wpa_passphrase</span>
+    
+    <span class="nd">@wpa_passphrase</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">wpa_passphrase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_wpa_passphrase</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wpa_passphrase</span> <span class="o">=</span> <span class="n">new_wpa_passphrase</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">content</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_content</span>
+
+    <span class="nd">@content</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">content</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_content</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ssid</span> <span class="o">=</span> <span class="n">new_content</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wpa_passphrase</span> <span class="o">=</span> <span class="n">new_content</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_content</span> <span class="o">=</span> <span class="n">new_content</span></div>
+        
+<div class="viewcode-block" id="MeteoSensor"><a class="viewcode-back" href="../buoy.html#buoy.MeteoSensor">[docs]</a><span class="k">class</span> <span class="nc">MeteoSensor</span><span class="p">(</span><span class="n">Item</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buoy</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">buoy</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;meteoSensor&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>     <span class="c1"># Default all properties set to true and 10s period of acquisition</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">available_properties</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;pressure&#39;</span><span class="p">,</span> <span class="s1">&#39;humidity&#39;</span><span class="p">]</span>
+        
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_temperature</span>
+    
+    <span class="nd">@temperature</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_temperature</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_temperature</span> <span class="o">=</span> <span class="n">new_temperature</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">pressure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pressure</span>
+    
+    <span class="nd">@pressure</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">pressure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_pressure</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pressure</span> <span class="o">=</span> <span class="n">new_pressure</span>
+        
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">humidity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_humidity</span>
+    
+    <span class="nd">@humidity</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">humidity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_humidity</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_humidity</span> <span class="o">=</span> <span class="n">new_humidity</span>
+        
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">acquisitionPeriod</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_acquisitionPeriod</span>
+    
+    <span class="nd">@acquisitionPeriod</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">acquisitionPeriod</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_acquisitionPeriod</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_acquisitionPeriod</span> <span class="o">=</span> <span class="n">new_acquisitionPeriod</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">content</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_content</span>
+
+    <span class="nd">@content</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">content</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_content</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_temperature</span> <span class="o">=</span> <span class="n">new_content</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pressure</span> <span class="o">=</span> <span class="n">new_content</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_humidity</span> <span class="o">=</span> <span class="n">new_content</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_acquisitionPeriod</span> <span class="o">=</span> <span class="n">new_content</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_content</span> <span class="o">=</span> <span class="n">new_content</span></div>
+
+<div class="viewcode-block" id="GNSSReceiver"><a class="viewcode-back" href="../buoy.html#buoy.GNSSReceiver">[docs]</a><span class="k">class</span> <span class="nc">GNSSReceiver</span><span class="p">(</span><span class="n">Item</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buoy</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">buoy</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;gnssReceiver&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>     <span class="c1"># Default &#39;GPS&#39;, &#39;SBAS&#39;, &#39;Galileo&#39;, &#39;BeiDou&#39;, &#39;QZSS&#39;, &#39;GLONASS&#39; , acquisition period </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">available_constellations</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;gps&#39;</span><span class="p">,</span> <span class="s1">&#39;sbas&#39;</span><span class="p">,</span> <span class="s1">&#39;galileo&#39;</span><span class="p">,</span> <span class="s1">&#39;beidou&#39;</span><span class="p">,</span> <span class="s1">&#39;qzss&#39;</span><span class="p">,</span> <span class="s1">&#39;glonass&#39;</span><span class="p">]</span>
+        <span class="c1"># self.ublox_constellations_all_items = {&#39;gps_L1&#39;: &#39;CFG-SIGNAL-GPS_L1CA_ENA&#39;, </span>
+        <span class="c1">#                                    &#39;gps_L2&#39;: &#39;CFG-SIGNAL-GPS_L2C_ENA&#39;, </span>
+        <span class="c1">#                                    &#39;sbas_L1CA&#39;: &#39;CFG-SIGNAL-SBAS_L1CA_ENA&#39;,</span>
+        <span class="c1">#                                    &#39;galileo_E1&#39;: &#39;CFG-SIGNAL-GAL_E1_ENA&#39;,</span>
+        <span class="c1">#                                    &#39;galileo_E5B&#39;: &#39;CFG-SIGNAL-GAL_E5B_ENA&#39;,</span>
+        <span class="c1">#                                    &#39;beidou_B1&#39;: &#39;CFG-SIGNAL-BDS_B1_ENA&#39;,</span>
+        <span class="c1">#                                    &#39;beidou_B2&#39;: &#39;CFG-SIGNAL-BDS_B2_ENA&#39;,</span>
+        <span class="c1">#                                    &#39;qzss_L1CA&#39;: &#39;CFG-SIGNAL-QZSS_L1CA_ENA&#39;,</span>
+        <span class="c1">#                                    &#39;qzss_L1S&#39;: &#39;CFG-SIGNAL-QZSS_L1S_ENA&#39;,</span>
+        <span class="c1">#                                    &#39;qzss_L1CA&#39;: &#39;CFG-SIGNAL-QZSS_L2C_ENA&#39;,</span>
+        <span class="c1">#                                    &#39;glonass_L1&#39;: &#39;CFG-SIGNAL-GLO_L1_ENA&#39;,</span>
+        <span class="c1">#                                    &#39;glonass_L2&#39;: &#39;CFG-SIGNAL-GLO_L2_ENA&#39;,</span>
+        <span class="c1">#                                    &#39;gps&#39;:  &#39;CFG-SIGNAL-GPS_ENA&#39;,</span>
+        <span class="c1">#                                    &#39;sbas&#39;: &#39;CFG-SIGNAL-SBAS_ENA&#39;,</span>
+        <span class="c1">#                                    &#39;galileo&#39;: &#39;CFG-SIGNAL-GAL_ENA&#39;,</span>
+        <span class="c1">#                                    &#39;beidou&#39;: &#39;CFG-SIGNAL-BDS_ENA&#39;,</span>
+        <span class="c1">#                                    &#39;qzss&#39;: &#39;CFG-SIGNAL-QZSS_ENA&#39;,</span>
+        <span class="c1">#                                    &#39;glonass&#39;: &#39;CFG-SIGNAL-GLO_ENA&#39;}</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">ublox_constellations_items</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;gps&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;CFG-SIGNAL-GPS_L1CA_ENA&#39;</span><span class="p">,</span> <span class="s1">&#39;CFG-SIGNAL-GPS_L2C_ENA&#39;</span><span class="p">,</span> <span class="s1">&#39;CFG-SIGNAL-GPS_ENA&#39;</span><span class="p">],</span> 
+                                           <span class="s1">&#39;sbas&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;CFG-SIGNAL-SBAS_L1CA_ENA&#39;</span><span class="p">,</span> <span class="s1">&#39;CFG-SIGNAL-SBAS_ENA&#39;</span><span class="p">],</span> 
+                                           <span class="s1">&#39;galileo&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;CFG-SIGNAL-GAL_E1_ENA&#39;</span><span class="p">,</span> <span class="s1">&#39;CFG-SIGNAL-GAL_E5B_ENA&#39;</span><span class="p">,</span> <span class="s1">&#39;CFG-SIGNAL-GAL_ENA&#39;</span><span class="p">],</span> 
+                                           <span class="s1">&#39;beidou&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;CFG-SIGNAL-BDS_B1_ENA&#39;</span><span class="p">,</span> <span class="s1">&#39;CFG-SIGNAL-BDS_B2_ENA&#39;</span><span class="p">,</span> <span class="s1">&#39;CFG-SIGNAL-BDS_ENA&#39;</span><span class="p">],</span> 
+                                           <span class="s1">&#39;qzss&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;CFG-SIGNAL-QZSS_L1CA_ENA&#39;</span><span class="p">,</span> <span class="s1">&#39;CFG-SIGNAL-QZSS_L1S_ENA&#39;</span><span class="p">,</span> <span class="s1">&#39;CFG-SIGNAL-QZSS_L2C_ENA&#39;</span><span class="p">,</span> <span class="s1">&#39;CFG-SIGNAL-QZSS_ENA&#39;</span><span class="p">],</span> 
+                                           <span class="s1">&#39;glonass&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;CFG-SIGNAL-GLO_L1_ENA&#39;</span><span class="p">,</span> <span class="s1">&#39;CFG-SIGNAL-GLO_L2_ENA&#39;</span><span class="p">,</span> <span class="s1">&#39;CFG-SIGNAL-GLO_ENA&#39;</span><span class="p">]}</span>
+                                           
+                
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">gps</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gps</span>
+    
+    <span class="nd">@gps</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">gps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_gps</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_gps</span> <span class="o">=</span> <span class="n">new_gps</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sbas</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sbas</span>
+    
+    <span class="nd">@sbas</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">sbas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_sbas</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sbas</span> <span class="o">=</span> <span class="n">new_sbas</span>
+        
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">galileo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_galileo</span>
+    
+    <span class="nd">@galileo</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">galileo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_galileo</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_galileo</span> <span class="o">=</span> <span class="n">new_galileo</span>
+        
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">beidou</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_beidou</span>
+    
+    <span class="nd">@beidou</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">beidou</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_beidou</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_beidou</span> <span class="o">=</span> <span class="n">new_beidou</span>
+        
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">qzss</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_qzss</span>
+    
+    <span class="nd">@qzss</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">qzss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_qzss</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_qzss</span> <span class="o">=</span> <span class="n">new_qzss</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">glonass</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_glonass</span>
+    
+    <span class="nd">@glonass</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">glonass</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_glonass</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_glonass</span> <span class="o">=</span> <span class="n">new_glonass</span>
+        
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">acquisitionPeriod</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_acquisitionPeriod</span>
+    
+    <span class="nd">@acquisitionPeriod</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">acquisitionPeriod</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_acquisitionPeriod</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_acquisitionPeriod</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">new_acquisitionPeriod</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">content</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_content</span>
+
+    <span class="nd">@content</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">content</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_content</span><span class="p">):</span>
+        <span class="n">new_content</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">new_c</span><span class="p">)</span> <span class="k">for</span> <span class="n">new_c</span> <span class="ow">in</span> <span class="n">new_content</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_gps</span> <span class="o">=</span> <span class="n">new_content</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sbas</span> <span class="o">=</span> <span class="n">new_content</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_galileo</span> <span class="o">=</span> <span class="n">new_content</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_beidou</span> <span class="o">=</span> <span class="n">new_content</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_qzss</span> <span class="o">=</span> <span class="n">new_content</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_glonass</span> <span class="o">=</span> <span class="n">new_content</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_acquisitionPeriod</span> <span class="o">=</span> <span class="n">new_content</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_content</span> <span class="o">=</span> <span class="n">new_content</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Baptiste Menetrier.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

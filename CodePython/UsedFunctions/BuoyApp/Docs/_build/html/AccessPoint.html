@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AccessPoint module &mdash; GNSSBuoy 06/03/2023 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="buoy module" href="buoy.html" />
+    <link rel="prev" title="Code" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            GNSSBuoy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Code</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">AccessPoint module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#AccessPoint.APisAvailable"><code class="docutils literal notranslate"><span class="pre">APisAvailable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#AccessPoint.APisConnected"><code class="docutils literal notranslate"><span class="pre">APisConnected()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#AccessPoint.add_accessPoint_profile"><code class="docutils literal notranslate"><span class="pre">add_accessPoint_profile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#AccessPoint.connectToAP"><code class="docutils literal notranslate"><span class="pre">connectToAP()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#AccessPoint.disconnectFromAP"><code class="docutils literal notranslate"><span class="pre">disconnectFromAP()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#AccessPoint.forgetAP"><code class="docutils literal notranslate"><span class="pre">forgetAP()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#AccessPoint.getDataFromAP"><code class="docutils literal notranslate"><span class="pre">getDataFromAP()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#AccessPoint.set_ap_profile"><code class="docutils literal notranslate"><span class="pre">set_ap_profile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#AccessPoint.str_to_hex"><code class="docutils literal notranslate"><span class="pre">str_to_hex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#AccessPoint.transferFileFromAP"><code class="docutils literal notranslate"><span class="pre">transferFileFromAP()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="buoy.html">buoy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="buoyApp.html">buoyApp module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deployUserConfig.html">deployUserConfig module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geodesy.html">geodesy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raw_data_in_real_time.html">raw_data_in_real_time module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">GNSSBuoy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Code</a></li>
+      <li class="breadcrumb-item active">AccessPoint module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/AccessPoint.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-AccessPoint">
+<span id="accesspoint-module"></span><h1>AccessPoint module<a class="headerlink" href="#module-AccessPoint" title="Permalink to this heading"></a></h1>
+<p>Functions to connect to buoy access point.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="AccessPoint.APisAvailable">
+<span class="sig-prename descclassname"><span class="pre">AccessPoint.</span></span><span class="sig-name descname"><span class="pre">APisAvailable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ssid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/AccessPoint.html#APisAvailable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AccessPoint.APisAvailable" title="Permalink to this definition"></a></dt>
+<dd><p>Return buoy AP availability:
+True: AP is available
+False: AP is not available</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="AccessPoint.APisConnected">
+<span class="sig-prename descclassname"><span class="pre">AccessPoint.</span></span><span class="sig-name descname"><span class="pre">APisConnected</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ssid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/AccessPoint.html#APisConnected"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AccessPoint.APisConnected" title="Permalink to this definition"></a></dt>
+<dd><p>Return buoy AP connection status:
+True: Connected to AP
+False: Not connected to AP</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="AccessPoint.add_accessPoint_profile">
+<span class="sig-prename descclassname"><span class="pre">AccessPoint.</span></span><span class="sig-name descname"><span class="pre">add_accessPoint_profile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/AccessPoint.html#add_accessPoint_profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AccessPoint.add_accessPoint_profile" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="AccessPoint.connectToAP">
+<span class="sig-prename descclassname"><span class="pre">AccessPoint.</span></span><span class="sig-name descname"><span class="pre">connectToAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ssid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/AccessPoint.html#connectToAP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AccessPoint.connectToAP" title="Permalink to this definition"></a></dt>
+<dd><p>Try to connect to buoy access point if available.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="AccessPoint.disconnectFromAP">
+<span class="sig-prename descclassname"><span class="pre">AccessPoint.</span></span><span class="sig-name descname"><span class="pre">disconnectFromAP</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/AccessPoint.html#disconnectFromAP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AccessPoint.disconnectFromAP" title="Permalink to this definition"></a></dt>
+<dd><p>Disconnect from buoy access point if connected.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="AccessPoint.forgetAP">
+<span class="sig-prename descclassname"><span class="pre">AccessPoint.</span></span><span class="sig-name descname"><span class="pre">forgetAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ssid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/AccessPoint.html#forgetAP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AccessPoint.forgetAP" title="Permalink to this definition"></a></dt>
+<dd><p>Forget Access Point settings</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="AccessPoint.getDataFromAP">
+<span class="sig-prename descclassname"><span class="pre">AccessPoint.</span></span><span class="sig-name descname"><span class="pre">getDataFromAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/AccessPoint.html#getDataFromAP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AccessPoint.getDataFromAP" title="Permalink to this definition"></a></dt>
+<dd><p>Download all archived data from AP</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="AccessPoint.set_ap_profile">
+<span class="sig-prename descclassname"><span class="pre">AccessPoint.</span></span><span class="sig-name descname"><span class="pre">set_ap_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ssid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pwd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/AccessPoint.html#set_ap_profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AccessPoint.set_ap_profile" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="AccessPoint.str_to_hex">
+<span class="sig-prename descclassname"><span class="pre">AccessPoint.</span></span><span class="sig-name descname"><span class="pre">str_to_hex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">txt_to_convert</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/AccessPoint.html#str_to_hex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AccessPoint.str_to_hex" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="AccessPoint.transferFileFromAP">
+<span class="sig-prename descclassname"><span class="pre">AccessPoint.</span></span><span class="sig-name descname"><span class="pre">transferFileFromAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/AccessPoint.html#transferFileFromAP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AccessPoint.transferFileFromAP" title="Permalink to this definition"></a></dt>
+<dd><p>Transfer file from AP to local</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="Code" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="buoy.html" class="btn btn-neutral float-right" title="buoy module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Baptiste Menetrier.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
