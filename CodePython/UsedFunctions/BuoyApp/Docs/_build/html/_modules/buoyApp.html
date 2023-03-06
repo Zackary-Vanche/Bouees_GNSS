@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>buoyApp &mdash; GNSSBuoy 06/03/2023 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            GNSSBuoy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Code</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GNSSBuoy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">buoyApp</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for buoyApp</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#----------------------------------------------------------------------------</span>
+<span class="c1"># Created By  : Menetrier Baptiste</span>
+<span class="c1"># Created Date: 04/03/2023</span>
+<span class="c1"># version =&#39;1.0&#39;</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">GUI classes to handle configuration of the buoy and live data visualisation.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Imports</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="p">,</span> <span class="n">QFileDialog</span><span class="p">,</span> \
+    <span class="n">QMainWindow</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QLineEdit</span><span class="p">,</span> <span class="n">QProgressBar</span><span class="p">,</span> <span class="n">QCheckBox</span><span class="p">,</span> \
+    <span class="n">QSpinBox</span><span class="p">,</span> <span class="n">QStatusBar</span>
+<span class="kn">from</span> <span class="nn">PyQt5</span> <span class="kn">import</span> <span class="n">QtCore</span> <span class="c1"># Timer </span>
+<span class="kn">from</span> <span class="nn">PyQt5</span> <span class="kn">import</span> <span class="n">uic</span>
+
+<span class="c1"># Live data </span>
+<span class="kn">from</span> <span class="nn">matplotlib.backends.backend_qt5agg</span> <span class="kn">import</span> <span class="n">FigureCanvasQTAgg</span> <span class="k">as</span> <span class="n">FigureCanvas</span>
+<span class="kn">from</span> <span class="nn">matplotlib.figure</span> <span class="kn">import</span> <span class="n">Figure</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">subprocess</span> <span class="k">as</span> <span class="nn">sp</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> 
+<span class="kn">import</span> <span class="nn">pynmea2</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">from</span> <span class="nn">raw_data_in_real_time</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">AccessPoint</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">buoy</span> <span class="kn">import</span> <span class="o">*</span>
+
+<div class="viewcode-block" id="MplCanvas"><a class="viewcode-back" href="../buoyApp.html#buoyApp.MplCanvas">[docs]</a><span class="k">class</span> <span class="nc">MplCanvas</span><span class="p">(</span><span class="n">FigureCanvas</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">Figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">axes</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MplCanvas</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="APConnectionUI"><a class="viewcode-back" href="../buoyApp.html#buoyApp.APConnectionUI">[docs]</a><span class="k">class</span> <span class="nc">APConnectionUI</span><span class="p">(</span><span class="n">QMainWindow</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mainUI</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">APConnectionUI</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        
+        <span class="c1"># Load the ui file </span>
+        <span class="n">uic</span><span class="o">.</span><span class="n">loadUi</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;C:\Users\33686\Desktop\ENSTAB\Cours\3A\Guerledan\Bouees_GNSS\CodePython\UsedFunctions\buoyApp\UI\AP_ConnectionDialogWindow.ui&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="c1"># uic.loadUi(r&quot;.\UI\AP_ConnectionDialogWindow.ui&quot;, self)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainUI</span> <span class="o">=</span> <span class="n">mainUI</span>
+        
+        <span class="c1">################################################</span>
+        <span class="c1">#######        Widgets definition        #######</span>
+        <span class="c1">################################################</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loadConfig_pushButton</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">findChild</span><span class="p">(</span><span class="n">QPushButton</span><span class="p">,</span> <span class="s2">&quot;loadConfig_pushButton&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connectToAP_pushButton</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">findChild</span><span class="p">(</span><span class="n">QPushButton</span><span class="p">,</span> <span class="s2">&quot;connectToAP_pushButton&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accessPoint_SSID_lineEdit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">findChild</span><span class="p">(</span><span class="n">QLineEdit</span><span class="p">,</span> <span class="s2">&quot;accessPoint_SSID_lineEdit&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accessPoint_PWD_lineEdit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">findChild</span><span class="p">(</span><span class="n">QLineEdit</span><span class="p">,</span> <span class="s2">&quot;accessPoint_PWD_lineEdit&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accessPoint_ConfirmPWD_lineEdit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">findChild</span><span class="p">(</span><span class="n">QLineEdit</span><span class="p">,</span> <span class="s2">&quot;accessPoint_ConfirmPWD_lineEdit&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">waitConnection_progressBar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">findChild</span><span class="p">(</span><span class="n">QProgressBar</span><span class="p">,</span> <span class="s2">&quot;waitConnection_progressBar&quot;</span><span class="p">)</span>
+
+        <span class="c1">################################################</span>
+        <span class="c1">#######          Slots definition        #######</span>
+        <span class="c1">################################################        </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loadConfig_pushButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loadConfig</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connectToAP_pushButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connectToAP</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">ap_ssid</span> <span class="o">=</span> <span class="s1">&#39;buoyAccessPoint&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ap_pwd</span> <span class="o">=</span> <span class="s1">&#39;password!&#39;</span>
+        
+<div class="viewcode-block" id="APConnectionUI.connectToAP"><a class="viewcode-back" href="../buoyApp.html#buoyApp.APConnectionUI.connectToAP">[docs]</a>    <span class="k">def</span> <span class="nf">connectToAP</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Try to connect to buoy access point if available. &quot;&quot;&quot;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">ap_ssid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accessPoint_SSID_lineEdit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ap_pwd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accessPoint_PWD_lineEdit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Windows&quot;</span><span class="p">:</span>
+            <span class="n">set_ap_profile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ap_ssid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ap_pwd</span><span class="p">)</span>
+            <span class="n">add_accessPoint_profile</span><span class="p">()</span>
+
+        <span class="k">elif</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Linux&quot;</span><span class="p">:</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;sudo nmcli device wifi rescan&#39;</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+            
+
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainUI</span><span class="o">.</span><span class="n">ap_is_connected</span> <span class="o">=</span> <span class="n">APisConnected</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ap_ssid</span><span class="p">)</span>
+        
+        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainUI</span><span class="o">.</span><span class="n">ap_is_connected</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">APisAvailable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ap_ssid</span><span class="p">):</span>
+                <span class="c1"># buoy AP is available </span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Attempting to connect to buoy..</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Windows&quot;</span><span class="p">:</span>
+                    <span class="n">cmd</span> <span class="o">=</span> <span class="n">CONNECT_CMD</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ap_ssid</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Linux&quot;</span><span class="p">:</span>
+                    <span class="n">interface</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">popen</span><span class="p">(</span><span class="n">INTERFACE_CMD</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="n">cmd</span> <span class="o">=</span> <span class="n">CONNECT_CMD</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ap_ssid</span><span class="p">,</span> <span class="n">interface</span><span class="p">)</span>
+                    <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;sudo </span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s1">&#39;</span>
+                    
+                <span class="n">status</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                
+                <span class="k">if</span> <span class="n">APisConnected</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ap_ssid</span><span class="p">):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Connection to buoy successful !</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">mainUI</span><span class="o">.</span><span class="n">ap_is_connected</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">mainUI</span><span class="o">.</span><span class="n">update_status</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Connection to buoy failed !</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">mainUI</span><span class="o">.</span><span class="n">ap_is_connected</span> <span class="o">=</span> <span class="kc">False</span>
+                    
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># self.waitConnection_progressBar.setMaximum(0)</span>
+                <span class="c1"># buoy AP is out of range or not activated</span>
+                <span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="c1"># self.waitConnection_progressBar.setValue(elapsed_time / tot_time_to_wait)</span>
+                <span class="k">if</span> <span class="n">elapsed_time</span> <span class="o">&lt;</span> <span class="mi">60</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Buoy AP not available,  elapsed time = </span><span class="si">{</span><span class="n">elapsed_time</span><span class="si">}</span><span class="s2">s.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">elapsed_time</span> <span class="o">&lt;</span> <span class="mi">3600</span><span class="p">:</span>
+                    <span class="n">elapsed_time_min</span> <span class="o">=</span> <span class="n">elapsed_time</span> <span class="o">//</span> <span class="mi">60</span>
+                    <span class="n">elapsed_time_sec</span> <span class="o">=</span> <span class="n">elapsed_time</span> <span class="o">%</span> <span class="mi">60</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Buoy AP not available,  elapsed time = </span><span class="si">{</span><span class="n">elapsed_time_min</span><span class="si">}</span><span class="s2">m, </span><span class="si">{</span><span class="n">elapsed_time_sec</span><span class="si">}</span><span class="s2">s.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="APConnectionUI.openFileDialog"><a class="viewcode-back" href="../buoyApp.html#buoyApp.APConnectionUI.openFileDialog">[docs]</a>    <span class="k">def</span> <span class="nf">openFileDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">fileName</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="o">.</span><span class="n">getOpenFileName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Load configuration&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;Text Files (*.txt)&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fileName</span></div>
+        
+<div class="viewcode-block" id="APConnectionUI.loadConfig"><a class="viewcode-back" href="../buoyApp.html#buoyApp.APConnectionUI.loadConfig">[docs]</a>    <span class="k">def</span> <span class="nf">loadConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">src</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">openFileDialog</span><span class="p">()</span> <span class="c1"># Get filepath</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainUI</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">readConfig</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">src</span><span class="p">)</span> <span class="c1"># Read config from src file </span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">updateContent</span><span class="p">()</span></div>
+            
+<div class="viewcode-block" id="APConnectionUI.updateContent"><a class="viewcode-back" href="../buoyApp.html#buoyApp.APConnectionUI.updateContent">[docs]</a>    <span class="k">def</span> <span class="nf">updateContent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># AccessPoint </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accessPoint_SSID_lineEdit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mainUI</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">accessPoint</span><span class="o">.</span><span class="n">ssid</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accessPoint_PWD_lineEdit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mainUI</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">accessPoint</span><span class="o">.</span><span class="n">wpa_passphrase</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accessPoint_ConfirmPWD_lineEdit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mainUI</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">accessPoint</span><span class="o">.</span><span class="n">wpa_passphrase</span><span class="p">)</span></div></div>
+        
+<div class="viewcode-block" id="BuoyUI"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI">[docs]</a><span class="k">class</span> <span class="nc">BuoyUI</span><span class="p">(</span><span class="n">QMainWindow</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BuoyUI</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        
+        <span class="c1"># Load the ui file </span>
+        <span class="n">uic</span><span class="o">.</span><span class="n">loadUi</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;C:\Users\33686\Desktop\ENSTAB\Cours\3A\Guerledan\Bouees_GNSS\CodePython\UsedFunctions\buoyApp\UI\buoyApp.ui&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="c1"># uic.loadUi(r&quot;.\UI\buoyApp.ui&quot;, self)</span>
+
+        <span class="c1">################################################</span>
+        <span class="c1">#######        Widgets definition        #######</span>
+        <span class="c1">################################################</span>
+
+        <span class="c1"># QCheckBox</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">available_GNSS_constellations</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;GPS&#39;</span><span class="p">,</span> <span class="s1">&#39;SBAS&#39;</span><span class="p">,</span> <span class="s1">&#39;Galileo&#39;</span><span class="p">,</span> <span class="s1">&#39;BeiDou&#39;</span><span class="p">,</span> <span class="s1">&#39;QZSS&#39;</span><span class="p">,</span> <span class="s1">&#39;GLONASS&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">GNSS_checkBox</span> <span class="o">=</span> <span class="p">{</span><span class="n">gnss_cons</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">findChild</span><span class="p">(</span><span class="n">QCheckBox</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">gnss_cons</span><span class="si">}</span><span class="s2">_checkBox&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">gnss_cons</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">available_GNSS_constellations</span><span class="p">}</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">available_METEO_properties</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;pressure&#39;</span><span class="p">,</span> <span class="s1">&#39;humidity&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">METEO_checkBox</span> <span class="o">=</span> <span class="p">{</span><span class="n">prop</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">findChild</span><span class="p">(</span><span class="n">QCheckBox</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prop</span><span class="si">}</span><span class="s2">_checkBox&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">prop</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">available_METEO_properties</span><span class="p">}</span>
+                 
+                
+        <span class="c1">################################################</span>
+        <span class="c1">#######          Slots definition        #######</span>
+        <span class="c1">################################################</span>
+        <span class="c1"># Button control</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validateConfig_pushButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">validateConfig</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saveConfig_pushButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transferConfig_pushButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transferConfig</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loadConfig_pushButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loadConfig</span><span class="p">)</span>
+        <span class="c1"># Text edited</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wifi_PSK_lineEdit</span><span class="o">.</span><span class="n">textEdited</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resetWifi_PSKConfirm</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accessPoint_PWD_lineEdit</span><span class="o">.</span><span class="n">textEdited</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resetAccessPoint_PWDConfirm</span><span class="p">)</span>
+        <span class="c1"># Text editing finished</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wifi_SSID_lineEdit</span><span class="o">.</span><span class="n">editingFinished</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">checkWifi_SSID</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wifi_PSK_lineEdit</span><span class="o">.</span><span class="n">editingFinished</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">checkWifi_PSK</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accessPoint_SSID_lineEdit</span><span class="o">.</span><span class="n">editingFinished</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">checkAccessPoint_SSID</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accessPoint_PWD_lineEdit</span><span class="o">.</span><span class="n">editingFinished</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">checkAccessPoint_PWD</span><span class="p">)</span>
+
+        <span class="c1">################################################</span>
+        <span class="c1">#######         Configuration page      #######</span>
+        <span class="c1">################################################</span>
+        <span class="c1"># Warning messages </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">warningMsgType</span> <span class="o">=</span> <span class="s1">&#39;Warning&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">warningBoxTitle</span> <span class="o">=</span> <span class="s1">&#39;Warning, invalid entry!&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">infoMsgType</span> <span class="o">=</span> <span class="s1">&#39;Information&#39;</span>
+
+        <span class="c1"># Buoy object </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buoy</span> <span class="o">=</span> <span class="n">Buoy</span><span class="p">()</span>
+        
+        <span class="c1"># Boolean to track save status </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">configIsSaved</span> <span class="o">=</span> <span class="kc">False</span>
+        
+        <span class="c1">################################################</span>
+        <span class="c1">#######           Access point          #######</span>
+        <span class="c1">################################################</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ap_is_connected</span> <span class="o">=</span> <span class="n">APisConnected</span><span class="p">(</span><span class="n">ssid</span><span class="o">=</span><span class="s1">&#39;buoyAccessPoint&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_status</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ap_connection_window</span> <span class="o">=</span> <span class="kc">None</span>
+        
+        <span class="c1">################################################</span>
+        <span class="c1">#######             Live data            #######</span>
+        <span class="c1">################################################</span>
+        <span class="c1"># TODO: update to ask for user input and handle connection process </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span> <span class="o">=</span> <span class="s1">&#39;192.168.4.1&#39;</span>
+        <span class="c1"># self.hostname = &#39;192.168.43.124&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="s1">&#39;pi&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="s1">&#39;hydro&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_processing_time</span> <span class="o">=</span> <span class="mi">1000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timer_min_interval</span> <span class="o">=</span> <span class="mi">500</span>
+        
+        <span class="c1"># GNSS window </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gnss_livePlot_initialised</span> <span class="o">=</span> <span class="kc">False</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_live_data_GNSS_pushButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_live_GNSS_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_live_data_GNSS_pushButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stop_gnssLive</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">nmea_tmpfile</span> <span class="o">=</span> <span class="s2">&quot;/tmp/live_data_nmea.txt&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gnss_items_to_display</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;hdop&#39;</span><span class="p">,</span> <span class="s1">&#39;vdop&#39;</span><span class="p">,</span> <span class="s1">&#39;pdop&#39;</span><span class="p">,</span> <span class="s1">&#39;snr&#39;</span><span class="p">,</span> <span class="s1">&#39;pos&#39;</span><span class="p">]</span>
+        <span class="n">gnss_plots</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;dop&#39;</span><span class="p">,</span> <span class="s1">&#39;snr&#39;</span><span class="p">,</span> <span class="s1">&#39;pos&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span> <span class="o">=</span> <span class="p">{</span><span class="n">item</span><span class="p">:</span> <span class="n">MplCanvas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">gnss_plots</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verticalLayout_data_GNSS</span> <span class="o">=</span> <span class="p">{</span><span class="n">item</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;verticalLayout_data_</span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">gnss_plots</span><span class="p">}</span>
+        
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">gnss_plots</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">verticalLayout_data_GNSS</span><span class="p">[</span><span class="n">item</span><span class="p">]</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="n">item</span><span class="p">])</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">_plot_ref_GNSS</span> <span class="o">=</span> <span class="p">{</span><span class="n">item</span><span class="p">:</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">gnss_plots</span><span class="p">}</span> <span class="c1"># reference to the plotted line</span>
+        
+        <span class="c1"># Initialize DOP figure</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;dop&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;DOP&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;dop&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;dop&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">labelrotation</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;dop&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;hdop&#39;</span><span class="p">,</span> <span class="s1">&#39;vdop&#39;</span><span class="p">,</span> <span class="s1">&#39;pdop&#39;</span><span class="p">],</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;dop&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Dilution of precision&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;dop&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">set_tight_layout</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        
+        
+        <span class="c1"># Initialize position figure</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;E [m]&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;N [m]&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">ticklabel_format</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">useOffset</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;plain&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;UTM zone&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">labelrotation</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">locator_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">nbins</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">set_tight_layout</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        
+        <span class="c1"># Initialize snr figure</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;snr&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;PRN&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;snr&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;SNR&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;snr&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Signal to noise ratio&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;snr&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">labelrotation</span> <span class="o">=</span> <span class="mi">90</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;snr&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">set_tight_layout</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Initialise datafram</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nb_gnss_values_to_display</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="n">data_GNSS_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;x_utm&#39;</span><span class="p">,</span> <span class="s1">&#39;y_utm&#39;</span><span class="p">,</span> <span class="s1">&#39;n_utm&#39;</span><span class="p">,</span> <span class="s1">&#39;hdop&#39;</span><span class="p">,</span> <span class="s1">&#39;vdop&#39;</span><span class="p">,</span> <span class="s1">&#39;pdop&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prn</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i_prn</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">12</span><span class="o">*</span><span class="mi">4</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i_prn</span> <span class="o">&lt;=</span><span class="mi">9</span><span class="p">:</span>
+                <span class="n">prn</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;0</span><span class="si">{</span><span class="n">i_prn</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">prn</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">i_prn</span><span class="p">)</span>
+            <span class="n">data_GNSS_keys</span> <span class="o">+=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;snr_prn_</span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">prn</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prn</span><span class="p">)</span>
+        
+        <span class="c1"># Initialize datframe </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_GNSS</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">key</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">nb_gnss_values_to_display</span><span class="p">))</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">data_GNSS_keys</span><span class="p">})</span>
+        <span class="c1">#Initialise time vector </span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_GNSS</span><span class="o">.</span><span class="n">time</span><span class="p">)):</span>
+            <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_GNSS</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">now</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="c1"># To match nmea utc time </span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">pause</span><span class="p">(</span><span class="mf">0.001</span><span class="p">)</span>
+
+        <span class="c1"># METEO window </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meteo_logfile</span> <span class="o">=</span> <span class="s2">&quot;/home/pi/data/METEO/logMETEO.txt&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meteo_settingfile</span> <span class="o">=</span> <span class="s2">&quot;/home/pi/ScriptPython/capteur_settings.txt&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meteo_livePlot_initialised</span> <span class="o">=</span> <span class="kc">False</span> 
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_live_data_METEO_pushButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_live_METEO_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_live_data_METEO_pushButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stop_meteoLive</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">meteo_items_to_display</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;pressure&#39;</span><span class="p">,</span> <span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;humidity&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_METEO</span> <span class="o">=</span> <span class="p">{</span><span class="n">item</span><span class="p">:</span> <span class="n">MplCanvas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">meteo_items_to_display</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verticalLayout_data_METEO</span> <span class="o">=</span> <span class="p">{</span><span class="n">item</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;verticalLayout_data_</span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">meteo_items_to_display</span><span class="p">}</span>
+        
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">meteo_items_to_display</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">verticalLayout_data_METEO</span><span class="p">[</span><span class="n">item</span><span class="p">]</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">canvas_METEO</span><span class="p">[</span><span class="n">item</span><span class="p">])</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">_plot_ref_METEO</span> <span class="o">=</span> <span class="p">{</span><span class="n">item</span><span class="p">:</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">meteo_items_to_display</span><span class="p">}</span> <span class="c1"># reference to the plotted line            </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_axes_ranges_METEO</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;pressure&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span> <span class="s1">&#39;temperature&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span><span class="s1">&#39;humidity&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">}</span> <span class="c1"># Ranges to initialize plots </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_value_METEO</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;pressure&#39;</span><span class="p">:</span> <span class="mi">1013</span><span class="p">,</span> <span class="s1">&#39;temperature&#39;</span><span class="p">:</span> <span class="mi">21</span><span class="p">,</span><span class="s1">&#39;humidity&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">}</span> <span class="c1"># Default values to initializes plots </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_axes_offset_METEO</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;pressure&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;temperature&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span><span class="s1">&#39;humidity&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">}</span> <span class="c1"># Visual y ranges to apply </span>
+        
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">meteo_items_to_display</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">canvas_METEO</span><span class="p">[</span><span class="n">item</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">default_value_METEO</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_axes_ranges_METEO</span><span class="p">[</span><span class="n">item</span><span class="p">],</span> \
+                    <span class="bp">self</span><span class="o">.</span><span class="n">default_value_METEO</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_axes_ranges_METEO</span><span class="p">[</span><span class="n">item</span><span class="p">]])</span>
+        
+        <span class="c1"># Initialise datafram</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nb_meteo_values_to_display</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">data_METEO_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">meteo_items_to_display</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_METEO</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">key</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">nb_meteo_values_to_display</span><span class="p">))</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">data_METEO_keys</span><span class="p">})</span>
+        <span class="c1"># Initialise time vector </span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_METEO</span><span class="o">.</span><span class="n">time</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_METEO</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">pause</span><span class="p">(</span><span class="mf">0.001</span><span class="p">)</span>
+
+        <span class="c1"># Initialise figures </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_METEO</span><span class="p">[</span><span class="s1">&#39;pressure&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_METEO</span><span class="p">[</span><span class="s1">&#39;pressure&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Pressure [hPa]&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_METEO</span><span class="p">[</span><span class="s1">&#39;pressure&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">set_tight_layout</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_METEO</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Temperature [°C]&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_METEO</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">set_tight_layout</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_METEO</span><span class="p">[</span><span class="s1">&#39;humidity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Humidity [%]&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_METEO</span><span class="p">[</span><span class="s1">&#39;humidity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">set_tight_layout</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+                        
+        <span class="c1"># Show app </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="c1">################################################</span>
+    <span class="c1">#######       Live data functions        #######</span>
+    <span class="c1">################################################</span>
+    
+    <span class="c1">### METEO data ###</span>
+<div class="viewcode-block" id="BuoyUI.plot_live_METEO_data"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.plot_live_METEO_data">[docs]</a>    <span class="k">def</span> <span class="nf">plot_live_METEO_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise meteo plot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+                
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ap_is_connected</span><span class="p">:</span> <span class="c1"># user connected to ap </span>
+            
+            <span class="c1"># Initialize an SSH client</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client_METEO</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel_METEO</span> <span class="o">=</span> <span class="n">init_ssh_client</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">)</span>
+            <span class="c1"># self.channel_METEO.send(&quot;tail -f /home/pi/data/METEO/logMETEO.txt\n&quot;) # Read meteo data</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">channel_METEO_init</span> <span class="o">=</span> <span class="kc">True</span> 
+            
+
+            <span class="c1"># Setup a timer to trigger the redraw by calling update_plot.</span>
+            <span class="n">meteo_rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getMeteoRate</span><span class="p">()</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">meteo_rate</span> <span class="o">/</span> <span class="mi">1000</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="c1"># Wait to make sure nmea sentences are received before reading</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">timer_meteo</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">QTimer</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">timer_meteo</span><span class="o">.</span><span class="n">setInterval</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">meteo_rate</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_processing_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">timer_min_interval</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">timer_meteo</span><span class="o">.</span><span class="n">timeout</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update_METEO_plot</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">timer_meteo</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_METEO_plot</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">meteo_livePlot_initialised</span> <span class="o">=</span> <span class="kc">True</span> 
+            
+        <span class="k">else</span><span class="p">:</span> <span class="c1"># user not connected to ap</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">show_connection_window</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="BuoyUI.getMeteoRate"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.getMeteoRate">[docs]</a>    <span class="k">def</span> <span class="nf">getMeteoRate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current acquisition rate.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            rate: Acquisition rate used by BME280 sensor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;cat </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">meteo_settingfile</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">stdin</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_METEO</span><span class="o">.</span><span class="n">exec_command</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+        <span class="n">settings</span> <span class="o">=</span> <span class="n">stdout</span><span class="o">.</span><span class="n">readlines</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+        <span class="n">rate</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">settings</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">rate</span></div>
+    
+<div class="viewcode-block" id="BuoyUI.get_meteo_data"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.get_meteo_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_meteo_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read meteo data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">n_lines_to_read</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;tail -n </span><span class="si">{</span><span class="n">n_lines_to_read</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">meteo_logfile</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">stdin</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_METEO</span><span class="o">.</span><span class="n">exec_command</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">stdout</span><span class="o">.</span><span class="n">readlines</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">meteo_data</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span> 
+            <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">meteo_data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;</span><span class="si">%d</span><span class="s1">%m%Y %H:%M:%S&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">meteo_data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                <span class="n">temp</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">meteo_data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                
+            <span class="k">if</span> <span class="n">meteo_data</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                <span class="n">pressure</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">meteo_data</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">pressure</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                
+            <span class="k">if</span> <span class="n">meteo_data</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                <span class="n">humidity</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">meteo_data</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">humidity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                
+            <span class="n">data_to_append</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">timestamp</span><span class="p">],</span> 
+                                        <span class="s1">&#39;temperature&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">temp</span><span class="p">],</span> 
+                                        <span class="s1">&#39;pressure&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">pressure</span><span class="p">],</span> 
+                                        <span class="s1">&#39;humidity&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">humidity</span><span class="p">]})</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_METEO</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">data_METEO</span><span class="p">,</span> <span class="n">data_to_append</span><span class="p">])</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Error while parsing meteo data. Line to parse: </span><span class="si">{</span><span class="n">line</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            
+        <span class="c1"># Keep limited data size </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_METEO</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_METEO</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_METEO</span><span class="o">.</span><span class="n">time</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_METEO</span><span class="o">.</span><span class="n">time</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">nb_meteo_values_to_display</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_METEO</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_METEO</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">nb_meteo_values_to_display</span><span class="p">:]</span></div>
+        
+<div class="viewcode-block" id="BuoyUI.update_METEO_plot"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.update_METEO_plot">[docs]</a>    <span class="k">def</span> <span class="nf">update_METEO_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update plot with last meteo data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_meteo_data</span><span class="p">()</span> <span class="c1"># Get last data </span>
+        
+        <span class="c1"># Get xticks position and labels to display time on x-axis </span>
+        <span class="n">xticks_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_METEO</span><span class="o">.</span><span class="n">time</span><span class="p">))])</span>
+        <span class="n">xticks_label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">data_METEO</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_METEO</span><span class="o">.</span><span class="n">time</span><span class="p">))])</span>
+                     
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">meteo_items_to_display</span><span class="p">:</span>
+            <span class="c1"># Note: we no longer need to clear the axis.</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plot_ref_METEO</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># First time we have no plot reference, so do a normal plot.</span>
+                <span class="n">plot_refs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">canvas_METEO</span><span class="p">[</span><span class="n">item</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_METEO</span><span class="p">[</span><span class="n">item</span><span class="p">]),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_plot_ref_METEO</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">=</span> <span class="n">plot_refs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># We have a reference, we can use it to update the data for that line.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_plot_ref_METEO</span><span class="p">[</span><span class="n">item</span><span class="p">]</span><span class="o">.</span><span class="n">set_ydata</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_METEO</span><span class="p">[</span><span class="n">item</span><span class="p">])</span>
+                
+            <span class="c1"># Trigger the canvas to update and redraw.</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_METEO</span><span class="p">[</span><span class="n">item</span><span class="p">]))</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_METEO</span><span class="p">[</span><span class="n">item</span><span class="p">]))):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">canvas_METEO</span><span class="p">[</span><span class="n">item</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_METEO</span><span class="p">[</span><span class="n">item</span><span class="p">])</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_axes_offset_METEO</span><span class="p">[</span><span class="n">item</span><span class="p">],</span>
+                                                    <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_METEO</span><span class="p">[</span><span class="n">item</span><span class="p">])</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_axes_offset_METEO</span><span class="p">[</span><span class="n">item</span><span class="p">]])</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">canvas_METEO</span><span class="p">[</span><span class="n">item</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">xticks_pos</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">canvas_METEO</span><span class="p">[</span><span class="n">item</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">xticks_label</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">canvas_METEO</span><span class="p">[</span><span class="n">item</span><span class="p">]</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span></div>
+
+    <span class="c1">### GNSS data ###</span>
+<div class="viewcode-block" id="BuoyUI.plot_live_GNSS_data"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.plot_live_GNSS_data">[docs]</a>    <span class="k">def</span> <span class="nf">plot_live_GNSS_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ap_is_connected</span><span class="p">:</span> <span class="c1"># user connected to ap </span>
+            
+            <span class="c1"># Initialize an SSH client</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client_GNSS</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel_GNSS</span> <span class="o">=</span> <span class="n">init_ssh_client</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">)</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;gpspipe -o </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nmea_tmpfile</span><span class="si">}</span><span class="s2"> -r&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client_GNSS</span><span class="o">.</span><span class="n">exec_command</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">channel_GNSS_init</span> <span class="o">=</span> <span class="kc">True</span> 
+            
+            
+            <span class="c1"># Setup a timer to trigger the redraw by calling update_plot.</span>
+            <span class="n">gnss_rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getUbloxRate</span><span class="p">()</span> 
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">gnss_rate</span> <span class="o">/</span> <span class="mi">1000</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="c1"># Wait to make sure nmea sentences are received before reading</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">timer_gnss</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">QTimer</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">timer_gnss</span><span class="o">.</span><span class="n">setInterval</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">gnss_rate</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_processing_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">timer_min_interval</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">timer_gnss</span><span class="o">.</span><span class="n">timeout</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update_GNSS_plot</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">timer_gnss</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_GNSS_plot</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gnss_livePlot_initialised</span> <span class="o">=</span> <span class="kc">True</span> 
+            
+        <span class="k">else</span><span class="p">:</span> <span class="c1"># user not connected to ap</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">show_connection_window</span><span class="p">()</span></div>
+     
+<div class="viewcode-block" id="BuoyUI.getUbloxRate"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.getUbloxRate">[docs]</a>    <span class="k">def</span> <span class="nf">getUbloxRate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current acquisition rate.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            rate: Acquisition rate used by the u-blox module.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;ubxtool -g CFG-RATE-MEAS | fgrep CFG-RATE-MEAS&quot;</span>
+        <span class="n">stdin</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_GNSS</span><span class="o">.</span><span class="n">exec_command</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+        <span class="n">rate_level0</span> <span class="o">=</span> <span class="n">stdout</span><span class="o">.</span><span class="n">readlines</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">rate_level0</span> <span class="o">=</span> <span class="n">rate_level0</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+        <span class="n">rate</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">rate_level0</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">rate</span></div>
+    
+<div class="viewcode-block" id="BuoyUI.get_gnss_data"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.get_gnss_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_gnss_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read nmea data. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">n_lines_to_read</span> <span class="o">=</span> <span class="mi">16</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;tail -n </span><span class="si">{</span><span class="n">n_lines_to_read</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nmea_tmpfile</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">stdin</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_GNSS</span><span class="o">.</span><span class="n">exec_command</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">stdout</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+        <span class="c1"># print(lines)</span>
+        
+        <span class="n">sequence_complete</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">sequence</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">while</span> <span class="ow">not</span> <span class="n">sequence_complete</span><span class="p">:</span>
+                <span class="n">nmea_msg</span> <span class="o">=</span> <span class="n">lines</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+                <span class="c1"># print(nmea_msg)</span>
+                <span class="n">sequence</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nmea_msg</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">nmea_msg</span><span class="p">[:</span><span class="mi">6</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;$GPZDA&#39;</span><span class="p">:</span>
+                    <span class="n">sequence_complete</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="n">sequence</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+            <span class="n">data_GNSS_dic</span> <span class="o">=</span> <span class="p">{}</span>
+        
+            <span class="c1"># GPZDA</span>
+            <span class="n">sentence_gpzda</span> <span class="o">=</span> <span class="n">sequence</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">pynmea2</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">sentence_gpzda</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="c1"># data_GNSS_dic[&#39;time&#39;] = [msg.timestamp.strftime(&#39;%H:%M:%S&#39;)]</span>
+            <span class="n">data_GNSS_dic</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">msg</span><span class="o">.</span><span class="n">timestamp</span><span class="p">]</span>
+            
+            <span class="c1"># GPGGA</span>
+            <span class="n">sentence_gpgga</span> <span class="o">=</span> <span class="n">sequence</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">pynmea2</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">sentence_gpgga</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">x_utm</span><span class="p">,</span> <span class="n">y_utm</span><span class="p">,</span> <span class="n">n_utm</span> <span class="o">=</span> <span class="n">proj_to_UTM</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">longitude</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">latitude</span><span class="p">))</span> <span class="c1"># Proj to UTM                </span>
+            <span class="n">data_GNSS_dic</span><span class="p">[</span><span class="s1">&#39;x_utm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">x_utm</span><span class="p">]</span>
+            <span class="n">data_GNSS_dic</span><span class="p">[</span><span class="s1">&#39;y_utm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">y_utm</span><span class="p">]</span>
+            <span class="n">data_GNSS_dic</span><span class="p">[</span><span class="s1">&#39;n_utm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">n_utm</span><span class="p">]</span>
+            
+            <span class="c1"># GPRMC</span>
+            <span class="n">sentence_gprmc</span> <span class="o">=</span> <span class="n">sequence</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="c1"># Not used yet</span>
+            
+            <span class="c1"># GPGSA</span>
+            <span class="n">sentence_gpgsa</span> <span class="o">=</span> <span class="n">sequence</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">pynmea2</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">sentence_gpgsa</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">data_GNSS_dic</span><span class="p">[</span><span class="s1">&#39;hdop&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">msg</span><span class="o">.</span><span class="n">hdop</span><span class="p">]</span>
+            <span class="n">data_GNSS_dic</span><span class="p">[</span><span class="s1">&#39;vdop&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">msg</span><span class="o">.</span><span class="n">vdop</span><span class="p">]</span>
+            <span class="n">data_GNSS_dic</span><span class="p">[</span><span class="s1">&#39;pdop&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">msg</span><span class="o">.</span><span class="n">pdop</span><span class="p">]</span>
+
+            <span class="c1"># GPGBS</span>
+            <span class="n">sentence_gpgsb</span> <span class="o">=</span> <span class="n">sequence</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="c1"># Not used yet</span>
+            
+            <span class="k">for</span> <span class="n">prn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">prn</span><span class="p">:</span>
+                <span class="n">data_GNSS_dic</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;snr_prn_</span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">]</span> 
+                
+            <span class="c1"># GPGSV</span>
+            <span class="k">for</span> <span class="n">i_gsv</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sequence</span><span class="p">)):</span>
+                <span class="n">sentence_gpgsv</span> <span class="o">=</span> <span class="n">sequence</span><span class="p">[</span><span class="n">i_gsv</span><span class="p">]</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="n">pynmea2</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">sentence_gpgsv</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+                    <span class="n">idx</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">name_to_idx</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;snr_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span>
+                    <span class="n">idx_prn</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">name_to_idx</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;sv_prn_num_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span>
+
+                    <span class="k">if</span> <span class="n">idx</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                        <span class="n">prn</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">idx_prn</span><span class="p">]</span>
+                        <span class="c1"># For the moment keep only GPS satelites with prn &lt;= 32</span>
+                        <span class="k">if</span> <span class="n">prn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">prn</span><span class="p">:</span>
+                            <span class="n">data_GNSS_dic</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;snr_prn_</span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">idx</span><span class="p">])]</span>
+
+            <span class="n">data_to_append</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data_GNSS_dic</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_GNSS</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">data_GNSS</span><span class="p">,</span> <span class="n">data_to_append</span><span class="p">])</span>
+            
+            <span class="c1"># Keep limited data size </span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_GNSS</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_GNSS</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_GNSS</span><span class="o">.</span><span class="n">time</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_GNSS</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_GNSS</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">nb_gnss_values_to_display</span><span class="p">:]</span>
+            
+            <span class="c1"># Initialise entire array to the first value when reading data for the first time</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel_GNSS_init</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_GNSS</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">key</span> <span class="o">!=</span> <span class="s1">&#39;time&#39;</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">data_GNSS</span><span class="p">[</span><span class="n">key</span><span class="p">][:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_GNSS</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> 
+                <span class="bp">self</span><span class="o">.</span><span class="n">channel_GNSS_init</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Error while parsing NMEA data. Sequence to parse: </span><span class="si">{</span><span class="n">sequence</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+            
+      
+<div class="viewcode-block" id="BuoyUI.update_GNSS_plot"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.update_GNSS_plot">[docs]</a>    <span class="k">def</span> <span class="nf">update_GNSS_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Drop off the first y element, append a new one.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_gnss_data</span><span class="p">()</span> <span class="c1"># Update dataframe </span>
+        
+        <span class="c1">### DOPS ###</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;dop&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">cla</span><span class="p">()</span> <span class="c1"># For some reason it seems impossible to correctly updating the DOP plot at 1hz without clearing it manually before </span>
+        
+        <span class="n">dop_color</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;hdop&#39;</span><span class="p">:</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;vdop&#39;</span><span class="p">:</span> <span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="s1">&#39;pdop&#39;</span><span class="p">:</span> <span class="s1">&#39;g&#39;</span><span class="p">}</span>
+        <span class="c1"># Note: we no longer need to clear the axis.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plot_ref_GNSS</span><span class="p">[</span><span class="s1">&#39;dop&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># First time we have no plot reference, so do a normal plot.</span>
+            
+            <span class="k">for</span> <span class="n">dop</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;hdop&#39;</span><span class="p">,</span> <span class="s1">&#39;vdop&#39;</span><span class="p">,</span> <span class="s1">&#39;pdop&#39;</span><span class="p">]:</span>
+            <span class="c1"># for dop in [&#39;pdop&#39;]:</span>
+                <span class="n">plot_refs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;dop&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_GNSS</span><span class="p">[</span><span class="n">dop</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">dop</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">dop_color</span><span class="p">[</span><span class="n">dop</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_plot_ref_GNSS</span><span class="p">[</span><span class="n">dop</span><span class="p">]</span> <span class="o">=</span> <span class="n">plot_refs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># We have a reference, we can use it to update the data for that line.</span>
+            <span class="k">for</span> <span class="n">dop</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;hdop&#39;</span><span class="p">,</span> <span class="s1">&#39;vdop&#39;</span><span class="p">,</span> <span class="s1">&#39;pdop&#39;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_plot_ref_GNSS</span><span class="p">[</span><span class="n">dop</span><span class="p">]</span><span class="o">.</span><span class="n">set_ydata</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_GNSS</span><span class="p">[</span><span class="n">dop</span><span class="p">])</span>
+                
+        <span class="c1"># Reset all plot </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;dop&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Dilution of precision&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;dop&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;DOP&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;dop&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;dop&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">labelrotation</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;dop&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;hdop&#39;</span><span class="p">,</span> <span class="s1">&#39;vdop&#39;</span><span class="p">,</span> <span class="s1">&#39;pdop&#39;</span><span class="p">],</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">)</span>
+        
+        <span class="n">xticks_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_GNSS</span><span class="o">.</span><span class="n">time</span><span class="p">))])</span>
+        <span class="n">xticks_label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">data_GNSS</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_GNSS</span><span class="o">.</span><span class="n">time</span><span class="p">))])</span>
+        <span class="n">nb_ticks_to_display</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="n">idx_ticks_to_display</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">xticks_pos</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">nb_ticks_to_display</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span><span class="c1"># subsampling ticks for clarity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;dop&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">xticks_pos</span><span class="p">[</span><span class="n">idx_ticks_to_display</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;dop&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">xticks_label</span><span class="p">[</span><span class="n">idx_ticks_to_display</span><span class="p">])</span>
+            
+        <span class="c1"># Trigger the canvas to update and redraw.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;dop&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+            
+        <span class="c1">### POS ###</span>
+        <span class="c1"># Note: we no longer need to clear the axis.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plot_ref_GNSS</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># First time we have no plot reference, so do a normal plot.</span>
+            <span class="n">plot_refs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_GNSS</span><span class="o">.</span><span class="n">x_utm</span><span class="p">),</span>
+                                                          <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_GNSS</span><span class="o">.</span><span class="n">y_utm</span><span class="p">),</span>
+                                                          <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span>
+                                                          <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_plot_ref_GNSS</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">plot_refs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># We have a reference, we can use it to update the data for that line.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_plot_ref_GNSS</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_xdata</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_GNSS</span><span class="o">.</span><span class="n">x_utm</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_plot_ref_GNSS</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_ydata</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_GNSS</span><span class="o">.</span><span class="n">y_utm</span><span class="p">))</span>
+                        
+        <span class="c1"># Trigger the canvas to update and redraw.</span>
+        <span class="n">x_offset</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">y_offset</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_GNSS</span><span class="o">.</span><span class="n">x_utm</span><span class="p">)</span><span class="o">-</span><span class="n">x_offset</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_GNSS</span><span class="o">.</span><span class="n">x_utm</span><span class="p">)</span><span class="o">+</span><span class="n">x_offset</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_GNSS</span><span class="o">.</span><span class="n">y_utm</span><span class="p">)</span><span class="o">-</span><span class="n">y_offset</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_GNSS</span><span class="o">.</span><span class="n">y_utm</span><span class="p">)</span><span class="o">+</span><span class="n">y_offset</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;UTM zone n°</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_GNSS</span><span class="o">.</span><span class="n">n_utm</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+        
+        <span class="c1">### SNR ### </span>
+        <span class="n">all_snr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">data_GNSS</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;snr_prn_</span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">prn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">prn</span><span class="p">])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plot_ref_GNSS</span><span class="p">[</span><span class="s1">&#39;snr&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># First time we have no plot reference, so do a normal plot.</span>
+            <span class="n">plot_refs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;snr&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prn</span><span class="p">,</span>
+                                                          <span class="n">all_snr</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_plot_ref_GNSS</span><span class="p">[</span><span class="s1">&#39;snr&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">plot_refs</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># We have a reference, we can use it to update the data for that line.</span>
+            <span class="k">for</span> <span class="n">rect</span><span class="p">,</span> <span class="n">snr</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_plot_ref_GNSS</span><span class="p">[</span><span class="s1">&#39;snr&#39;</span><span class="p">],</span> <span class="n">all_snr</span><span class="p">):</span>
+                <span class="n">rect</span><span class="o">.</span><span class="n">set_height</span><span class="p">(</span><span class="n">snr</span><span class="p">)</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas_GNSS</span><span class="p">[</span><span class="s1">&#39;snr&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span></div>
+        
+    <span class="c1">################################################</span>
+    <span class="c1">#######     Configuration functions      #######</span>
+    <span class="c1">################################################</span>
+<div class="viewcode-block" id="BuoyUI.resetWifi_PSKConfirm"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.resetWifi_PSKConfirm">[docs]</a>    <span class="k">def</span> <span class="nf">resetWifi_PSKConfirm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wifi_ConfirmPSK_lineEdit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="BuoyUI.resetAccessPoint_PWDConfirm"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.resetAccessPoint_PWDConfirm">[docs]</a>    <span class="k">def</span> <span class="nf">resetAccessPoint_PWDConfirm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accessPoint_ConfirmPWD_lineEdit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="BuoyUI.checkWifi_SSID"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.checkWifi_SSID">[docs]</a>    <span class="k">def</span> <span class="nf">checkWifi_SSID</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ssid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wifi_SSID_lineEdit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        <span class="n">txt</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">isValid</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ssid</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">wifi</span><span class="o">.</span><span class="n">ssid_MinLength</span><span class="p">:</span>
+            <span class="n">txt</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;SSID should contain at least </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">wifi</span><span class="o">.</span><span class="n">ssid_MinLength</span><span class="si">}</span><span class="s1"> caracters. &#39;</span>
+            <span class="n">isValid</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">ssid</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">wifi</span><span class="o">.</span><span class="n">ssid_MaxLength</span><span class="p">:</span>
+            <span class="n">txt</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;SSID should contain less than </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">wifi</span><span class="o">.</span><span class="n">ssid_MaxLength</span><span class="si">}</span><span class="s1"> caracters. &#39;</span>
+            <span class="n">isValid</span> <span class="o">=</span> <span class="kc">False</span>
+    
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">isValid</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">showMsgBox</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">warningMsgType</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">warningBoxTitle</span><span class="p">,</span> <span class="n">txt</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">isValid</span></div>
+
+<div class="viewcode-block" id="BuoyUI.checkWifi_PSK"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.checkWifi_PSK">[docs]</a>    <span class="k">def</span> <span class="nf">checkWifi_PSK</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">psk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wifi_PSK_lineEdit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        <span class="n">txt</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">isValid</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">psk</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">wifi</span><span class="o">.</span><span class="n">psk_MinLength</span><span class="p">:</span>
+            <span class="n">txt</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;Password should contain at least </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">wifi</span><span class="o">.</span><span class="n">psk_MinLength</span><span class="si">}</span><span class="s1"> caracters. &#39;</span>
+            <span class="n">isValid</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">psk</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">wifi</span><span class="o">.</span><span class="n">psk_MaxLength</span><span class="p">:</span>
+            <span class="n">txt</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;Password should contain less than </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">wifi</span><span class="o">.</span><span class="n">psk_MaxLength</span><span class="si">}</span><span class="s1"> caracters. &#39;</span>
+            <span class="n">isValid</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">wifi</span><span class="o">.</span><span class="n">psk_RequiredCharacter</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">psk</span><span class="p">):</span>
+            <span class="n">txt</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;Password should contain at least one special character: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">wifi</span><span class="o">.</span><span class="n">psk_RequiredCharacter</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">isValid</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">isValid</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">showMsgBox</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">warningMsgType</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">warningBoxTitle</span><span class="p">,</span> <span class="n">txt</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">isValid</span></div>
+
+<div class="viewcode-block" id="BuoyUI.checkAccessPoint_SSID"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.checkAccessPoint_SSID">[docs]</a>    <span class="k">def</span> <span class="nf">checkAccessPoint_SSID</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ssid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accessPoint_SSID_lineEdit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        <span class="n">txt</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">isValid</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ssid</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">accessPoint</span><span class="o">.</span><span class="n">ssid_MinLength</span><span class="p">:</span>
+            <span class="n">txt</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;SSID should contain at least </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">accessPoint</span><span class="o">.</span><span class="n">ssid_MinLength</span><span class="si">}</span><span class="s1"> caracters. &#39;</span>
+            <span class="n">isValid</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">ssid</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">accessPoint</span><span class="o">.</span><span class="n">ssid_MaxLength</span><span class="p">:</span>
+            <span class="n">txt</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;SSID should contain less than </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">accessPoint</span><span class="o">.</span><span class="n">ssid_MaxLength</span><span class="si">}</span><span class="s1"> caracters. &#39;</span>
+            <span class="n">isValid</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">isValid</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">showMsgBox</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">warningMsgType</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">warningBoxTitle</span><span class="p">,</span> <span class="n">txt</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">isValid</span></div>
+
+<div class="viewcode-block" id="BuoyUI.checkAccessPoint_PWD"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.checkAccessPoint_PWD">[docs]</a>    <span class="k">def</span> <span class="nf">checkAccessPoint_PWD</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">pwd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accessPoint_PWD_lineEdit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        <span class="n">txt</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">isValid</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pwd</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">accessPoint</span><span class="o">.</span><span class="n">pwd_MinLength</span><span class="p">:</span>
+            <span class="n">txt</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;Password should contain at least </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">accessPoint</span><span class="o">.</span><span class="n">pwd_MinLength</span><span class="si">}</span><span class="s1"> caracters. &#39;</span>
+            <span class="n">isValid</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">pwd</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">accessPoint</span><span class="o">.</span><span class="n">pwd_MaxLength</span><span class="p">:</span>
+            <span class="n">txt</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;Password should contain less than </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">accessPoint</span><span class="o">.</span><span class="n">pwd_MaxLength</span><span class="si">}</span><span class="s1"> caracters. &#39;</span>
+            <span class="n">isValid</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">accessPoint</span><span class="o">.</span><span class="n">pwd_RequiredCharacter</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">pwd</span><span class="p">):</span>
+            <span class="n">txt</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;Password should contain at least one special character: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">accessPoint</span><span class="o">.</span><span class="n">pwd_RequiredCharacter</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">isValid</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">isValid</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">showMsgBox</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">warningMsgType</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">warningBoxTitle</span><span class="p">,</span> <span class="n">txt</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">isValid</span></div>
+
+<div class="viewcode-block" id="BuoyUI.confirmWifiPSK"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.confirmWifiPSK">[docs]</a>    <span class="k">def</span> <span class="nf">confirmWifiPSK</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">psk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wifi_PSK_lineEdit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        <span class="n">confirm_psk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wifi_ConfirmPSK_lineEdit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        <span class="n">isValid</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">psk</span> <span class="o">!=</span> <span class="n">confirm_psk</span><span class="p">:</span>
+            <span class="n">isValid</span> <span class="o">=</span> <span class="kc">False</span> 
+            <span class="n">txt</span> <span class="o">=</span> <span class="s1">&#39;Wifi passwords are not identical!&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">showMsgBox</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">warningMsgType</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">warningBoxTitle</span><span class="p">,</span> <span class="n">txt</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">isValid</span></div>
+
+<div class="viewcode-block" id="BuoyUI.confirmAccessPointPWD"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.confirmAccessPointPWD">[docs]</a>    <span class="k">def</span> <span class="nf">confirmAccessPointPWD</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">psk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accessPoint_PWD_lineEdit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        <span class="n">confirm_psk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accessPoint_ConfirmPWD_lineEdit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        <span class="n">isValid</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">psk</span> <span class="o">!=</span> <span class="n">confirm_psk</span><span class="p">:</span>
+            <span class="n">isValid</span> <span class="o">=</span> <span class="kc">False</span> 
+            <span class="n">txt</span> <span class="o">=</span> <span class="s1">&#39;Access Point passwords are not identical!&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">showMsgBox</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">warningMsgType</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">warningBoxTitle</span><span class="p">,</span> <span class="n">txt</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">isValid</span></div>
+
+<div class="viewcode-block" id="BuoyUI.saveConfig"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.saveConfig">[docs]</a>    <span class="k">def</span> <span class="nf">saveConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Save configuration file for later use  </span>
+        <span class="n">configIsValid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkConfig</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">configIsValid</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">getConfig</span><span class="p">()</span>
+            <span class="c1"># dest = QtWidgets.QFileDialog.getExistingDirectory(self, &#39;Select Folder&#39;)</span>
+            <span class="n">dest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">saveFileDialog</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">writeMainConfig</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">dest</span><span class="p">)</span></div>
+            
+<div class="viewcode-block" id="BuoyUI.loadConfig"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.loadConfig">[docs]</a>    <span class="k">def</span> <span class="nf">loadConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">src</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">openFileDialog</span><span class="p">()</span> <span class="c1"># Get filepath</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">readConfig</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">src</span><span class="p">)</span> <span class="c1"># Read config from src file </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">updateContent</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="BuoyUI.updateContent"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.updateContent">[docs]</a>    <span class="k">def</span> <span class="nf">updateContent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Fill UI with parameters loaded into buoy object</span>
+        <span class="c1"># WiFi </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wifi_SSID_lineEdit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">wifi</span><span class="o">.</span><span class="n">ssid</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wifi_PSK_lineEdit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">wifi</span><span class="o">.</span><span class="n">psk</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wifi_ConfirmPSK_lineEdit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">wifi</span><span class="o">.</span><span class="n">psk</span><span class="p">)</span>
+
+        <span class="c1"># AccessPoint </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accessPoint_SSID_lineEdit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">accessPoint</span><span class="o">.</span><span class="n">ssid</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accessPoint_PWD_lineEdit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">accessPoint</span><span class="o">.</span><span class="n">wpa_passphrase</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accessPoint_ConfirmPWD_lineEdit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">accessPoint</span><span class="o">.</span><span class="n">wpa_passphrase</span><span class="p">)</span>
+        
+        <span class="c1"># GNSS</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gnss_acquisitionPeriod_spinBox</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">gnssReceiver</span><span class="o">.</span><span class="n">acquisitionPeriod</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">for</span> <span class="n">gnss_constellation</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">available_GNSS_constellations</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">GNSS_checkBox</span><span class="p">[</span><span class="n">gnss_constellation</span><span class="p">]</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span> <span class="nb">bool</span><span class="p">(</span> <span class="nb">int</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">gnssReceiver</span><span class="p">,</span> <span class="n">gnss_constellation</span><span class="o">.</span><span class="n">lower</span><span class="p">()))</span> <span class="p">)</span> <span class="p">)</span>
+            
+        <span class="c1"># Meteo</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meteo_acquisitionPeriod_spinBox</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">meteoSensor</span><span class="o">.</span><span class="n">acquisitionPeriod</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">for</span> <span class="n">meteo_property</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">available_METEO_properties</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">METEO_checkBox</span><span class="p">[</span><span class="n">meteo_property</span><span class="p">]</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span> <span class="nb">bool</span><span class="p">(</span> <span class="nb">int</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">meteoSensor</span><span class="p">,</span> <span class="n">meteo_property</span><span class="p">))</span> <span class="p">)</span> <span class="p">)</span></div>
+
+        
+<div class="viewcode-block" id="BuoyUI.validateConfig"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.validateConfig">[docs]</a>    <span class="k">def</span> <span class="nf">validateConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Save configuration file </span>
+        <span class="n">configIsValid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkConfig</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">configIsValid</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">getConfig</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">writeMainConfig</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">configIsSaved</span> <span class="o">=</span> <span class="kc">True</span></div>
+            
+<div class="viewcode-block" id="BuoyUI.transferConfig"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.transferConfig">[docs]</a>    <span class="k">def</span> <span class="nf">transferConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>       
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">configIsSaved</span><span class="p">:</span>
+            <span class="n">dest</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="o">.</span><span class="n">getExistingDirectory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;Select Folder&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">copyMainConfigFileToSDCard</span><span class="p">(</span><span class="n">dest</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="bp">self</span><span class="o">.</span><span class="n">validateConfig</span><span class="p">()</span>
+            <span class="n">dest</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="o">.</span><span class="n">getExistingDirectory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;Select Folder&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">copyMainConfigFileToSDCard</span><span class="p">(</span><span class="n">dest</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="BuoyUI.checkConfig"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.checkConfig">[docs]</a>    <span class="k">def</span> <span class="nf">checkConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">wifiIsValid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkWifi</span><span class="p">()</span>
+        <span class="n">accessPointIsValid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkAccessPoint</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">wifiIsValid</span> <span class="o">&amp;</span> <span class="n">accessPointIsValid</span></div>
+
+<div class="viewcode-block" id="BuoyUI.checkWifi"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.checkWifi">[docs]</a>    <span class="k">def</span> <span class="nf">checkWifi</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ssidIsValid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkWifi_SSID</span><span class="p">()</span>
+        <span class="n">pskIsValid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkWifi_PSK</span><span class="p">()</span>
+        <span class="n">pskConfirm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">confirmWifiPSK</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">ssidIsValid</span> <span class="o">&amp;</span> <span class="n">pskIsValid</span> <span class="o">&amp;</span> <span class="n">pskConfirm</span></div>
+
+<div class="viewcode-block" id="BuoyUI.checkAccessPoint"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.checkAccessPoint">[docs]</a>    <span class="k">def</span> <span class="nf">checkAccessPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ssidIsValid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkAccessPoint_SSID</span><span class="p">()</span>
+        <span class="n">pwdIsValid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkAccessPoint_PWD</span><span class="p">()</span>
+        <span class="n">pwdConfirm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">confirmAccessPointPWD</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">ssidIsValid</span> <span class="o">&amp;</span> <span class="n">pwdIsValid</span> <span class="o">&amp;</span> <span class="n">pwdConfirm</span></div>
+
+<div class="viewcode-block" id="BuoyUI.getConfig"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.getConfig">[docs]</a>    <span class="k">def</span> <span class="nf">getConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">getWifiConfig</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">getAccessPointConfig</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">getGNSSConfig</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">getMETEOConfig</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="BuoyUI.getWifiConfig"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.getWifiConfig">[docs]</a>    <span class="k">def</span> <span class="nf">getWifiConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">wifi</span><span class="o">.</span><span class="n">ssid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wifi_SSID_lineEdit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">wifi</span><span class="o">.</span><span class="n">psk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wifi_PSK_lineEdit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="BuoyUI.getAccessPointConfig"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.getAccessPointConfig">[docs]</a>    <span class="k">def</span> <span class="nf">getAccessPointConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">accessPoint</span><span class="o">.</span><span class="n">ssid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accessPoint_SSID_lineEdit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">accessPoint</span><span class="o">.</span><span class="n">wpa_passphrase</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accessPoint_PWD_lineEdit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span></div>
+        
+<div class="viewcode-block" id="BuoyUI.getGNSSConfig"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.getGNSSConfig">[docs]</a>    <span class="k">def</span> <span class="nf">getGNSSConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">gnss_constellation</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">available_GNSS_constellations</span><span class="p">:</span>
+            <span class="n">gnss_checkBox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GNSS_checkBox</span><span class="p">[</span><span class="n">gnss_constellation</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">gnss_checkBox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">gnssReceiver</span><span class="p">,</span> <span class="n">gnss_constellation</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span> 
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">gnssReceiver</span><span class="p">,</span> <span class="n">gnss_constellation</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="mi">0</span><span class="p">)</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">gnssReceiver</span><span class="o">.</span><span class="n">acquisitionPeriod</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gnss_acquisitionPeriod_spinBox</span><span class="o">.</span><span class="n">value</span><span class="p">())</span></div>
+        
+<div class="viewcode-block" id="BuoyUI.getMETEOConfig"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.getMETEOConfig">[docs]</a>    <span class="k">def</span> <span class="nf">getMETEOConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">meteo_property</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">available_METEO_properties</span><span class="p">:</span>
+            <span class="n">meteo_checkBox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">METEO_checkBox</span><span class="p">[</span><span class="n">meteo_property</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">meteo_checkBox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">meteoSensor</span><span class="p">,</span> <span class="n">meteo_property</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> 
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">meteoSensor</span><span class="p">,</span> <span class="n">meteo_property</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">meteoSensor</span><span class="o">.</span><span class="n">acquisitionPeriod</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meteo_acquisitionPeriod_spinBox</span><span class="o">.</span><span class="n">value</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="BuoyUI.update_status"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.update_status">[docs]</a>    <span class="k">def</span> <span class="nf">update_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ap_is_connected</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">statusBar</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span><span class="s2">&quot;Status: connected to buoy&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">statusBar</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s2">&quot;background-color : green&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">statusBar</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span><span class="s2">&quot;Status: not connected to buoy&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">statusBar</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s2">&quot;background-color : red&quot;</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="BuoyUI.showMsgBox"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.showMsgBox">[docs]</a>    <span class="k">def</span> <span class="nf">showMsgBox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">MsgType</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Display a custom pop up message box to inform user.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            MsgType (string): Type of message box to display (&#39;Information&#39; or &#39;Warning&#39;).</span>
+<span class="sd">            title (string): Message box title.</span>
+<span class="sd">            text (string): Text to display in the message box.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">MsgType</span> <span class="o">==</span> <span class="s1">&#39;Information&#39;</span><span class="p">:</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Information</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">MsgType</span> <span class="o">==</span> <span class="s1">&#39;Warning&#39;</span><span class="p">:</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
+
+        <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span></div>
+        
+<div class="viewcode-block" id="BuoyUI.saveFileDialog"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.saveFileDialog">[docs]</a>    <span class="k">def</span> <span class="nf">saveFileDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">fileName</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="o">.</span><span class="n">getSaveFileName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Save configuration&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;Text Files (*.txt)&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fileName</span></div>
+
+<div class="viewcode-block" id="BuoyUI.openFileDialog"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.openFileDialog">[docs]</a>    <span class="k">def</span> <span class="nf">openFileDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">fileName</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="o">.</span><span class="n">getOpenFileName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Load configuration&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;Text Files (*.txt)&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">fileName</span></div>
+
+<div class="viewcode-block" id="BuoyUI.stop_gnssLive"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.stop_gnssLive">[docs]</a>    <span class="k">def</span> <span class="nf">stop_gnssLive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gnss_livePlot_initialised</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">timer_gnss</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;rm </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nmea_tmpfile</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">stdin</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_GNSS</span><span class="o">.</span><span class="n">exec_command</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client_GNSS</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gnss_livePlot_initialised</span> <span class="o">=</span> <span class="kc">False</span></div>
+        
+<div class="viewcode-block" id="BuoyUI.stop_meteoLive"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.stop_meteoLive">[docs]</a>    <span class="k">def</span> <span class="nf">stop_meteoLive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">meteo_livePlot_initialised</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">timer_meteo</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client_METEO</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">meteo_livePlot_initialised</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="BuoyUI.closeEvent"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.closeEvent">[docs]</a>    <span class="k">def</span> <span class="nf">closeEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="n">reply</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">question</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;Window Close&#39;</span><span class="p">,</span> <span class="s1">&#39;Do you want to close app ?&#39;</span><span class="p">,</span>
+                                     <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Yes</span> <span class="o">|</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">No</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">No</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">reply</span> <span class="o">==</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Yes</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stop_gnssLive</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stop_meteoLive</span><span class="p">()</span>
+            <span class="n">event</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;BuoyApp closed&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">event</span><span class="o">.</span><span class="n">ignore</span><span class="p">()</span></div>
+
+    <span class="c1">################################################</span>
+    <span class="c1">#######    Connection to access point    #######</span>
+    <span class="c1">################################################</span>
+<div class="viewcode-block" id="BuoyUI.show_connection_window"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.show_connection_window">[docs]</a>    <span class="k">def</span> <span class="nf">show_connection_window</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ap_connection_window</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ap_connection_window</span> <span class="o">=</span> <span class="n">APConnectionUI</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ap_connection_window</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ap_connection_window</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>  <span class="c1"># Close window.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ap_connection_window</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Discard reference.</span></div></div>
+        
+    
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">QApplication</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+    <span class="n">UIWindow</span> <span class="o">=</span> <span class="n">BuoyUI</span><span class="p">()</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Baptiste Menetrier.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

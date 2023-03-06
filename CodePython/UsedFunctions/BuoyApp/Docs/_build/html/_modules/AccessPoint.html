@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AccessPoint &mdash; GNSSBuoy 06/03/2023 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            GNSSBuoy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Code</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GNSSBuoy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">AccessPoint</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for AccessPoint</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#----------------------------------------------------------------------------</span>
+<span class="c1"># Created By  : Menetrier Baptiste</span>
+<span class="c1"># Created Date: 04/03/2023</span>
+<span class="c1"># version =&#39;1.0&#39;</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Functions to connect to buoy access point.  </span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Imports</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">platform</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">AP_PROFILE_TEMPLATE</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;C:\Users\33686\Desktop\ENSTAB\Cours\3A\Guerledan\Bouees_GNSS\CodePython\UsedFunctions\BuoyApp\AccessPoint\buoy_ap_profile_template.xml&#39;</span>
+<span class="n">AP_PROFILE</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;C:\Users\33686\Desktop\ENSTAB\Cours\3A\Guerledan\Bouees_GNSS\CodePython\UsedFunctions\BuoyApp\AccessPoint\buoy_ap_profile.xml&#39;</span>
+<span class="c1"># AP_PROFILE_TEMPLATE = r&#39;.\AccessPoint\buoy_ap_profile_template.xml&#39;</span>
+<span class="c1"># AP_PROFILE = r&#39;.\AccessPoint\buoy_ap_profile.xml&#39;</span>
+
+<span class="c1"># AP_PROFILE = r&#39;.\buoy_ap_profile.xml&#39;</span>
+<span class="n">PASSWORD</span> <span class="o">=</span> <span class="s1">&#39;hydro&#39;</span>
+<span class="n">AP_IP</span> <span class="o">=</span> <span class="s1">&#39;192.168.4.1&#39;</span>
+<span class="n">SSID</span> <span class="o">=</span> <span class="s1">&#39;RPiZeroW_Bouee&#39;</span>
+
+
+<span class="c1">## Updated version to handle Linux ##</span>
+<span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Windows&quot;</span><span class="p">:</span>
+    <span class="n">INTERFACE_CMD</span> <span class="o">=</span> <span class="s2">&quot;netsh interface show interface Wi-Fi | findstr /C:</span><span class="se">\&quot;</span><span class="s2">Connected</span><span class="se">\&quot;</span><span class="s2">&quot;</span>
+    <span class="n">CONNECT_CMD</span> <span class="o">=</span> <span class="s2">&quot;netsh wlan connect name=</span><span class="se">\&quot;</span><span class="si">{}</span><span class="se">\&quot;</span><span class="s2"> interface=</span><span class="se">\&quot;</span><span class="s2">Wi-Fi</span><span class="se">\&quot;</span><span class="s2">&quot;</span>
+<span class="k">elif</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Linux&quot;</span><span class="p">:</span>
+    <span class="n">INTERFACE_CMD</span> <span class="o">=</span> <span class="s2">&quot;iw dev | awk &#39;$1==</span><span class="se">\&quot;</span><span class="s2">Interface</span><span class="se">\&quot;</span><span class="s2">{print $2}&#39;&quot;</span>
+    <span class="n">CONNECT_CMD</span> <span class="o">=</span> <span class="s2">&quot;nmcli device wifi connect </span><span class="si">{}</span><span class="s2"> ifname </span><span class="si">{}</span><span class="s2">&quot;</span>
+
+<div class="viewcode-block" id="APisAvailable"><a class="viewcode-back" href="../AccessPoint.html#AccessPoint.APisAvailable">[docs]</a><span class="k">def</span> <span class="nf">APisAvailable</span><span class="p">(</span><span class="n">ssid</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return buoy AP availability: </span>
+<span class="sd">        True: AP is available </span>
+<span class="sd">        False: AP is not available</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Windows&quot;</span><span class="p">:</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;netsh wlan show networks | findstr SSID | findstr </span><span class="si">{</span><span class="n">ssid</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="k">elif</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Linux&quot;</span><span class="p">:</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;nmcli device wifi list | grep </span><span class="si">{</span><span class="n">ssid</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span> <span class="c1"># 0 if no error, not 0 otherwise </span>
+    <span class="c1"># print(status)</span>
+    <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span> 
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="APisConnected"><a class="viewcode-back" href="../AccessPoint.html#AccessPoint.APisConnected">[docs]</a><span class="k">def</span> <span class="nf">APisConnected</span><span class="p">(</span><span class="n">ssid</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return buoy AP connection status: </span>
+<span class="sd">        True: Connected to AP </span>
+<span class="sd">        False: Not connected to AP</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Windows&quot;</span><span class="p">:</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;netsh wlan show interface | findstr SSID | findstr </span><span class="si">{</span><span class="n">ssid</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span> <span class="c1"># 0 if no error, not 0 otherwise </span>
+    <span class="k">elif</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Linux&quot;</span><span class="p">:</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;nmcli device show | grep GENERAL.CONNECTION | grep -q </span><span class="si">{</span><span class="n">ssid</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span> <span class="c1"># 0 if no error, not 0 otherwise </span>
+    <span class="c1"># print(f&#39;Status = {status}&#39;)</span>
+    <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span> 
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="connectToAP"><a class="viewcode-back" href="../AccessPoint.html#AccessPoint.connectToAP">[docs]</a><span class="k">def</span> <span class="nf">connectToAP</span><span class="p">(</span><span class="n">ssid</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Try to connect to buoy access point if available. &quot;&quot;&quot;</span>
+
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Windows&quot;</span><span class="p">:</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;netsh wlan add profile filename=&quot;</span><span class="si">{</span><span class="n">AP_PROFILE</span><span class="si">}</span><span class="s1">&quot;&#39;</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Linux&quot;</span><span class="p">:</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;sudo nmcli device wifi rescan&#39;</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">APisConnected</span><span class="p">(</span><span class="n">ssid</span><span class="p">):</span>
+
+        <span class="c1"># print(APisConnected(ssid))</span>
+        <span class="k">if</span> <span class="n">APisAvailable</span><span class="p">(</span><span class="n">ssid</span><span class="p">):</span>
+            <span class="c1"># buoy AP is available </span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Attempting to connect to buoy..</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Windows&quot;</span><span class="p">:</span>
+                <span class="n">cmd</span> <span class="o">=</span> <span class="n">CONNECT_CMD</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ssid</span><span class="p">)</span>
+                
+            <span class="k">elif</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Linux&quot;</span><span class="p">:</span>
+                <span class="n">interface</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">popen</span><span class="p">(</span><span class="n">INTERFACE_CMD</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="n">cmd</span> <span class="o">=</span> <span class="n">CONNECT_CMD</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ssid</span><span class="p">,</span> <span class="n">interface</span><span class="p">)</span>
+                <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;sudo </span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">APisConnected</span><span class="p">(</span><span class="n">ssid</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Connection to buoy successful !</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Connection to buoy failed !</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># buoy AP is out of range or not activated</span>
+            <span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">elapsed_time</span> <span class="o">&lt;</span> <span class="mi">60</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Buoy AP not available,  elapsed time = </span><span class="si">{</span><span class="n">elapsed_time</span><span class="si">}</span><span class="s2">s.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">elapsed_time</span> <span class="o">&lt;</span> <span class="mi">3600</span><span class="p">:</span>
+                <span class="n">elapsed_time_min</span> <span class="o">=</span> <span class="n">elapsed_time</span> <span class="o">//</span> <span class="mi">60</span>
+                <span class="n">elapsed_time_sec</span> <span class="o">=</span> <span class="n">elapsed_time</span> <span class="o">%</span> <span class="mi">60</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Buoy AP not available,  elapsed time = </span><span class="si">{</span><span class="n">elapsed_time_min</span><span class="si">}</span><span class="s2">m, </span><span class="si">{</span><span class="n">elapsed_time_sec</span><span class="si">}</span><span class="s2">s.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="add_accessPoint_profile"><a class="viewcode-back" href="../AccessPoint.html#AccessPoint.add_accessPoint_profile">[docs]</a><span class="k">def</span> <span class="nf">add_accessPoint_profile</span><span class="p">():</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;netsh wlan add profile </span><span class="si">{</span><span class="n">AP_PROFILE</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="set_ap_profile"><a class="viewcode-back" href="../AccessPoint.html#AccessPoint.set_ap_profile">[docs]</a><span class="k">def</span> <span class="nf">set_ap_profile</span><span class="p">(</span><span class="n">ssid</span><span class="p">,</span> <span class="n">pwd</span><span class="p">):</span>
+    <span class="n">ssid_hex</span> <span class="o">=</span> <span class="n">str_to_hex</span><span class="p">(</span><span class="n">ssid</span><span class="p">)</span>
+        
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">AP_PROFILE_TEMPLATE</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+        
+        <span class="n">lines</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;ap_name&#39;</span><span class="p">,</span> <span class="n">ssid</span><span class="p">)</span>
+        <span class="n">lines</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;5250695A65726F575F426F756565&#39;</span><span class="p">,</span> <span class="n">ssid_hex</span><span class="p">)</span>
+        <span class="n">lines</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;ap_name&#39;</span><span class="p">,</span> <span class="n">ssid</span><span class="p">)</span>
+        <span class="n">lines</span><span class="p">[</span><span class="mi">21</span><span class="p">]</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">21</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;ap_pwd&#39;</span><span class="p">,</span> <span class="n">pwd</span><span class="p">)</span>
+    
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">AP_PROFILE</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> </div>
+        
+<span class="c1"># def APisAvailable(ssid):</span>
+<span class="c1">#     &quot;&quot;&quot;Return buoy AP availability: </span>
+<span class="c1">#         True: AP is available </span>
+<span class="c1">#         False: AP is not available</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     cmd = f&#39;netsh wlan show networks | findstr SSID | findstr {ssid}&#39;</span>
+<span class="c1">#     status = os.system(cmd) # 0 if no error, not 0 otherwise </span>
+<span class="c1">#     # print(status)</span>
+<span class="c1">#     if status == 0:</span>
+<span class="c1">#         return True </span>
+<span class="c1">#     else:</span>
+<span class="c1">#         return False</span>
+
+
+<span class="c1"># def APisConnected(ssid):</span>
+<span class="c1">#     &quot;&quot;&quot;Return buoy AP connection status: </span>
+<span class="c1">#         True: Connected to AP </span>
+<span class="c1">#         False: Not connected to AP</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     cmd = f&#39;netsh wlan show interface | findstr SSID | findstr {ssid}&#39;</span>
+<span class="c1">#     status = os.system(cmd) # 0 if no error, not 0 otherwise </span>
+
+<span class="c1">#     # print(f&#39;Status = {status}&#39;)</span>
+<span class="c1">#     if status == 0:</span>
+<span class="c1">#         return True </span>
+<span class="c1">#     else:</span>
+<span class="c1">#         return False</span>
+
+<span class="c1"># def connectToAP(ssid):</span>
+<span class="c1">#     &quot;&quot;&quot; Try to connect to buoy access point if available. &quot;&quot;&quot;</span>
+
+<span class="c1">#     start_time = time.time()</span>
+<span class="c1">#     cmd = f&#39;netsh wlan add profile filename=&quot;{AP_PROFILE}&quot;&#39;</span>
+<span class="c1">#     status = os.system(cmd)</span>
+
+<span class="c1">#     while not APisConnected():</span>
+
+<span class="c1">#         # print(APisConnected())</span>
+<span class="c1">#         if APisAvailable():</span>
+<span class="c1">#             # buoy AP is available </span>
+<span class="c1">#             print(&quot;Attempting to connect to buoy..\n&quot;)</span>
+<span class="c1">#             cmd = f&#39;netsh wlan connect name=&quot;{ssid}&quot; interface=&quot;{INTERFACE}&quot;&#39;</span>
+<span class="c1">#             status = os.system(cmd)</span>
+<span class="c1">#             time.sleep(5)</span>
+<span class="c1">#             if APisConnected():</span>
+<span class="c1">#                 print(&quot;Connection to buoy successful !\n&quot;)</span>
+<span class="c1">#             else:</span>
+<span class="c1">#                 print(&quot;Connection to buoy failed !\n&quot;)</span>
+<span class="c1">#         else:</span>
+<span class="c1">#             # buoy AP is out of range or not activated</span>
+<span class="c1">#             elapsed_time = np.round(time.time() - start_time, 0)</span>
+<span class="c1">#             if elapsed_time &lt; 60:</span>
+<span class="c1">#                 print(f&quot;Buoy AP not available,  elapsed time = {elapsed_time}s.\n&quot;)</span>
+<span class="c1">#             elif elapsed_time &lt; 3600:</span>
+<span class="c1">#                 elapsed_time_min = elapsed_time // 60</span>
+<span class="c1">#                 elapsed_time_sec = elapsed_time % 60</span>
+<span class="c1">#                 print(f&quot;Buoy AP not available,  elapsed time = {elapsed_time_min}m, {elapsed_time_sec}s.\n&quot;)</span>
+
+<span class="c1">#         time.sleep(5)</span>
+
+<div class="viewcode-block" id="disconnectFromAP"><a class="viewcode-back" href="../AccessPoint.html#AccessPoint.disconnectFromAP">[docs]</a><span class="k">def</span> <span class="nf">disconnectFromAP</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Disconnect from buoy access point if connected. &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">APisConnected</span><span class="p">():</span>
+        <span class="c1"># User is connected to buoy </span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Disconnecting from buoy..</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;netsh wlan disconnect&#39;</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Disconnected from buoy.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Disconnection from buoy failed !</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># User is not connected to buoy </span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;buoy is already disconnected.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="forgetAP"><a class="viewcode-back" href="../AccessPoint.html#AccessPoint.forgetAP">[docs]</a><span class="k">def</span> <span class="nf">forgetAP</span><span class="p">(</span><span class="n">ssid</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Forget Access Point settings &quot;&quot;&quot;</span>
+
+    <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;netsh wlan delete profile name=</span><span class="si">{</span><span class="n">ssid</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span></div>
+     
+        
+<div class="viewcode-block" id="transferFileFromAP"><a class="viewcode-back" href="../AccessPoint.html#AccessPoint.transferFileFromAP">[docs]</a><span class="k">def</span> <span class="nf">transferFileFromAP</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dest</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Transfer file from AP to local &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">APisConnected</span><span class="p">():</span>
+        <span class="c1"># cmd = f&quot;pscp -batch -pw {PASSWORD} pi@raspberrypi.local:{src} {dest}&quot;</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;pscp -v -pw </span><span class="si">{</span><span class="n">PASSWORD</span><span class="si">}</span><span class="s2"> pi@</span><span class="si">{</span><span class="n">AP_IP</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">src</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">dest</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+        <span class="c1"># print(f&quot;{src}\n&quot;) </span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;File transfer failed, AP is not connected&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="getDataFromAP"><a class="viewcode-back" href="../AccessPoint.html#AccessPoint.getDataFromAP">[docs]</a><span class="k">def</span> <span class="nf">getDataFromAP</span><span class="p">(</span><span class="n">dataType</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Download all archived data from AP&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Downloading data from buoy..&quot;</span><span class="p">)</span>
+    <span class="c1"># NMEA </span>
+    <span class="k">if</span> <span class="n">dataType</span> <span class="o">==</span> <span class="s1">&#39;NMEA&#39;</span> <span class="ow">or</span> <span class="n">dataType</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+        <span class="n">src</span> <span class="o">=</span> <span class="s2">&quot;/home/pi/BuyoData/NMEA/*.gz&quot;</span>
+        <span class="n">dest</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;C:\Users\33686\Desktop\ENSTAB\Cours\3A\Guerledan\CONFIG&quot;</span>
+        <span class="n">transferFileFromAP</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dest</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">dataType</span> <span class="o">==</span> <span class="s1">&#39;UBX&#39;</span> <span class="ow">or</span> <span class="n">dataType</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+        <span class="n">src</span> <span class="o">=</span> <span class="s2">&quot;/home/pi/BuyoData/UBX/*.gz&quot;</span>
+        <span class="n">dest</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;C:\Users\33686\Desktop\ENSTAB\Cours\3A\Guerledan\CONFIG&quot;</span>
+        <span class="n">transferFileFromAP</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dest</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">dataType</span> <span class="o">==</span> <span class="s1">&#39;METEO&#39;</span> <span class="ow">or</span> <span class="n">dataType</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+        <span class="n">src</span> <span class="o">=</span> <span class="s2">&quot;/home/pi/BuyoData/METEO/*.gz&quot;</span>
+        <span class="n">dest</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;C:\Users\33686\Desktop\ENSTAB\Cours\3A\Guerledan\CONFIG&quot;</span>
+        <span class="n">transferFileFromAP</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dest</span><span class="p">)</span></div>
+
+   
+   
+<div class="viewcode-block" id="str_to_hex"><a class="viewcode-back" href="../AccessPoint.html#AccessPoint.str_to_hex">[docs]</a><span class="k">def</span> <span class="nf">str_to_hex</span><span class="p">(</span><span class="n">txt_to_convert</span><span class="p">):</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="n">txt_to_convert</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="n">txt_hex</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">txt_hex</span></div>
+    
+<span class="k">if</span> <span class="vm">__name__</span><span class="o">==</span><span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># pass</span>
+
+    <span class="c1"># forgetAP()</span>
+    <span class="c1"># disconnectFromAP()</span>
+    <span class="n">ssid</span> <span class="o">=</span> <span class="s1">&#39;buoyAccessPoint&#39;</span>
+    <span class="c1"># ssid = &#39;buoyAccessPoint 2&#39;</span>
+    <span class="n">pwd</span> <span class="o">=</span> <span class="s1">&#39;password!&#39;</span>
+    <span class="n">set_ap_profile</span><span class="p">(</span><span class="n">ssid</span><span class="p">,</span> <span class="n">pwd</span><span class="p">)</span>
+    
+    
+    <span class="n">connectToAP</span><span class="p">(</span><span class="n">ssid</span><span class="p">)</span>
+
+    <span class="c1"># APisAvailable()</span>
+
+    <span class="c1"># src = &quot;/home/pi/BuyoConfig/APRoutine.sh&quot;</span>
+    <span class="c1"># dest = r&quot;C:\Users\33686\Desktop\ENSTAB\Cours\3A\Guerledan\CONFIG&quot;</span>
+    <span class="c1"># transferFileFromAP(src, dest)</span>
+
+    <span class="c1"># getDataFromAP(dataType=&#39;all&#39;)</span>
+    
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Baptiste Menetrier.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

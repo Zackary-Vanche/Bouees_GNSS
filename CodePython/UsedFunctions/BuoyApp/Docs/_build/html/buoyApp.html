@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>buoyApp module &mdash; GNSSBuoy 06/03/2023 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="deployUserConfig module" href="deployUserConfig.html" />
+    <link rel="prev" title="buoy module" href="buoy.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            GNSSBuoy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Code</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="AccessPoint.html">AccessPoint module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="buoy.html">buoy module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">buoyApp module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#buoyApp.APConnectionUI"><code class="docutils literal notranslate"><span class="pre">APConnectionUI</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.APConnectionUI.connectToAP"><code class="docutils literal notranslate"><span class="pre">APConnectionUI.connectToAP()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.APConnectionUI.loadConfig"><code class="docutils literal notranslate"><span class="pre">APConnectionUI.loadConfig()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.APConnectionUI.openFileDialog"><code class="docutils literal notranslate"><span class="pre">APConnectionUI.openFileDialog()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.APConnectionUI.updateContent"><code class="docutils literal notranslate"><span class="pre">APConnectionUI.updateContent()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#buoyApp.BuoyUI"><code class="docutils literal notranslate"><span class="pre">BuoyUI</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.checkAccessPoint"><code class="docutils literal notranslate"><span class="pre">BuoyUI.checkAccessPoint()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.checkAccessPoint_PWD"><code class="docutils literal notranslate"><span class="pre">BuoyUI.checkAccessPoint_PWD()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.checkAccessPoint_SSID"><code class="docutils literal notranslate"><span class="pre">BuoyUI.checkAccessPoint_SSID()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.checkConfig"><code class="docutils literal notranslate"><span class="pre">BuoyUI.checkConfig()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.checkWifi"><code class="docutils literal notranslate"><span class="pre">BuoyUI.checkWifi()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.checkWifi_PSK"><code class="docutils literal notranslate"><span class="pre">BuoyUI.checkWifi_PSK()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.checkWifi_SSID"><code class="docutils literal notranslate"><span class="pre">BuoyUI.checkWifi_SSID()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.closeEvent"><code class="docutils literal notranslate"><span class="pre">BuoyUI.closeEvent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.confirmAccessPointPWD"><code class="docutils literal notranslate"><span class="pre">BuoyUI.confirmAccessPointPWD()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.confirmWifiPSK"><code class="docutils literal notranslate"><span class="pre">BuoyUI.confirmWifiPSK()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.getAccessPointConfig"><code class="docutils literal notranslate"><span class="pre">BuoyUI.getAccessPointConfig()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.getConfig"><code class="docutils literal notranslate"><span class="pre">BuoyUI.getConfig()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.getGNSSConfig"><code class="docutils literal notranslate"><span class="pre">BuoyUI.getGNSSConfig()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.getMETEOConfig"><code class="docutils literal notranslate"><span class="pre">BuoyUI.getMETEOConfig()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.getMeteoRate"><code class="docutils literal notranslate"><span class="pre">BuoyUI.getMeteoRate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.getUbloxRate"><code class="docutils literal notranslate"><span class="pre">BuoyUI.getUbloxRate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.getWifiConfig"><code class="docutils literal notranslate"><span class="pre">BuoyUI.getWifiConfig()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.get_gnss_data"><code class="docutils literal notranslate"><span class="pre">BuoyUI.get_gnss_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.get_meteo_data"><code class="docutils literal notranslate"><span class="pre">BuoyUI.get_meteo_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.loadConfig"><code class="docutils literal notranslate"><span class="pre">BuoyUI.loadConfig()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.openFileDialog"><code class="docutils literal notranslate"><span class="pre">BuoyUI.openFileDialog()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.plot_live_GNSS_data"><code class="docutils literal notranslate"><span class="pre">BuoyUI.plot_live_GNSS_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.plot_live_METEO_data"><code class="docutils literal notranslate"><span class="pre">BuoyUI.plot_live_METEO_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.resetAccessPoint_PWDConfirm"><code class="docutils literal notranslate"><span class="pre">BuoyUI.resetAccessPoint_PWDConfirm()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.resetWifi_PSKConfirm"><code class="docutils literal notranslate"><span class="pre">BuoyUI.resetWifi_PSKConfirm()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.saveConfig"><code class="docutils literal notranslate"><span class="pre">BuoyUI.saveConfig()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.saveFileDialog"><code class="docutils literal notranslate"><span class="pre">BuoyUI.saveFileDialog()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.showMsgBox"><code class="docutils literal notranslate"><span class="pre">BuoyUI.showMsgBox()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.show_connection_window"><code class="docutils literal notranslate"><span class="pre">BuoyUI.show_connection_window()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.stop_gnssLive"><code class="docutils literal notranslate"><span class="pre">BuoyUI.stop_gnssLive()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.stop_meteoLive"><code class="docutils literal notranslate"><span class="pre">BuoyUI.stop_meteoLive()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.transferConfig"><code class="docutils literal notranslate"><span class="pre">BuoyUI.transferConfig()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.updateContent"><code class="docutils literal notranslate"><span class="pre">BuoyUI.updateContent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.update_GNSS_plot"><code class="docutils literal notranslate"><span class="pre">BuoyUI.update_GNSS_plot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.update_METEO_plot"><code class="docutils literal notranslate"><span class="pre">BuoyUI.update_METEO_plot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.update_status"><code class="docutils literal notranslate"><span class="pre">BuoyUI.update_status()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buoyApp.BuoyUI.validateConfig"><code class="docutils literal notranslate"><span class="pre">BuoyUI.validateConfig()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#buoyApp.MplCanvas"><code class="docutils literal notranslate"><span class="pre">MplCanvas</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="deployUserConfig.html">deployUserConfig module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geodesy.html">geodesy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raw_data_in_real_time.html">raw_data_in_real_time module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">GNSSBuoy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Code</a></li>
+      <li class="breadcrumb-item active">buoyApp module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/buoyApp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-buoyApp">
+<span id="buoyapp-module"></span><h1>buoyApp module<a class="headerlink" href="#module-buoyApp" title="Permalink to this heading"></a></h1>
+<p>GUI classes to handle configuration of the buoy and live data visualisation.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="buoyApp.APConnectionUI">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">buoyApp.</span></span><span class="sig-name descname"><span class="pre">APConnectionUI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mainUI</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#APConnectionUI"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.APConnectionUI" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QMainWindow</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.APConnectionUI.connectToAP">
+<span class="sig-name descname"><span class="pre">connectToAP</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#APConnectionUI.connectToAP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.APConnectionUI.connectToAP" title="Permalink to this definition"></a></dt>
+<dd><p>Try to connect to buoy access point if available.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.APConnectionUI.loadConfig">
+<span class="sig-name descname"><span class="pre">loadConfig</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#APConnectionUI.loadConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.APConnectionUI.loadConfig" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.APConnectionUI.openFileDialog">
+<span class="sig-name descname"><span class="pre">openFileDialog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#APConnectionUI.openFileDialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.APConnectionUI.openFileDialog" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.APConnectionUI.updateContent">
+<span class="sig-name descname"><span class="pre">updateContent</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#APConnectionUI.updateContent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.APConnectionUI.updateContent" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">buoyApp.</span></span><span class="sig-name descname"><span class="pre">BuoyUI</span></span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QMainWindow</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.checkAccessPoint">
+<span class="sig-name descname"><span class="pre">checkAccessPoint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.checkAccessPoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.checkAccessPoint" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.checkAccessPoint_PWD">
+<span class="sig-name descname"><span class="pre">checkAccessPoint_PWD</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.checkAccessPoint_PWD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.checkAccessPoint_PWD" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.checkAccessPoint_SSID">
+<span class="sig-name descname"><span class="pre">checkAccessPoint_SSID</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.checkAccessPoint_SSID"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.checkAccessPoint_SSID" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.checkConfig">
+<span class="sig-name descname"><span class="pre">checkConfig</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.checkConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.checkConfig" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.checkWifi">
+<span class="sig-name descname"><span class="pre">checkWifi</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.checkWifi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.checkWifi" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.checkWifi_PSK">
+<span class="sig-name descname"><span class="pre">checkWifi_PSK</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.checkWifi_PSK"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.checkWifi_PSK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.checkWifi_SSID">
+<span class="sig-name descname"><span class="pre">checkWifi_SSID</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.checkWifi_SSID"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.checkWifi_SSID" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.closeEvent">
+<span class="sig-name descname"><span class="pre">closeEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QCloseEvent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.closeEvent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.closeEvent" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.confirmAccessPointPWD">
+<span class="sig-name descname"><span class="pre">confirmAccessPointPWD</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.confirmAccessPointPWD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.confirmAccessPointPWD" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.confirmWifiPSK">
+<span class="sig-name descname"><span class="pre">confirmWifiPSK</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.confirmWifiPSK"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.confirmWifiPSK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.getAccessPointConfig">
+<span class="sig-name descname"><span class="pre">getAccessPointConfig</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.getAccessPointConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.getAccessPointConfig" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.getConfig">
+<span class="sig-name descname"><span class="pre">getConfig</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.getConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.getConfig" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.getGNSSConfig">
+<span class="sig-name descname"><span class="pre">getGNSSConfig</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.getGNSSConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.getGNSSConfig" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.getMETEOConfig">
+<span class="sig-name descname"><span class="pre">getMETEOConfig</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.getMETEOConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.getMETEOConfig" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.getMeteoRate">
+<span class="sig-name descname"><span class="pre">getMeteoRate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.getMeteoRate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.getMeteoRate" title="Permalink to this definition"></a></dt>
+<dd><p>Get current acquisition rate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Acquisition rate used by BME280 sensor.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>rate</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.getUbloxRate">
+<span class="sig-name descname"><span class="pre">getUbloxRate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.getUbloxRate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.getUbloxRate" title="Permalink to this definition"></a></dt>
+<dd><p>Get current acquisition rate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Acquisition rate used by the u-blox module.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>rate</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.getWifiConfig">
+<span class="sig-name descname"><span class="pre">getWifiConfig</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.getWifiConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.getWifiConfig" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.get_gnss_data">
+<span class="sig-name descname"><span class="pre">get_gnss_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.get_gnss_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.get_gnss_data" title="Permalink to this definition"></a></dt>
+<dd><p>Read nmea data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.get_meteo_data">
+<span class="sig-name descname"><span class="pre">get_meteo_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.get_meteo_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.get_meteo_data" title="Permalink to this definition"></a></dt>
+<dd><p>Read meteo data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.loadConfig">
+<span class="sig-name descname"><span class="pre">loadConfig</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.loadConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.loadConfig" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.openFileDialog">
+<span class="sig-name descname"><span class="pre">openFileDialog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.openFileDialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.openFileDialog" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.plot_live_GNSS_data">
+<span class="sig-name descname"><span class="pre">plot_live_GNSS_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.plot_live_GNSS_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.plot_live_GNSS_data" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.plot_live_METEO_data">
+<span class="sig-name descname"><span class="pre">plot_live_METEO_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.plot_live_METEO_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.plot_live_METEO_data" title="Permalink to this definition"></a></dt>
+<dd><p>Initialise meteo plot.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.resetAccessPoint_PWDConfirm">
+<span class="sig-name descname"><span class="pre">resetAccessPoint_PWDConfirm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.resetAccessPoint_PWDConfirm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.resetAccessPoint_PWDConfirm" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.resetWifi_PSKConfirm">
+<span class="sig-name descname"><span class="pre">resetWifi_PSKConfirm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.resetWifi_PSKConfirm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.resetWifi_PSKConfirm" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.saveConfig">
+<span class="sig-name descname"><span class="pre">saveConfig</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.saveConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.saveConfig" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.saveFileDialog">
+<span class="sig-name descname"><span class="pre">saveFileDialog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.saveFileDialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.saveFileDialog" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.showMsgBox">
+<span class="sig-name descname"><span class="pre">showMsgBox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MsgType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.showMsgBox"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.showMsgBox" title="Permalink to this definition"></a></dt>
+<dd><p>Display a custom pop up message box to inform user.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>MsgType</strong> (<em>string</em>) – Type of message box to display (‘Information’ or ‘Warning’).</p></li>
+<li><p><strong>title</strong> (<em>string</em>) – Message box title.</p></li>
+<li><p><strong>text</strong> (<em>string</em>) – Text to display in the message box.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.show_connection_window">
+<span class="sig-name descname"><span class="pre">show_connection_window</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.show_connection_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.show_connection_window" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.stop_gnssLive">
+<span class="sig-name descname"><span class="pre">stop_gnssLive</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.stop_gnssLive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.stop_gnssLive" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.stop_meteoLive">
+<span class="sig-name descname"><span class="pre">stop_meteoLive</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.stop_meteoLive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.stop_meteoLive" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.transferConfig">
+<span class="sig-name descname"><span class="pre">transferConfig</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.transferConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.transferConfig" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.updateContent">
+<span class="sig-name descname"><span class="pre">updateContent</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.updateContent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.updateContent" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.update_GNSS_plot">
+<span class="sig-name descname"><span class="pre">update_GNSS_plot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.update_GNSS_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.update_GNSS_plot" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.update_METEO_plot">
+<span class="sig-name descname"><span class="pre">update_METEO_plot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.update_METEO_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.update_METEO_plot" title="Permalink to this definition"></a></dt>
+<dd><p>Update plot with last meteo data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.update_status">
+<span class="sig-name descname"><span class="pre">update_status</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.update_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.update_status" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="buoyApp.BuoyUI.validateConfig">
+<span class="sig-name descname"><span class="pre">validateConfig</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.validateConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.validateConfig" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="buoyApp.MplCanvas">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">buoyApp.</span></span><span class="sig-name descname"><span class="pre">MplCanvas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#MplCanvas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.MplCanvas" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">FigureCanvasQTAgg</span></code></p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="buoy.html" class="btn btn-neutral float-left" title="buoy module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="deployUserConfig.html" class="btn btn-neutral float-right" title="deployUserConfig module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Baptiste Menetrier.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
