@@ -373,7 +373,7 @@
 <span class="sd">    to the Raspberrry Pi (for update purposes for instance) or as a ssh connection. </span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        Item (Item): Mother class. </span>
+<span class="sd">        Item (Item): parent class</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buoy</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">buoy</span><span class="p">)</span>
@@ -414,6 +414,11 @@
 
 
 <div class="viewcode-block" id="AccessPoint"><a class="viewcode-back" href="../buoy.html#buoy.AccessPoint">[docs]</a><span class="k">class</span> <span class="nc">AccessPoint</span><span class="p">(</span><span class="n">Item</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class handling the access point configuration. </span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        Item (Item): parent class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buoy</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">buoy</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;accessPoint&#39;</span>
@@ -452,6 +457,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_content</span> <span class="o">=</span> <span class="n">new_content</span></div>
         
 <div class="viewcode-block" id="MeteoSensor"><a class="viewcode-back" href="../buoy.html#buoy.MeteoSensor">[docs]</a><span class="k">class</span> <span class="nc">MeteoSensor</span><span class="p">(</span><span class="n">Item</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Class handling meteo sensor configuration.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        Item (Item): parent class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buoy</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">buoy</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;meteoSensor&#39;</span>
@@ -503,6 +513,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_content</span> <span class="o">=</span> <span class="n">new_content</span></div>
 
 <div class="viewcode-block" id="GNSSReceiver"><a class="viewcode-back" href="../buoy.html#buoy.GNSSReceiver">[docs]</a><span class="k">class</span> <span class="nc">GNSSReceiver</span><span class="p">(</span><span class="n">Item</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Class handling GNSS configuration.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        Item (Item): parent class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buoy</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">buoy</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;gnssReceiver&#39;</span>

@@ -138,6 +138,12 @@ Item classes handle the different items than can be configured by user.</p>
 <dt class="sig sig-object py" id="buoy.AccessPoint">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">buoy.</span></span><span class="sig-name descname"><span class="pre">AccessPoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buoy</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoy.html#AccessPoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoy.AccessPoint" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#buoy.Item" title="buoy.Item"><code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code></a></p>
+<p>Class handling the access point configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>Item</strong> (<a class="reference internal" href="#buoy.Item" title="buoy.Item"><em>Item</em></a>) – parent class</p>
+</dd>
+</dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="buoy.AccessPoint.content">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">content</span></span><a class="headerlink" href="#buoy.AccessPoint.content" title="Permalink to this definition"></a></dt>
@@ -231,6 +237,12 @@ each element with its item’s attribute.</p>
 <dt class="sig sig-object py" id="buoy.GNSSReceiver">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">buoy.</span></span><span class="sig-name descname"><span class="pre">GNSSReceiver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buoy</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoy.html#GNSSReceiver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoy.GNSSReceiver" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#buoy.Item" title="buoy.Item"><code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code></a></p>
+<p>Class handling GNSS configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>Item</strong> (<a class="reference internal" href="#buoy.Item" title="buoy.Item"><em>Item</em></a>) – parent class</p>
+</dd>
+</dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="buoy.GNSSReceiver.acquisitionPeriod">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">acquisitionPeriod</span></span><a class="headerlink" href="#buoy.GNSSReceiver.acquisitionPeriod" title="Permalink to this definition"></a></dt>
@@ -290,6 +302,12 @@ self.name: name of the item</p>
 <dt class="sig sig-object py" id="buoy.MeteoSensor">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">buoy.</span></span><span class="sig-name descname"><span class="pre">MeteoSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buoy</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoy.html#MeteoSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoy.MeteoSensor" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#buoy.Item" title="buoy.Item"><code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code></a></p>
+<p>Class handling meteo sensor configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>Item</strong> (<a class="reference internal" href="#buoy.Item" title="buoy.Item"><em>Item</em></a>) – parent class</p>
+</dd>
+</dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="buoy.MeteoSensor.acquisitionPeriod">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">acquisitionPeriod</span></span><a class="headerlink" href="#buoy.MeteoSensor.acquisitionPeriod" title="Permalink to this definition"></a></dt>
@@ -325,7 +343,7 @@ self.name: name of the item</p>
 to the Raspberrry Pi (for update purposes for instance) or as a ssh connection.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>Item</strong> (<a class="reference internal" href="#buoy.Item" title="buoy.Item"><em>Item</em></a>) – Mother class.</p>
+<dd class="field-odd"><p><strong>Item</strong> (<a class="reference internal" href="#buoy.Item" title="buoy.Item"><em>Item</em></a>) – parent class</p>
 </dd>
 </dl>
 <dl class="py property">

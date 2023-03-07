@@ -303,7 +303,7 @@ class Wifi(Item):
     to the Raspberrry Pi (for update purposes for instance) or as a ssh connection. 
 
     Args:
-        Item (Item): Mother class. 
+        Item (Item): parent class
     """
     def __init__(self, buoy):
         super().__init__(buoy)
@@ -344,6 +344,11 @@ class Wifi(Item):
 
 
 class AccessPoint(Item):
+    """Class handling the access point configuration. 
+
+    Args:
+        Item (Item): parent class
+    """
     def __init__(self, buoy):
         super().__init__(buoy)
         self.name = 'accessPoint'
@@ -382,6 +387,11 @@ class AccessPoint(Item):
         self._content = new_content
         
 class MeteoSensor(Item):
+    """ Class handling meteo sensor configuration.
+
+    Args:
+        Item (Item): parent class
+    """
     def __init__(self, buoy):
         super().__init__(buoy)
         self.name = 'meteoSensor'
@@ -433,6 +443,11 @@ class MeteoSensor(Item):
         self._content = new_content
 
 class GNSSReceiver(Item):
+    """ Class handling GNSS configuration.
+
+    Args:
+        Item (Item): parent class
+    """
     def __init__(self, buoy):
         super().__init__(buoy)
         self.name = 'gnssReceiver'
