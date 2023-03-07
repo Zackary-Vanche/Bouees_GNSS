@@ -18,7 +18,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="deployUserConfig module" href="deployUserConfig.html" />
+    <link rel="next" title="geodesy module" href="geodesy.html" />
     <link rel="prev" title="buoy module" href="buoy.html" /> 
 </head>
 
@@ -97,7 +97,6 @@
 <li class="toctree-l3"><a class="reference internal" href="#buoyApp.MplCanvas"><code class="docutils literal notranslate"><span class="pre">MplCanvas</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="deployUserConfig.html">deployUserConfig module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="geodesy.html">geodesy module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="raw_data_in_real_time.html">raw_data_in_real_time module</a></li>
 </ul>
@@ -136,6 +135,12 @@
 <dt class="sig sig-object py" id="buoyApp.APConnectionUI">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">buoyApp.</span></span><span class="sig-name descname"><span class="pre">APConnectionUI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mainUI</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#APConnectionUI"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.APConnectionUI" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QMainWindow</span></code></p>
+<p>Connection window used to connect to access point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>QMainWindow</strong> (<em>QMainWindow</em>) – </p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.APConnectionUI.connectToAP">
 <span class="sig-name descname"><span class="pre">connectToAP</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#APConnectionUI.connectToAP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.APConnectionUI.connectToAP" title="Permalink to this definition"></a></dt>
@@ -150,7 +155,16 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.APConnectionUI.openFileDialog">
 <span class="sig-name descname"><span class="pre">openFileDialog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#APConnectionUI.openFileDialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.APConnectionUI.openFileDialog" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Open dialog file to load configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>configuration full path</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.APConnectionUI.updateContent">
@@ -166,52 +180,139 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.checkAccessPoint">
 <span class="sig-name descname"><span class="pre">checkAccessPoint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.checkAccessPoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.checkAccessPoint" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Assert access point configuration matches requirements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if ok, False otherwise</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.checkAccessPoint_PWD">
 <span class="sig-name descname"><span class="pre">checkAccessPoint_PWD</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.checkAccessPoint_PWD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.checkAccessPoint_PWD" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Assert access point password matches basic requirements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if ok, False otherwise</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.checkAccessPoint_SSID">
 <span class="sig-name descname"><span class="pre">checkAccessPoint_SSID</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.checkAccessPoint_SSID"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.checkAccessPoint_SSID" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Assert access point SSID matches basic requirements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>_description_</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>_type_</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.checkConfig">
 <span class="sig-name descname"><span class="pre">checkConfig</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.checkConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.checkConfig" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Assert configuration matches all requirements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if ok, False otherwise</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.checkWifi">
 <span class="sig-name descname"><span class="pre">checkWifi</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.checkWifi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.checkWifi" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Assert wifi configuration matches requirements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if ok, False otherwise</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.checkWifi_PSK">
 <span class="sig-name descname"><span class="pre">checkWifi_PSK</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.checkWifi_PSK"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.checkWifi_PSK" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Assert wifi password matches basic requirements</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if ok, False otherwise</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.checkWifi_SSID">
 <span class="sig-name descname"><span class="pre">checkWifi_SSID</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.checkWifi_SSID"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.checkWifi_SSID" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Assert wifi SSID matches basic requirements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if ok, False otherwise</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.closeEvent">
-<span class="sig-name descname"><span class="pre">closeEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QCloseEvent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.closeEvent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.closeEvent" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">closeEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.closeEvent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.closeEvent" title="Permalink to this definition"></a></dt>
+<dd><p>Assert user realy desire to close app.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>closevent</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.confirmAccessPointPWD">
 <span class="sig-name descname"><span class="pre">confirmAccessPointPWD</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.confirmAccessPointPWD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.confirmAccessPointPWD" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Assert password and comfirm password are identical for access point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if ok, False otherwise</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.confirmWifiPSK">
 <span class="sig-name descname"><span class="pre">confirmWifiPSK</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.confirmWifiPSK"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.confirmWifiPSK" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Assert password and comfirm password are identical for wifi.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if ok, False otherwise</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.getAccessPointConfig">
@@ -221,7 +322,8 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.getConfig">
 <span class="sig-name descname"><span class="pre">getConfig</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.getConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.getConfig" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get configuration written in GUI.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.getGNSSConfig">
@@ -239,7 +341,7 @@
 <dd><p>Get current acquisition rate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Acquisition rate used by BME280 sensor.</p>
+<dd class="field-odd"><p>Acquisition rate used by BME280 sensor</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>rate</p>
@@ -253,7 +355,7 @@
 <dd><p>Get current acquisition rate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Acquisition rate used by the u-blox module.</p>
+<dd class="field-odd"><p>acquisition rate used by the u-blox module</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>rate</p>
@@ -269,7 +371,7 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.get_gnss_data">
 <span class="sig-name descname"><span class="pre">get_gnss_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.get_gnss_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.get_gnss_data" title="Permalink to this definition"></a></dt>
-<dd><p>Read nmea data.</p>
+<dd><p>Read NMEA data from buoy.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -281,17 +383,28 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.loadConfig">
 <span class="sig-name descname"><span class="pre">loadConfig</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.loadConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.loadConfig" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Load configuration.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.openFileDialog">
 <span class="sig-name descname"><span class="pre">openFileDialog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.openFileDialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.openFileDialog" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Open dialog UI</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>path of the file to load.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.plot_live_GNSS_data">
 <span class="sig-name descname"><span class="pre">plot_live_GNSS_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.plot_live_GNSS_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.plot_live_GNSS_data" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Initialise ssh connection to get real time data from buoy and start QtCore.QtTimer to update plot.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.plot_live_METEO_data">
@@ -302,22 +415,34 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.resetAccessPoint_PWDConfirm">
 <span class="sig-name descname"><span class="pre">resetAccessPoint_PWDConfirm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.resetAccessPoint_PWDConfirm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.resetAccessPoint_PWDConfirm" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Reset access point password to empty string in GUI.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.resetWifi_PSKConfirm">
 <span class="sig-name descname"><span class="pre">resetWifi_PSKConfirm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.resetWifi_PSKConfirm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.resetWifi_PSKConfirm" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Reset wifi password to empty string in GUI.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.saveConfig">
 <span class="sig-name descname"><span class="pre">saveConfig</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.saveConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.saveConfig" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Save configuration for later use.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.saveFileDialog">
 <span class="sig-name descname"><span class="pre">saveFileDialog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.saveFileDialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.saveFileDialog" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Display dialog UI to select location to save file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>full path to location selected</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.showMsgBox">
@@ -326,9 +451,9 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>MsgType</strong> (<em>string</em>) – Type of message box to display (‘Information’ or ‘Warning’).</p></li>
-<li><p><strong>title</strong> (<em>string</em>) – Message box title.</p></li>
-<li><p><strong>text</strong> (<em>string</em>) – Text to display in the message box.</p></li>
+<li><p><strong>MsgType</strong> (<em>string</em>) – type of message box to display (‘Information’ or ‘Warning’)</p></li>
+<li><p><strong>title</strong> (<em>string</em>) – message box title</p></li>
+<li><p><strong>text</strong> (<em>string</em>) – text to display in the message box</p></li>
 </ul>
 </dd>
 </dl>
@@ -337,32 +462,38 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.show_connection_window">
 <span class="sig-name descname"><span class="pre">show_connection_window</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.show_connection_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.show_connection_window" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Open connection window.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.stop_gnssLive">
 <span class="sig-name descname"><span class="pre">stop_gnssLive</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.stop_gnssLive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.stop_gnssLive" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Interupt real time plot of the GNSS data.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.stop_meteoLive">
 <span class="sig-name descname"><span class="pre">stop_meteoLive</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.stop_meteoLive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.stop_meteoLive" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Interupt real time plot of the meteo data.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.transferConfig">
 <span class="sig-name descname"><span class="pre">transferConfig</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.transferConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.transferConfig" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Transfert configuration to SD card for deployment.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.updateContent">
 <span class="sig-name descname"><span class="pre">updateContent</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.updateContent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.updateContent" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Fill GUI with parameters loaded into buoy object.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.update_GNSS_plot">
 <span class="sig-name descname"><span class="pre">update_GNSS_plot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.update_GNSS_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.update_GNSS_plot" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Update GNSS plot in GUI with last data recorded.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.update_METEO_plot">
@@ -373,12 +504,17 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.update_status">
 <span class="sig-name descname"><span class="pre">update_status</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.update_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.update_status" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Update connection status.
+Status bar set to green if connected to buoy AP.
+Status bar set to red if not connected to buoy AP.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="buoyApp.BuoyUI.validateConfig">
 <span class="sig-name descname"><span class="pre">validateConfig</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#BuoyUI.validateConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.BuoyUI.validateConfig" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Assert configuration is valid and associate each element to the corresponding
+attribute in the Buoy class.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -386,6 +522,12 @@
 <dt class="sig sig-object py" id="buoyApp.MplCanvas">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">buoyApp.</span></span><span class="sig-name descname"><span class="pre">MplCanvas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buoyApp.html#MplCanvas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buoyApp.MplCanvas" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">FigureCanvasQTAgg</span></code></p>
+<p>Class to handle plot in GUI.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>FigureCanvas</strong> (<em>FigureCanvas</em>) – </p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -395,7 +537,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="buoy.html" class="btn btn-neutral float-left" title="buoy module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="deployUserConfig.html" class="btn btn-neutral float-right" title="deployUserConfig module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="geodesy.html" class="btn btn-neutral float-right" title="geodesy module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

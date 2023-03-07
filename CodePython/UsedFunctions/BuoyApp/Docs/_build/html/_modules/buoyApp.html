@@ -104,6 +104,11 @@
 <span class="kn">from</span> <span class="nn">buoy</span> <span class="kn">import</span> <span class="o">*</span>
 
 <div class="viewcode-block" id="MplCanvas"><a class="viewcode-back" href="../buoyApp.html#buoyApp.MplCanvas">[docs]</a><span class="k">class</span> <span class="nc">MplCanvas</span><span class="p">(</span><span class="n">FigureCanvas</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class to handle plot in GUI.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        FigureCanvas (FigureCanvas)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
         <span class="n">fig</span> <span class="o">=</span> <span class="n">Figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
@@ -111,6 +116,11 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">MplCanvas</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="APConnectionUI"><a class="viewcode-back" href="../buoyApp.html#buoyApp.APConnectionUI">[docs]</a><span class="k">class</span> <span class="nc">APConnectionUI</span><span class="p">(</span><span class="n">QMainWindow</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Connection window used to connect to access point. </span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        QMainWindow (QMainWindow)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mainUI</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">APConnectionUI</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         
@@ -198,6 +208,11 @@
 
 
 <div class="viewcode-block" id="APConnectionUI.openFileDialog"><a class="viewcode-back" href="../buoyApp.html#buoyApp.APConnectionUI.openFileDialog">[docs]</a>    <span class="k">def</span> <span class="nf">openFileDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Open dialog file to load configuration.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: configuration full path</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">fileName</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="o">.</span><span class="n">getOpenFileName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Load configuration&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;Text Files (*.txt)&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">fileName</span></div>
         
@@ -398,8 +413,7 @@
     
     <span class="c1">### METEO data ###</span>
 <div class="viewcode-block" id="BuoyUI.plot_live_METEO_data"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.plot_live_METEO_data">[docs]</a>    <span class="k">def</span> <span class="nf">plot_live_METEO_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise meteo plot.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Initialise meteo plot. &quot;&quot;&quot;</span>
                 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ap_is_connected</span><span class="p">:</span> <span class="c1"># user connected to ap </span>
             
@@ -427,7 +441,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current acquisition rate.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            rate: Acquisition rate used by BME280 sensor.</span>
+<span class="sd">            rate: Acquisition rate used by BME280 sensor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;cat </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">meteo_settingfile</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="n">stdin</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_METEO</span><span class="o">.</span><span class="n">exec_command</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
@@ -436,8 +450,7 @@
         <span class="k">return</span> <span class="n">rate</span></div>
     
 <div class="viewcode-block" id="BuoyUI.get_meteo_data"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.get_meteo_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_meteo_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read meteo data.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Read meteo data. &quot;&quot;&quot;</span>
         
         <span class="n">n_lines_to_read</span> <span class="o">=</span> <span class="mi">2</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;tail -n </span><span class="si">{</span><span class="n">n_lines_to_read</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">meteo_logfile</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -476,8 +489,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">data_METEO</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_METEO</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">nb_meteo_values_to_display</span><span class="p">:]</span></div>
         
 <div class="viewcode-block" id="BuoyUI.update_METEO_plot"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.update_METEO_plot">[docs]</a>    <span class="k">def</span> <span class="nf">update_METEO_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update plot with last meteo data.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Update plot with last meteo data. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">get_meteo_data</span><span class="p">()</span> <span class="c1"># Get last data </span>
         
         <span class="c1"># Get xticks position and labels to display time on x-axis </span>
@@ -505,6 +517,7 @@
 
     <span class="c1">### GNSS data ###</span>
 <div class="viewcode-block" id="BuoyUI.plot_live_GNSS_data"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.plot_live_GNSS_data">[docs]</a>    <span class="k">def</span> <span class="nf">plot_live_GNSS_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Initialise ssh connection to get real time data from buoy and start QtCore.QtTimer to update plot. &quot;&quot;&quot;</span>
                 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ap_is_connected</span><span class="p">:</span> <span class="c1"># user connected to ap </span>
             
@@ -530,10 +543,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">show_connection_window</span><span class="p">()</span></div>
      
 <div class="viewcode-block" id="BuoyUI.getUbloxRate"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.getUbloxRate">[docs]</a>    <span class="k">def</span> <span class="nf">getUbloxRate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current acquisition rate.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Get current acquisition rate.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            rate: Acquisition rate used by the u-blox module.</span>
+<span class="sd">            rate: acquisition rate used by the u-blox module</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;ubxtool -g CFG-RATE-MEAS | fgrep CFG-RATE-MEAS&quot;</span>
         <span class="n">stdin</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_GNSS</span><span class="o">.</span><span class="n">exec_command</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
@@ -543,8 +556,7 @@
         <span class="k">return</span> <span class="n">rate</span></div>
     
 <div class="viewcode-block" id="BuoyUI.get_gnss_data"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.get_gnss_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_gnss_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read nmea data. </span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Read NMEA data from buoy. &quot;&quot;&quot;</span>
         
         <span class="n">n_lines_to_read</span> <span class="o">=</span> <span class="mi">16</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;tail -n </span><span class="si">{</span><span class="n">n_lines_to_read</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nmea_tmpfile</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -629,6 +641,7 @@
             
       
 <div class="viewcode-block" id="BuoyUI.update_GNSS_plot"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.update_GNSS_plot">[docs]</a>    <span class="k">def</span> <span class="nf">update_GNSS_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Update GNSS plot in GUI with last data recorded. &quot;&quot;&quot;</span>
         <span class="c1"># Drop off the first y element, append a new one.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">get_gnss_data</span><span class="p">()</span> <span class="c1"># Update dataframe </span>
         
@@ -709,12 +722,19 @@
     <span class="c1">#######     Configuration functions      #######</span>
     <span class="c1">################################################</span>
 <div class="viewcode-block" id="BuoyUI.resetWifi_PSKConfirm"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.resetWifi_PSKConfirm">[docs]</a>    <span class="k">def</span> <span class="nf">resetWifi_PSKConfirm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Reset wifi password to empty string in GUI. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wifi_ConfirmPSK_lineEdit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span></div>
         
 <div class="viewcode-block" id="BuoyUI.resetAccessPoint_PWDConfirm"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.resetAccessPoint_PWDConfirm">[docs]</a>    <span class="k">def</span> <span class="nf">resetAccessPoint_PWDConfirm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Reset access point password to empty string in GUI. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">accessPoint_ConfirmPWD_lineEdit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span></div>
         
 <div class="viewcode-block" id="BuoyUI.checkWifi_SSID"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.checkWifi_SSID">[docs]</a>    <span class="k">def</span> <span class="nf">checkWifi_SSID</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Assert wifi SSID matches basic requirements. </span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if ok, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ssid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wifi_SSID_lineEdit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
         <span class="n">txt</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="n">isValid</span> <span class="o">=</span> <span class="kc">True</span>
@@ -731,6 +751,11 @@
         <span class="k">return</span> <span class="n">isValid</span></div>
 
 <div class="viewcode-block" id="BuoyUI.checkWifi_PSK"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.checkWifi_PSK">[docs]</a>    <span class="k">def</span> <span class="nf">checkWifi_PSK</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Assert wifi password matches basic requirements</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if ok, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">psk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wifi_PSK_lineEdit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
         <span class="n">txt</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="n">isValid</span> <span class="o">=</span> <span class="kc">True</span>
@@ -750,6 +775,11 @@
         <span class="k">return</span> <span class="n">isValid</span></div>
 
 <div class="viewcode-block" id="BuoyUI.checkAccessPoint_SSID"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.checkAccessPoint_SSID">[docs]</a>    <span class="k">def</span> <span class="nf">checkAccessPoint_SSID</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Assert access point SSID matches basic requirements.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            _type_: _description_</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ssid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accessPoint_SSID_lineEdit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
         <span class="n">txt</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="n">isValid</span> <span class="o">=</span> <span class="kc">True</span>
@@ -765,6 +795,11 @@
         <span class="k">return</span> <span class="n">isValid</span></div>
 
 <div class="viewcode-block" id="BuoyUI.checkAccessPoint_PWD"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.checkAccessPoint_PWD">[docs]</a>    <span class="k">def</span> <span class="nf">checkAccessPoint_PWD</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Assert access point password matches basic requirements.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if ok, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">pwd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accessPoint_PWD_lineEdit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
         <span class="n">txt</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="n">isValid</span> <span class="o">=</span> <span class="kc">True</span>
@@ -784,6 +819,11 @@
         <span class="k">return</span> <span class="n">isValid</span></div>
 
 <div class="viewcode-block" id="BuoyUI.confirmWifiPSK"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.confirmWifiPSK">[docs]</a>    <span class="k">def</span> <span class="nf">confirmWifiPSK</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Assert password and comfirm password are identical for wifi.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if ok, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">psk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wifi_PSK_lineEdit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
         <span class="n">confirm_psk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wifi_ConfirmPSK_lineEdit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
         <span class="n">isValid</span> <span class="o">=</span> <span class="kc">True</span>
@@ -795,6 +835,11 @@
         <span class="k">return</span> <span class="n">isValid</span></div>
 
 <div class="viewcode-block" id="BuoyUI.confirmAccessPointPWD"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.confirmAccessPointPWD">[docs]</a>    <span class="k">def</span> <span class="nf">confirmAccessPointPWD</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Assert password and comfirm password are identical for access point.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if ok, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">psk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accessPoint_PWD_lineEdit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
         <span class="n">confirm_psk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accessPoint_ConfirmPWD_lineEdit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
         <span class="n">isValid</span> <span class="o">=</span> <span class="kc">True</span>
@@ -806,6 +851,7 @@
         <span class="k">return</span> <span class="n">isValid</span></div>
 
 <div class="viewcode-block" id="BuoyUI.saveConfig"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.saveConfig">[docs]</a>    <span class="k">def</span> <span class="nf">saveConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Save configuration for later use. &quot;&quot;&quot;</span>
         <span class="c1"># Save configuration file for later use  </span>
         <span class="n">configIsValid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkConfig</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">configIsValid</span><span class="p">:</span>
@@ -815,12 +861,14 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">writeMainConfig</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">dest</span><span class="p">)</span></div>
             
 <div class="viewcode-block" id="BuoyUI.loadConfig"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.loadConfig">[docs]</a>    <span class="k">def</span> <span class="nf">loadConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Load configuration. &quot;&quot;&quot;</span>
         <span class="n">src</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">openFileDialog</span><span class="p">()</span> <span class="c1"># Get filepath</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">readConfig</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">src</span><span class="p">)</span> <span class="c1"># Read config from src file </span>
         <span class="bp">self</span><span class="o">.</span><span class="n">updateContent</span><span class="p">()</span></div>
     
 <div class="viewcode-block" id="BuoyUI.updateContent"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.updateContent">[docs]</a>    <span class="k">def</span> <span class="nf">updateContent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># Fill UI with parameters loaded into buoy object</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Fill GUI with parameters loaded into buoy object.  &quot;&quot;&quot;</span>
+
         <span class="c1"># WiFi </span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wifi_SSID_lineEdit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">wifi</span><span class="o">.</span><span class="n">ssid</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wifi_PSK_lineEdit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">wifi</span><span class="o">.</span><span class="n">psk</span><span class="p">)</span>
@@ -843,6 +891,8 @@
 
         
 <div class="viewcode-block" id="BuoyUI.validateConfig"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.validateConfig">[docs]</a>    <span class="k">def</span> <span class="nf">validateConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Assert configuration is valid and associate each element to the corresponding</span>
+<span class="sd">        attribute in the Buoy class. &quot;&quot;&quot;</span>
         <span class="c1"># Save configuration file </span>
         <span class="n">configIsValid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkConfig</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">configIsValid</span><span class="p">:</span>
@@ -850,7 +900,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">writeMainConfig</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">configIsSaved</span> <span class="o">=</span> <span class="kc">True</span></div>
             
-<div class="viewcode-block" id="BuoyUI.transferConfig"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.transferConfig">[docs]</a>    <span class="k">def</span> <span class="nf">transferConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>       
+<div class="viewcode-block" id="BuoyUI.transferConfig"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.transferConfig">[docs]</a>    <span class="k">def</span> <span class="nf">transferConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Transfert configuration to SD card for deployment. &quot;&quot;&quot;</span>       
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">configIsSaved</span><span class="p">:</span>
             <span class="n">dest</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="o">.</span><span class="n">getExistingDirectory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;Select Folder&#39;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">copyMainConfigFileToSDCard</span><span class="p">(</span><span class="n">dest</span><span class="p">)</span>
@@ -860,23 +911,39 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">copyMainConfigFileToSDCard</span><span class="p">(</span><span class="n">dest</span><span class="p">)</span></div>
     
 <div class="viewcode-block" id="BuoyUI.checkConfig"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.checkConfig">[docs]</a>    <span class="k">def</span> <span class="nf">checkConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Assert configuration matches all requirements. </span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if ok, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">wifiIsValid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkWifi</span><span class="p">()</span>
         <span class="n">accessPointIsValid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkAccessPoint</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">wifiIsValid</span> <span class="o">&amp;</span> <span class="n">accessPointIsValid</span></div>
 
 <div class="viewcode-block" id="BuoyUI.checkWifi"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.checkWifi">[docs]</a>    <span class="k">def</span> <span class="nf">checkWifi</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Assert wifi configuration matches requirements.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if ok, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ssidIsValid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkWifi_SSID</span><span class="p">()</span>
         <span class="n">pskIsValid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkWifi_PSK</span><span class="p">()</span>
         <span class="n">pskConfirm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">confirmWifiPSK</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">ssidIsValid</span> <span class="o">&amp;</span> <span class="n">pskIsValid</span> <span class="o">&amp;</span> <span class="n">pskConfirm</span></div>
 
 <div class="viewcode-block" id="BuoyUI.checkAccessPoint"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.checkAccessPoint">[docs]</a>    <span class="k">def</span> <span class="nf">checkAccessPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Assert access point configuration matches requirements.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if ok, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ssidIsValid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkAccessPoint_SSID</span><span class="p">()</span>
         <span class="n">pwdIsValid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkAccessPoint_PWD</span><span class="p">()</span>
         <span class="n">pwdConfirm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">confirmAccessPointPWD</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">ssidIsValid</span> <span class="o">&amp;</span> <span class="n">pwdIsValid</span> <span class="o">&amp;</span> <span class="n">pwdConfirm</span></div>
 
 <div class="viewcode-block" id="BuoyUI.getConfig"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.getConfig">[docs]</a>    <span class="k">def</span> <span class="nf">getConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Get configuration written in GUI. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">getWifiConfig</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">getAccessPointConfig</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">getGNSSConfig</span><span class="p">()</span>
@@ -909,6 +976,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">buoy</span><span class="o">.</span><span class="n">meteoSensor</span><span class="o">.</span><span class="n">acquisitionPeriod</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meteo_acquisitionPeriod_spinBox</span><span class="o">.</span><span class="n">value</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="BuoyUI.update_status"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.update_status">[docs]</a>    <span class="k">def</span> <span class="nf">update_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Update connection status. </span>
+<span class="sd">        Status bar set to green if connected to buoy AP.</span>
+<span class="sd">        Status bar set to red if not connected to buoy AP.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ap_is_connected</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">statusBar</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span><span class="s2">&quot;Status: connected to buoy&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">statusBar</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s2">&quot;background-color : green&quot;</span><span class="p">)</span>
@@ -920,9 +991,9 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Display a custom pop up message box to inform user.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            MsgType (string): Type of message box to display (&#39;Information&#39; or &#39;Warning&#39;).</span>
-<span class="sd">            title (string): Message box title.</span>
-<span class="sd">            text (string): Text to display in the message box.</span>
+<span class="sd">            MsgType (string): type of message box to display (&#39;Information&#39; or &#39;Warning&#39;)</span>
+<span class="sd">            title (string): message box title</span>
+<span class="sd">            text (string): text to display in the message box</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">MsgType</span> <span class="o">==</span> <span class="s1">&#39;Information&#39;</span><span class="p">:</span>
@@ -936,14 +1007,25 @@
         <span class="n">msg</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span></div>
         
 <div class="viewcode-block" id="BuoyUI.saveFileDialog"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.saveFileDialog">[docs]</a>    <span class="k">def</span> <span class="nf">saveFileDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Display dialog UI to select location to save file. </span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: full path to location selected</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">fileName</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="o">.</span><span class="n">getSaveFileName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Save configuration&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;Text Files (*.txt)&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">fileName</span></div>
 
 <div class="viewcode-block" id="BuoyUI.openFileDialog"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.openFileDialog">[docs]</a>    <span class="k">def</span> <span class="nf">openFileDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="n">fileName</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="o">.</span><span class="n">getOpenFileName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Load configuration&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;Text Files (*.txt)&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">fileName</span></div>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Open dialog UI </span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: path of the file to load.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fileName</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="o">.</span><span class="n">getOpenFileName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Load configuration&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;Text Files (*.txt)&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fileName</span></div>
 
 <div class="viewcode-block" id="BuoyUI.stop_gnssLive"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.stop_gnssLive">[docs]</a>    <span class="k">def</span> <span class="nf">stop_gnssLive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Interupt real time plot of the GNSS data. &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gnss_livePlot_initialised</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">timer_gnss</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
             <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;rm </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nmea_tmpfile</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -952,12 +1034,18 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">gnss_livePlot_initialised</span> <span class="o">=</span> <span class="kc">False</span></div>
         
 <div class="viewcode-block" id="BuoyUI.stop_meteoLive"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.stop_meteoLive">[docs]</a>    <span class="k">def</span> <span class="nf">stop_meteoLive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Interupt real time plot of the meteo data. &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">meteo_livePlot_initialised</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">timer_meteo</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">client_METEO</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">meteo_livePlot_initialised</span> <span class="o">=</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="BuoyUI.closeEvent"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.closeEvent">[docs]</a>    <span class="k">def</span> <span class="nf">closeEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Assert user realy desire to close app. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            event (closevent)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">reply</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">question</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;Window Close&#39;</span><span class="p">,</span> <span class="s1">&#39;Do you want to close app ?&#39;</span><span class="p">,</span>
                                      <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Yes</span> <span class="o">|</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">No</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">No</span><span class="p">)</span>
         
@@ -973,6 +1061,7 @@
     <span class="c1">#######    Connection to access point    #######</span>
     <span class="c1">################################################</span>
 <div class="viewcode-block" id="BuoyUI.show_connection_window"><a class="viewcode-back" href="../buoyApp.html#buoyApp.BuoyUI.show_connection_window">[docs]</a>    <span class="k">def</span> <span class="nf">show_connection_window</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Open connection window. &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ap_connection_window</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ap_connection_window</span> <span class="o">=</span> <span class="n">APConnectionUI</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ap_connection_window</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>

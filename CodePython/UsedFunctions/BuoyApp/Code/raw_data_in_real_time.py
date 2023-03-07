@@ -19,6 +19,16 @@ from geodesy import getUTM_zone, utm_geod2map # Geodesy functions
 ###########               Initialise ssh connection               ########### 
 #############################################################################
 def init_ssh_client(hostname, username, password):
+    """Initialise ssh connection.
+
+    Args:
+        hostname (str): RaspberryPi IP (By default static IP '192.168.4.1') 
+        username (str): RaspberryPi username ('pi' by default)
+        password (str): RaspberryPi password ('hydro' by default)
+
+    Returns:
+        paramiko objects: client and channel associated to the ssh connection
+    """
     # Initialize an SSH client
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -34,6 +44,15 @@ def init_ssh_client(hostname, username, password):
 #############################################################################
 
 def proj_to_UTM(lon, lat):
+    """Project coordinates from WGS84 to UTM zone.
+
+    Args:
+        lon (float): Longitude in decimal degrees 
+        lat (float): Latitue in decimal degrees
+
+    Returns:
+        float, float: x, y UTM zone coordinates
+    """
     n = getUTM_zone(lon)
     x_utm, y_utm = utm_geod2map(n, lon, lat)
     return x_utm, y_utm, n
@@ -43,7 +62,15 @@ def proj_to_UTM(lon, lat):
 #############################################################################
 
 def pre_process_sentence(sentence, verbose=False):
-    
+    """Pre-process NMEA sentences.
+
+    Args:
+        sentence (str): NMEA sentence
+        verbose (bool, optional): Option to print information for invalid sentences. Defaults to False
+
+    Returns:
+        str, str: type of sentence, pre-processed sentence ((None, None) in case sentence is invalid)
+    """
     # Assert sentence is an NMEA sentence
     if check_sentence_is_nmea_sentence(sentence):
         
@@ -72,6 +99,14 @@ def pre_process_sentence(sentence, verbose=False):
     
     
 def check_sentence_is_nmea_sentence(sentence):
+    """Check if NMEA sentence belongs to the list of known sentences.
+
+    Args:
+        sentence (str): NMEA sentence
+
+    Returns:
+        bool: True if NMEA sentence belongs to the known list, False otherwise
+    """
     available_nmea_sentences = ["$GPGGA", "$GPGLL", "$GPGSA", "$GPGSV", "$GPVTG", "$GPRMC", '$GPDZDA']
     is_nmea_sentence = False
     for nmea_sentence in available_nmea_sentences:
@@ -79,6 +114,14 @@ def check_sentence_is_nmea_sentence(sentence):
     return is_nmea_sentence
 
 def remove_unneeded_character_from_sentence(sentence):
+    """Remove useless characters "\r", "\n".
+
+    Args:
+        sentence (str): NMEA sentence
+
+    Returns:
+        str: NMEA sentence without extra characters
+    """
     # Split the sentence into a list of characters
     char_list = list(sentence)
     # Remove extra '\r' characters
@@ -92,6 +135,14 @@ def remove_unneeded_character_from_sentence(sentence):
     return ''.join(char_list)
 
 def compute_nmea_checksum(sentence):
+    """Derive NMEA checksum.
+
+    Args:
+        sentence (str): NMEA sentence
+
+    Returns:
+        str: 2-digit hexadecimal string representing the checksum
+    """
     # Convert the sentence into a list of hexadecimal values
     hex_list = [format(ord(c), 'x').zfill(2) for c in sentence]
     # XOR the values in the list

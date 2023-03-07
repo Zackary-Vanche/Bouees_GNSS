@@ -34,6 +34,11 @@ from AccessPoint import *
 from buoy import *
 
 class MplCanvas(FigureCanvas):
+    """Class to handle plot in GUI.
+
+    Args:
+        FigureCanvas (FigureCanvas)
+    """
 
     def __init__(self, parent=None, width=5, height=4, dpi=100):
         fig = Figure(figsize=(width, height), dpi=dpi)
@@ -41,6 +46,11 @@ class MplCanvas(FigureCanvas):
         super(MplCanvas, self).__init__(fig)
 
 class APConnectionUI(QMainWindow):
+    """Connection window used to connect to access point. 
+
+    Args:
+        QMainWindow (QMainWindow)
+    """
     def __init__(self, mainUI):
         super(APConnectionUI, self).__init__()
         
@@ -128,6 +138,11 @@ class APConnectionUI(QMainWindow):
 
 
     def openFileDialog(self):
+        """Open dialog file to load configuration.
+
+        Returns:
+            str: configuration full path
+        """
         fileName, _ = QFileDialog.getOpenFileName(self, "Load configuration", "", "Text Files (*.txt)")
         return fileName
         
@@ -328,8 +343,7 @@ class BuoyUI(QMainWindow):
     
     ### METEO data ###
     def plot_live_METEO_data(self):
-        """Initialise meteo plot.
-        """
+        """ Initialise meteo plot. """
                 
         if self.ap_is_connected: # user connected to ap 
             
@@ -357,7 +371,7 @@ class BuoyUI(QMainWindow):
         """Get current acquisition rate.
 
         Returns:
-            rate: Acquisition rate used by BME280 sensor.
+            rate: Acquisition rate used by BME280 sensor
         """
         cmd = f"cat {self.meteo_settingfile}"
         stdin, stdout, stderr = self.client_METEO.exec_command(cmd)
@@ -366,8 +380,7 @@ class BuoyUI(QMainWindow):
         return rate
     
     def get_meteo_data(self):
-        """Read meteo data.
-        """
+        """ Read meteo data. """
         
         n_lines_to_read = 2
         cmd = f"tail -n {n_lines_to_read} {self.meteo_logfile}"
@@ -406,8 +419,7 @@ class BuoyUI(QMainWindow):
             self.data_METEO = self.data_METEO.iloc[-self.nb_meteo_values_to_display:]
         
     def update_METEO_plot(self):
-        """Update plot with last meteo data.
-        """
+        """ Update plot with last meteo data. """
         self.get_meteo_data() # Get last data 
         
         # Get xticks position and labels to display time on x-axis 
@@ -435,6 +447,7 @@ class BuoyUI(QMainWindow):
 
     ### GNSS data ###
     def plot_live_GNSS_data(self):
+        """ Initialise ssh connection to get real time data from buoy and start QtCore.QtTimer to update plot. """
                 
         if self.ap_is_connected: # user connected to ap 
             
@@ -460,10 +473,10 @@ class BuoyUI(QMainWindow):
             self.show_connection_window()
      
     def getUbloxRate(self):
-        """Get current acquisition rate.
+        """ Get current acquisition rate.
 
         Returns:
-            rate: Acquisition rate used by the u-blox module.
+            rate: acquisition rate used by the u-blox module
         """
         cmd = "ubxtool -g CFG-RATE-MEAS | fgrep CFG-RATE-MEAS"
         stdin, stdout, stderr = self.client_GNSS.exec_command(cmd)
@@ -473,8 +486,7 @@ class BuoyUI(QMainWindow):
         return rate
     
     def get_gnss_data(self):
-        """Read nmea data. 
-        """
+        """ Read NMEA data from buoy. """
         
         n_lines_to_read = 16
         cmd = f"tail -n {n_lines_to_read} {self.nmea_tmpfile}"
@@ -559,6 +571,7 @@ class BuoyUI(QMainWindow):
             
       
     def update_GNSS_plot(self):
+        """ Update GNSS plot in GUI with last data recorded. """
         # Drop off the first y element, append a new one.
         self.get_gnss_data() # Update dataframe 
         
@@ -639,12 +652,19 @@ class BuoyUI(QMainWindow):
     #######     Configuration functions      #######
     ################################################
     def resetWifi_PSKConfirm(self):
+        """ Reset wifi password to empty string in GUI. """
         self.wifi_ConfirmPSK_lineEdit.setText('')
         
     def resetAccessPoint_PWDConfirm(self):
+        """ Reset access point password to empty string in GUI. """
         self.accessPoint_ConfirmPWD_lineEdit.setText('')
         
     def checkWifi_SSID(self):
+        """ Assert wifi SSID matches basic requirements. 
+
+        Returns:
+            bool: True if ok, False otherwise
+        """
         ssid = self.wifi_SSID_lineEdit.text()
         txt = ''
         isValid = True
@@ -661,6 +681,11 @@ class BuoyUI(QMainWindow):
         return isValid
 
     def checkWifi_PSK(self):
+        """ Assert wifi password matches basic requirements
+
+        Returns:
+            bool: True if ok, False otherwise
+        """
         psk = self.wifi_PSK_lineEdit.text()
         txt = ''
         isValid = True
@@ -680,6 +705,11 @@ class BuoyUI(QMainWindow):
         return isValid
 
     def checkAccessPoint_SSID(self):
+        """ Assert access point SSID matches basic requirements.
+
+        Returns:
+            _type_: _description_
+        """
         ssid = self.accessPoint_SSID_lineEdit.text()
         txt = ''
         isValid = True
@@ -695,6 +725,11 @@ class BuoyUI(QMainWindow):
         return isValid
 
     def checkAccessPoint_PWD(self):
+        """ Assert access point password matches basic requirements.
+
+        Returns:
+            bool: True if ok, False otherwise
+        """
         pwd = self.accessPoint_PWD_lineEdit.text()
         txt = ''
         isValid = True
@@ -714,6 +749,11 @@ class BuoyUI(QMainWindow):
         return isValid
 
     def confirmWifiPSK(self):
+        """ Assert password and comfirm password are identical for wifi.
+
+        Returns:
+            bool: True if ok, False otherwise
+        """
         psk = self.wifi_PSK_lineEdit.text()
         confirm_psk = self.wifi_ConfirmPSK_lineEdit.text()
         isValid = True
@@ -725,6 +765,11 @@ class BuoyUI(QMainWindow):
         return isValid
 
     def confirmAccessPointPWD(self):
+        """ Assert password and comfirm password are identical for access point.
+
+        Returns:
+            bool: True if ok, False otherwise
+        """
         psk = self.accessPoint_PWD_lineEdit.text()
         confirm_psk = self.accessPoint_ConfirmPWD_lineEdit.text()
         isValid = True
@@ -736,6 +781,7 @@ class BuoyUI(QMainWindow):
         return isValid
 
     def saveConfig(self):
+        """ Save configuration for later use. """
         # Save configuration file for later use  
         configIsValid = self.checkConfig()
         if configIsValid:
@@ -745,12 +791,14 @@ class BuoyUI(QMainWindow):
             self.buoy.writeMainConfig(path=dest)
             
     def loadConfig(self):
+        """ Load configuration. """
         src = self.openFileDialog() # Get filepath
         self.buoy.readConfig(path=src) # Read config from src file 
         self.updateContent()
     
     def updateContent(self):
-        # Fill UI with parameters loaded into buoy object
+        """ Fill GUI with parameters loaded into buoy object.  """
+
         # WiFi 
         self.wifi_SSID_lineEdit.setText(self.buoy.wifi.ssid)
         self.wifi_PSK_lineEdit.setText(self.buoy.wifi.psk)
@@ -773,6 +821,8 @@ class BuoyUI(QMainWindow):
 
         
     def validateConfig(self):
+        """ Assert configuration is valid and associate each element to the corresponding
+        attribute in the Buoy class. """
         # Save configuration file 
         configIsValid = self.checkConfig()
         if configIsValid:
@@ -780,7 +830,8 @@ class BuoyUI(QMainWindow):
             self.buoy.writeMainConfig()
             self.configIsSaved = True
             
-    def transferConfig(self):       
+    def transferConfig(self):
+        """ Transfert configuration to SD card for deployment. """       
         if self.configIsSaved:
             dest = QFileDialog.getExistingDirectory(self, 'Select Folder')
             self.buoy.copyMainConfigFileToSDCard(dest)
@@ -790,23 +841,39 @@ class BuoyUI(QMainWindow):
             self.buoy.copyMainConfigFileToSDCard(dest)
     
     def checkConfig(self):
+        """ Assert configuration matches all requirements. 
+
+        Returns:
+            bool: True if ok, False otherwise
+        """
         wifiIsValid = self.checkWifi()
         accessPointIsValid = self.checkAccessPoint()
         return wifiIsValid & accessPointIsValid
 
     def checkWifi(self):
+        """ Assert wifi configuration matches requirements.
+
+        Returns:
+            bool: True if ok, False otherwise
+        """
         ssidIsValid = self.checkWifi_SSID()
         pskIsValid = self.checkWifi_PSK()
         pskConfirm = self.confirmWifiPSK()
         return ssidIsValid & pskIsValid & pskConfirm
 
     def checkAccessPoint(self):
+        """ Assert access point configuration matches requirements.
+
+        Returns:
+            bool: True if ok, False otherwise
+        """
         ssidIsValid = self.checkAccessPoint_SSID()
         pwdIsValid = self.checkAccessPoint_PWD()
         pwdConfirm = self.confirmAccessPointPWD()
         return ssidIsValid & pwdIsValid & pwdConfirm
 
     def getConfig(self):
+        """ Get configuration written in GUI. """
         self.getWifiConfig()
         self.getAccessPointConfig()
         self.getGNSSConfig()
@@ -839,6 +906,10 @@ class BuoyUI(QMainWindow):
         self.buoy.meteoSensor.acquisitionPeriod = int(self.meteo_acquisitionPeriod_spinBox.value())
 
     def update_status(self):
+        """ Update connection status. 
+        Status bar set to green if connected to buoy AP.
+        Status bar set to red if not connected to buoy AP.
+        """
         if self.ap_is_connected:
             self.statusBar.showMessage("Status: connected to buoy")
             self.statusBar.setStyleSheet("background-color : green")
@@ -850,9 +921,9 @@ class BuoyUI(QMainWindow):
         """Display a custom pop up message box to inform user.
 
         Args:
-            MsgType (string): Type of message box to display ('Information' or 'Warning').
-            title (string): Message box title.
-            text (string): Text to display in the message box.
+            MsgType (string): type of message box to display ('Information' or 'Warning')
+            title (string): message box title
+            text (string): text to display in the message box
         """
         msg = QMessageBox(self)
         if MsgType == 'Information':
@@ -866,14 +937,25 @@ class BuoyUI(QMainWindow):
         msg.exec_()
         
     def saveFileDialog(self):
+        """ Display dialog UI to select location to save file. 
+
+        Returns:
+            str: full path to location selected
+        """
         fileName, _ = QFileDialog.getSaveFileName(self, "Save configuration", "", "Text Files (*.txt)")
         return fileName
 
     def openFileDialog(self):
-            fileName, _ = QFileDialog.getOpenFileName(self, "Load configuration", "", "Text Files (*.txt)")
-            return fileName
+        """ Open dialog UI 
+
+        Returns:
+            str: path of the file to load.
+        """
+        fileName, _ = QFileDialog.getOpenFileName(self, "Load configuration", "", "Text Files (*.txt)")
+        return fileName
 
     def stop_gnssLive(self):
+        """ Interupt real time plot of the GNSS data. """
         if self.gnss_livePlot_initialised:
             self.timer_gnss.stop()
             cmd = f"rm {self.nmea_tmpfile}"
@@ -882,12 +964,18 @@ class BuoyUI(QMainWindow):
             self.gnss_livePlot_initialised = False
         
     def stop_meteoLive(self):
+        """ Interupt real time plot of the meteo data. """
         if self.meteo_livePlot_initialised:
             self.timer_meteo.stop()
             self.client_METEO.close()
             self.meteo_livePlot_initialised = False
 
     def closeEvent(self, event):
+        """ Assert user realy desire to close app. 
+
+        Args:
+            event (closevent)
+        """
         reply = QMessageBox.question(self, 'Window Close', 'Do you want to close app ?',
                                      QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         
@@ -903,6 +991,7 @@ class BuoyUI(QMainWindow):
     #######    Connection to access point    #######
     ################################################
     def show_connection_window(self):
+        """ Open connection window. """
         if self.ap_connection_window is None:
             self.ap_connection_window = APConnectionUI(self)
             self.ap_connection_window.show()

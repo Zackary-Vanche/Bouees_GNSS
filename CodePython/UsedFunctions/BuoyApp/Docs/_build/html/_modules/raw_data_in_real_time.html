@@ -89,6 +89,16 @@
 <span class="c1">###########               Initialise ssh connection               ########### </span>
 <span class="c1">#############################################################################</span>
 <div class="viewcode-block" id="init_ssh_client"><a class="viewcode-back" href="../raw_data_in_real_time.html#raw_data_in_real_time.init_ssh_client">[docs]</a><span class="k">def</span> <span class="nf">init_ssh_client</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialise ssh connection.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        hostname (str): RaspberryPi IP (By default static IP &#39;192.168.4.1&#39;) </span>
+<span class="sd">        username (str): RaspberryPi username (&#39;pi&#39; by default)</span>
+<span class="sd">        password (str): RaspberryPi password (&#39;hydro&#39; by default)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        paramiko objects: client and channel associated to the ssh connection</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Initialize an SSH client</span>
     <span class="n">client</span> <span class="o">=</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">SSHClient</span><span class="p">()</span>
     <span class="n">client</span><span class="o">.</span><span class="n">set_missing_host_key_policy</span><span class="p">(</span><span class="n">paramiko</span><span class="o">.</span><span class="n">AutoAddPolicy</span><span class="p">())</span>
@@ -104,6 +114,15 @@
 <span class="c1">#############################################################################</span>
 
 <div class="viewcode-block" id="proj_to_UTM"><a class="viewcode-back" href="../raw_data_in_real_time.html#raw_data_in_real_time.proj_to_UTM">[docs]</a><span class="k">def</span> <span class="nf">proj_to_UTM</span><span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Project coordinates from WGS84 to UTM zone.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        lon (float): Longitude in decimal degrees </span>
+<span class="sd">        lat (float): Latitue in decimal degrees</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        float, float: x, y UTM zone coordinates</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">getUTM_zone</span><span class="p">(</span><span class="n">lon</span><span class="p">)</span>
     <span class="n">x_utm</span><span class="p">,</span> <span class="n">y_utm</span> <span class="o">=</span> <span class="n">utm_geod2map</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">x_utm</span><span class="p">,</span> <span class="n">y_utm</span><span class="p">,</span> <span class="n">n</span></div>
@@ -113,7 +132,15 @@
 <span class="c1">#############################################################################</span>
 
 <div class="viewcode-block" id="pre_process_sentence"><a class="viewcode-back" href="../raw_data_in_real_time.html#raw_data_in_real_time.pre_process_sentence">[docs]</a><span class="k">def</span> <span class="nf">pre_process_sentence</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pre-process NMEA sentences.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sentence (str): NMEA sentence</span>
+<span class="sd">        verbose (bool, optional): Option to print information for invalid sentences. Defaults to False</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str, str: type of sentence, pre-processed sentence ((None, None) in case sentence is invalid)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Assert sentence is an NMEA sentence</span>
     <span class="k">if</span> <span class="n">check_sentence_is_nmea_sentence</span><span class="p">(</span><span class="n">sentence</span><span class="p">):</span>
         
@@ -142,6 +169,14 @@
     
     
 <div class="viewcode-block" id="check_sentence_is_nmea_sentence"><a class="viewcode-back" href="../raw_data_in_real_time.html#raw_data_in_real_time.check_sentence_is_nmea_sentence">[docs]</a><span class="k">def</span> <span class="nf">check_sentence_is_nmea_sentence</span><span class="p">(</span><span class="n">sentence</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if NMEA sentence belongs to the list of known sentences.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sentence (str): NMEA sentence</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if NMEA sentence belongs to the known list, False otherwise</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">available_nmea_sentences</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;$GPGGA&quot;</span><span class="p">,</span> <span class="s2">&quot;$GPGLL&quot;</span><span class="p">,</span> <span class="s2">&quot;$GPGSA&quot;</span><span class="p">,</span> <span class="s2">&quot;$GPGSV&quot;</span><span class="p">,</span> <span class="s2">&quot;$GPVTG&quot;</span><span class="p">,</span> <span class="s2">&quot;$GPRMC&quot;</span><span class="p">,</span> <span class="s1">&#39;$GPDZDA&#39;</span><span class="p">]</span>
     <span class="n">is_nmea_sentence</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">for</span> <span class="n">nmea_sentence</span> <span class="ow">in</span> <span class="n">available_nmea_sentences</span><span class="p">:</span>
@@ -149,6 +184,14 @@
     <span class="k">return</span> <span class="n">is_nmea_sentence</span></div>
 
 <div class="viewcode-block" id="remove_unneeded_character_from_sentence"><a class="viewcode-back" href="../raw_data_in_real_time.html#raw_data_in_real_time.remove_unneeded_character_from_sentence">[docs]</a><span class="k">def</span> <span class="nf">remove_unneeded_character_from_sentence</span><span class="p">(</span><span class="n">sentence</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove useless characters &quot;\r&quot;, &quot;\n&quot;.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sentence (str): NMEA sentence</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: NMEA sentence without extra characters</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Split the sentence into a list of characters</span>
     <span class="n">char_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
     <span class="c1"># Remove extra &#39;\r&#39; characters</span>
@@ -162,6 +205,14 @@
     <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">char_list</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="compute_nmea_checksum"><a class="viewcode-back" href="../raw_data_in_real_time.html#raw_data_in_real_time.compute_nmea_checksum">[docs]</a><span class="k">def</span> <span class="nf">compute_nmea_checksum</span><span class="p">(</span><span class="n">sentence</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Derive NMEA checksum.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sentence (str): NMEA sentence</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: 2-digit hexadecimal string representing the checksum</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Convert the sentence into a list of hexadecimal values</span>
     <span class="n">hex_list</span> <span class="o">=</span> <span class="p">[</span><span class="nb">format</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">sentence</span><span class="p">]</span>
     <span class="c1"># XOR the values in the list</span>
